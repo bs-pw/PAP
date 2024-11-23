@@ -1,15 +1,13 @@
-package Backend;
+package pap.z27.papapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@EnableJpaRepositories
 @SpringBootApplication
-public class Application {
+public class PapapiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		SpringApplication.run(PapapiApplication.class, args);
 	}
 
 }
