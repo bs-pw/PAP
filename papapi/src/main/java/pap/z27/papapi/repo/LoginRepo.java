@@ -1,19 +1,19 @@
-package pap.z27.papapi;
+package pap.z27.papapi.repo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
-import pap.z27.papapi.domains.User;
-import pap.z27.papapi.domains.subclasses.Password;
-import pap.z27.papapi.domains.subclasses.UserPublicInfo;
+import pap.z27.papapi.domain.User;
+import pap.z27.papapi.domain.subclasses.Password;
+import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 
 import java.util.List;
 
 @Repository
-public class PAPRepo {
+public class LoginRepo {
     @Autowired
     private final JdbcClient jdbcClient;
-    public PAPRepo(JdbcClient jdbcClient) {
+    public LoginRepo(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 

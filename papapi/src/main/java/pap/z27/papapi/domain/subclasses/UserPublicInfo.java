@@ -1,4 +1,4 @@
-package pap.z27.papapi.domains.subclasses;
+package pap.z27.papapi.domain.subclasses;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

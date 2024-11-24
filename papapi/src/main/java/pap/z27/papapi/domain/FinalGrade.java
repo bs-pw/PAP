@@ -1,4 +1,4 @@
-package pap.z27.papapi.domains;
+package pap.z27.papapi.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
