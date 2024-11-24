@@ -9,7 +9,7 @@ import pap.z27.papapi.domain.User;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/r")
+@RequestMapping("/api/user")
 @AllArgsConstructor
 
 public class UserResource {
@@ -17,11 +17,11 @@ public class UserResource {
 //    private final Services services;
     private UserRepo papRepo;
 
-    @GetMapping("/u/g")
+    @GetMapping("/all")
     List<User> getAllUsers() {
         return papRepo.findAllUsers();
     }
-    @GetMapping("/p/{mail}")
+    @GetMapping("/password/{mail}")
     String getpass(@PathVariable String mail) {
         return papRepo.findPasswordByMail(mail);
     }

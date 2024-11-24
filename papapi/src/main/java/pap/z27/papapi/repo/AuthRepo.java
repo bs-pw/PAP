@@ -6,10 +6,10 @@ import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.subclasses.Password;
 
 @Repository
-public class LoginRepo {
+public class AuthRepo {
     @Autowired
     private final JdbcClient jdbcClient;
-    public LoginRepo(JdbcClient jdbcClient) {this.jdbcClient = jdbcClient;}
+    public AuthRepo(JdbcClient jdbcClient) {this.jdbcClient = jdbcClient;}
 
     public boolean isPasswordCorrect(String mail, Password password) {
         String passwordFromDB = jdbcClient.sql("SELECT password FROM USERS where mail=?")

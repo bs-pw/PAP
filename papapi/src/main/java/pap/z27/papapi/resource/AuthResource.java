@@ -2,25 +2,21 @@ package pap.z27.papapi.resource;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pap.z27.papapi.domain.subclasses.Credentials;
 import pap.z27.papapi.domain.subclasses.Password;
-import pap.z27.papapi.repo.LoginRepo;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.Map;
+import pap.z27.papapi.repo.AuthRepo;
 
 @RestController
 @RequestMapping("/api/auth")
 @AllArgsConstructor
 
-public class LoginResource {
+public class AuthResource {
     @Autowired
-    private LoginRepo loginRepo;
+    private AuthRepo loginRepo;
 
 
     @GetMapping("/login")
