@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const LoginPage = () => {
-    const [email, setEmail] = useState('');
+    const [mail, setMail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
@@ -12,20 +12,18 @@ const LoginPage = () => {
 
         try {
             const url = new URL('http://localhost/api/auth/login');
-            url.searchParams.append('mail', email);
+            url.searchParams.append('mail', mail);
             url.searchParams.append('password', password);
 
             const response = await fetch(url, { method: 'GET' });
-            console.log(response)
             if (response.ok) {
                 navigate('/dashboard');
             } else {
                 const errorData = await response.json();
-                console.log(errorData)
-                setErrorMessage(errorData.message || 'Login failed');
+                setErrorMessage(errorData.message || 'Błąd logowania!');
             }
         } catch (error) {
-            setErrorMessage('An error occurred. Please try again.');
+            setErrorMessage('Wystąpił błąd! Spróbuj ponownie!');
             console.error(error)
         }
     };
@@ -43,8 +41,8 @@ const LoginPage = () => {
                             id="exampleInputEmail1"
                             aria-describedby="emailHelp"
                             placeholder="Enter email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={mail}
+                            onChange={(e) => setMail(e.target.value)}
                             required
                         />
 
