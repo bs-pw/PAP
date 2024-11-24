@@ -7,4 +7,5 @@ import lombok.Setter;
 @Getter
 public class Password {
     String password;
+    public Password(String password) {this.password = password;}
 }

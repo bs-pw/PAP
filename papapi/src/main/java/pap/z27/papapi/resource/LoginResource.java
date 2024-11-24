@@ -2,29 +2,31 @@ package pap.z27.papapi.resource;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import pap.z27.papapi.domain.subclasses.Credentials;
+import pap.z27.papapi.domain.subclasses.Password;
 import pap.z27.papapi.repo.LoginRepo;
-import pap.z27.papapi.domain.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/r")
+@RequestMapping("/api/auth")
 @AllArgsConstructor
 
 public class LoginResource {
     @Autowired
-//    private final Services services;
-    private LoginRepo papRepo;
+    private LoginRepo loginRepo;
 
-    @GetMapping("/u/g")
-    List<User> getAllUsers() {
-        return papRepo.findAllUsers();
-    }
-    @GetMapping("/p/{mail}")
-    String getpass(@PathVariable String mail) {
-        return papRepo.findPasswordByMail(mail);
+
+    @GetMapping("/login")
+    public String login(@RequestBody Credentials credentials) {
+//        System.out.println(credentials.getPassword());
+        if(loginRepo.isPasswordCorrect(credentials.getMail(), new Password(credentials.getPassword()))) return "OK";
+        return "ERROR";
     }
 }
-
-
