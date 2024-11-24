@@ -12,12 +12,15 @@ public class AuthRepo {
     public AuthRepo(JdbcClient jdbcClient) {this.jdbcClient = jdbcClient;}
 
     public boolean isPasswordCorrect(String mail, Password password) {
-        String passwordFromDB = jdbcClient.sql("SELECT password FROM USERS where mail=?")
+        try{
+            String passwordFromDB = jdbcClient.sql("SELECT password FROM USERS where mail=?")
                 .param(mail)
                 .query(Password.class)
                 .single()
                 .getPassword();
-        if (passwordFromDB.equals(password.getPassword())) return true;
-        return false;
+            return passwordFromDB.equals(password.getPassword());
+        }catch (Exception e){
+            return false;
+        }
     }
 }

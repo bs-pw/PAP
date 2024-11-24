@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -10,22 +11,22 @@ const LoginPage = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost/api/auth/login', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ mail: email, password }),
-            });
+            const url = new URL('http://localhost/api/auth/login');
+            url.searchParams.append('mail', email);
+            url.searchParams.append('password', password);
 
+            const response = await fetch(url, { method: 'GET' });
+            console.log(response)
             if (response.ok) {
                 navigate('/dashboard');
             } else {
                 const errorData = await response.json();
+                console.log(errorData)
                 setErrorMessage(errorData.message || 'Login failed');
             }
         } catch (error) {
             setErrorMessage('An error occurred. Please try again.');
+            console.error(error)
         }
     };
 
