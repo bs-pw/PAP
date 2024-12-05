@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Class implements Serializable {
+public class MyClass implements Serializable {
     private String course_code;
     private String semester;
     private Integer group_number;
