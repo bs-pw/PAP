@@ -1,8 +1,6 @@
 package pap.z27.papapi.resource;
 
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +23,7 @@ public class AuthResource {
     private UserRepo userRepo;
 
     @GetMapping("/login")
-    public ResponseEntity login(HttpServletRequest request) {
+    public ResponseEntity<String> login(HttpServletRequest request) {
         Credentials credentials = new Credentials();
         credentials.setMail(request.getParameter("mail"));
         credentials.setPassword(request.getParameter("password"));
@@ -42,8 +40,7 @@ public class AuthResource {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad credentials!\"}");
     }
     @GetMapping("/logout")
-    public ResponseEntity logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
+    public ResponseEntity<String> logout(HttpSession session) {
         if (session != null)
             session.invalidate();
         return ResponseEntity.ok("{\"logged out\":\"ok\"}");

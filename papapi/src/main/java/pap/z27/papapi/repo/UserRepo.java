@@ -19,6 +19,12 @@ public class UserRepo {
         this.jdbcClient = jdbcClient;
     }
 
+    public Integer countUserById(Integer userId) {
+        return jdbcClient.sql("SELECT COUNT(*) FROM USERS where user_id=?")
+                .param(userId)
+                .query(Integer.class)
+                .single();
+    }
     public List<User> findAllUsers() {
         return jdbcClient.sql("SELECT * FROM USERS")
                 .query(User.class)
@@ -67,11 +73,18 @@ public class UserRepo {
                 .list();
     }
     public Integer insertUser(User user) {
-        return jdbcClient.sql("INSERT INTO USERS (name, surname, password, mail)VALUES(?,?,?,?)")
-                .param(user.getName())
-                .param(user.getSurname())
-                .param(user.getPassword())
-                .param(user.getMail())
+            return jdbcClient.sql("INSERT INTO USERS (name, surname, password, mail) VALUES (?,?,?,?)")
+                    .param(user.getName())
+                    .param(user.getSurname())
+                    .param(user.getPassword())
+                    .param(user.getMail())
+                    .update();
+    }
+
+    public Integer updateUsersPassword(Integer userID, String password) {
+        return jdbcClient.sql("UPDATE USERS set password=? where user_id=?")
+                .param(password)
+                .param(userID)
                 .update();
     }
 
