@@ -1,0 +1,14 @@
+### GET request to example server
+POST http://localhost:80/api/user
+Content-Type: application/json
+
+{
+  "name": "Maciej",
+  "surname": "Borkowski",
+  "mail": "maci9@gmail.com",
+  "password": "piotrMaciag123",
+  "status": "student"
+}
+
+###
+PUT http://localhost:80/api/user/s/1?status=admin

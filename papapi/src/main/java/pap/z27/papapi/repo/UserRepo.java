@@ -88,6 +88,12 @@ public class UserRepo {
                 .param(userID)
                 .update();
     }
+    public Integer updateUsersStatus(Integer userID, String status) {
+        return jdbcClient.sql("UPDATE USERS set status=? where user_id=?")
+                .param(status)
+                .param(userID)
+                .update();
+    }
 
 
 //    public List<Attendance> findAllAttendances() {

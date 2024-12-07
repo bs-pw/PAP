@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.repo.UserRepo;
 import pap.z27.papapi.domain.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -51,6 +52,24 @@ public class UserResource {
         return ResponseEntity.ok("{\"password changed\":\"ok\"}");
 
     }
-}
 
+    @PutMapping(path = "/s/{userId}")
+    public ResponseEntity<String> changeStatus (
+            @PathVariable("userId") Integer userId,
+            @RequestParam String status
+    ) {
+        List<String> validStatus = new ArrayList<>();
+
+        validStatus.add("student");
+        validStatus.add("teacher");
+        validStatus.add("admin");
+        validStatus.add("assistant");
+
+        if (validStatus.contains(status)) {
+            userRepo.updateUsersStatus(userId, status);
+            return ResponseEntity.ok("{\"status\":\"ok\"}");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad status!\"}");
+    }
+}
 

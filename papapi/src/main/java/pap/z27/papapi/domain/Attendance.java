@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,8 +18,7 @@ public class Attendance {
     private String semester;
     private Integer group_number;
     private Integer class_id_for_group;
+    private Date date;
     private String attendance_status;
     private Integer who_inserted_id;
-    Attendance(String course_code, String semester, Integer group_number, String type, char day, Integer hour,
-               Integer user_id, Integer who_inserted_id) {}
 }

@@ -15,23 +15,24 @@ public class MyClassRepo {
         this.jdbcClient = jdbcClient;
     }
     public List<MyClass> findAllUsersClasses(Integer userID) {
-        return jdbcClient.sql("SELECT c.* FROM CLASSES c JOIN (SELECT user_id FROM STUDENTS_IN_CLASSES UNION SELECT user_id" +
-                        "FROM LECTURERS ) uic ON c.user_id = uic.user_id WHERE c.user_id = ?")
+        return jdbcClient.sql("SELECT c.* FROM CLASSES c JOIN (SELECT * FROM STUDENTS_IN_CLASSES UNION SELECT * " +
+                        "FROM LECTURERS ) uic ON (c.GROUP_NUMBER = uic.GROUP_NUMBER and c.SEMESTER = uic.SEMESTER and c.COURSE_CODE = uic.COURSE_CODE ) WHERE uic.user_id = ?")
                 .param(userID)
                 .query(MyClass.class)
                 .list();
     }
     public List<MyClass> findAllLecturersClasses(Integer userID) {
-        return jdbcClient.sql("SELECT c.* FROM CLASSES c JOIN (SELECT user_id FROM LECTURERS ) uic ON c.user_id = uic.user_id WHERE c.user_id = ?")
+        return jdbcClient.sql("SELECT c.* FROM CLASSES c JOIN (SELECT * FROM LECTURERS ) uic ON (c.GROUP_NUMBER = uic.GROUP_NUMBER and c.SEMESTER = uic.SEMESTER and c.COURSE_CODE = uic.COURSE_CODE ) WHERE uic.user_id = ?")
                 .param(userID)
                 .query(MyClass.class)
                 .list();
     }
     public Integer insertClass(MyClass myClass) {
-        return jdbcClient.sql("INSERT INTO CLASSES (course_code,semester,group_number,type,day,hour,length,'where') VALUES (?,?,?,?,?,?,?,?)")
+        return jdbcClient.sql("INSERT INTO CLASSES (course_code,semester,group_number,CLASS_ID_FOR_GROUP,type,day,hour,length,\"where\") VALUES (?,?,?,?,?,?,?,?,?)")
                 .param(myClass.getCourse_code())
                 .param(myClass.getSemester())
                 .param(myClass.getGroup_number())
+                .param(myClass.getClass_id_for_group())
                 .param(myClass.getType())
                 .param(myClass.getDay())
                 .param(myClass.getHour())
@@ -40,10 +41,11 @@ public class MyClassRepo {
                 .update();
     }
     public Integer removeClass(MyClass myClass) {
-        return jdbcClient.sql("DELETE FROM CLASSES where course_code=? and semester=? and group_number=? and type=? and day=? and hour=? and length=? and 'where'=?")
+        return jdbcClient.sql("DELETE FROM CLASSES where course_code=? and semester=? and group_number=? and CLASS_ID_FOR_GROUP=? and type=? and day=? and hour=? and length=? and \"where\"=?")
                 .param(myClass.getCourse_code())
                 .param(myClass.getSemester())
                 .param(myClass.getGroup_number())
+                .param(myClass.getClass_id_for_group())
                 .param(myClass.getType())
                 .param(myClass.getDay())
                 .param(myClass.getHour())
