@@ -16,6 +16,7 @@ public class MyClass implements Serializable {
     private String course_code;
     private String semester;
     private Integer group_number;
+    private Integer class_id_for_group;
     private String type;
     private char day;
     private Integer hour;
