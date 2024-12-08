@@ -29,6 +29,13 @@ public class FinalGradeRepo {
                 .param(finalGrade.getGrade())
                 .update();
     }
+    public Integer removeFinalGrade(FinalGrade finalGrade) {
+        return jdbcClient.sql("DELETE FROM FINAL_GRADES WHERE user_id=? and course_code=? and semester=?")
+                .param(finalGrade.getUser_id())
+                .param(finalGrade.getCourse_code())
+                .param(finalGrade.getSemester())
+                .update();
+    }
     public Integer updateFinalGrade(FinalGrade finalGrade) {
         return jdbcClient.sql("UPDATE FINAL_GRADES set grade=? where user_id=? and course_code=? and semester=?")
                 .param(finalGrade.getGrade())

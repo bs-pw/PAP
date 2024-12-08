@@ -7,6 +7,7 @@ import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.Group;
 import pap.z27.papapi.domain.User;
 import pap.z27.papapi.domain.subclasses.Password;
+import pap.z27.papapi.domain.subclasses.Status;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 
 import java.util.List;
@@ -57,7 +58,7 @@ public class UserRepo {
                 .list();
     }
     public List<UserPublicInfo> findAllUsersInGroup(Group group) {
-        return jdbcClient.sql("SELECT user_id,u.name,u.surname,u.mail from USERS u join STUDENTS_IN_CLASSES sin using(user_id) WHERE sin.course_code = ? AND sin.semester = ? AND sin.group_number = ?")
+        return jdbcClient.sql("SELECT user_id,u.name,u.surname,u.mail from USERS u join STUDENTS_IN_GROUPS sin using(user_id) WHERE sin.course_code = ? AND sin.semester = ? AND sin.group_number = ?")
                 .param(group.getCourse_code())
                 .param(group.getSemester())
                 .param(group.getGroup_number())
@@ -72,28 +73,34 @@ public class UserRepo {
                 .query(UserPublicInfo.class)
                 .list();
     }
-    public Integer insertUser(User user) {
-            return jdbcClient.sql("INSERT INTO USERS (name, surname, password, mail, status) VALUES (?,?,?,?,?)")
-                    .param(user.getName())
-                    .param(user.getSurname())
-                    .param(user.getPassword())
-                    .param(user.getMail())
-                    .param(user.getStatus())
-                    .update();
+    public void insertUser(User user) {
+        jdbcClient.sql("INSERT INTO USERS (name, surname, password, mail, status) VALUES (?,?,?,?,?)")
+                .param(user.getName())
+                .param(user.getSurname())
+                .param(user.getPassword())
+                .param(user.getMail())
+                .param(user.getStatus())
+                .update();
     }
 
-    public Integer updateUsersPassword(Integer userID, String password) {
-        return jdbcClient.sql("UPDATE USERS set password=? where user_id=?")
+    public void updateUsersPassword(Integer userID, String password) {
+        jdbcClient.sql("UPDATE USERS set password=? where user_id=?")
                 .param(password)
                 .param(userID)
                 .update();
     }
-    public Integer updateUsersStatus(Integer userID, String status) {
-        return jdbcClient.sql("UPDATE USERS set status=? where user_id=?")
+    public void updateUsersStatus(Integer userID, String status) {
+        jdbcClient.sql("UPDATE USERS set status=? where user_id=?")
                 .param(status)
                 .param(userID)
                 .update();
     }
+
+//    public String getUserStatus(Integer userID) {
+//        return jdbcClient.sql("SELECT status from USERS where USER_ID=?")
+//                .param(userID)
+//                .query(Status.class);
+//    }
 
 
 //    public List<Attendance> findAllAttendances() {

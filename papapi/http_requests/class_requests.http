@@ -1,0 +1,15 @@
+###
+POST http://localhost:80/api/class
+Content-Type: application/json
+
+{
+  "group_number": 104,
+  "course_code": "PAP",
+  "day": "1",
+  "hour": 735,
+  "length": 75,
+  "semester": "24Z",
+  "type": "lecture",
+  "where": "09"
+}
+###

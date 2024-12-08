@@ -53,4 +53,18 @@ public class CourseInSemesterRepo {
                 .param(courseInSemester.getSemester())
                 .update();
     }
+    public Integer addStudent(Integer userID, CourseInSemester courseInSemester) {
+        return jdbcClient.sql("INSERT INTO STUDENTS_IN_CLASSES (user_id,course_code,semester) VALUES (?,?,?)")
+                .param(userID)
+                .param(courseInSemester.getCourse_code())
+                .param(courseInSemester.getSemester())
+                .update();
+    }
+    public Integer removeCourseInSemester(CourseInSemester courseInSemester){
+        return jdbcClient.sql("DELETE FROM COURSES_IN_SEMESTER where course_code=? and semester=?")
+                .param(courseInSemester.getCourse_code())
+                .param(courseInSemester.getSemester())
+                .update();
+    }
+
 }

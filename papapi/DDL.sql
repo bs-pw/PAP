@@ -30,7 +30,7 @@
 --
 -- DROP TABLE lecturers CASCADE CONSTRAINTS;
 --
--- DROP TABLE students_in_classes CASCADE CONSTRAINTS;
+-- DROP TABLE students_in_groups CASCADE CONSTRAINTS;
 --
 -- DROP TABLE users CASCADE CONSTRAINTS;
 
@@ -62,7 +62,7 @@ CREATE TABLE classes (
 --  ERROR: Column name length exceeds maximum allowed length(30)
                          semester             VARCHAR2(4 CHAR) NOT NULL,
                          group_number                             NUMBER(3) NOT NULL,
-                         class_id_for_group                              NUMBER(3) NOT NULL,
+                         class_id_for_group                              NUMBER(3) GENERATED ALWAYS as IDENTITY(START with 1 INCREMENT by 1),
                          type                                            VARCHAR2(16 CHAR) NOT NULL,
                          day                                             CHAR(1 CHAR) NOT NULL,
     hour                                            NUMBER(4) NOT NULL,
@@ -176,7 +176,7 @@ ALTER TABLE lecturers
                                               semester,
                                               group_number );
 
-CREATE TABLE students_in_classes (
+CREATE TABLE students_in_groups (
                                      user_id                                   NUMBER(6) NOT NULL,
 --  ERROR: Column name length exceeds maximum allowed length(30)
                                      course_code VARCHAR2(5 CHAR) NOT NULL,
@@ -185,8 +185,8 @@ CREATE TABLE students_in_classes (
                                      group_number                             NUMBER(3) NOT NULL
 );
 
-ALTER TABLE students_in_classes
-    ADD CONSTRAINT students_in_classes_pk PRIMARY KEY ( user_id,
+ALTER TABLE students_in_groups
+    ADD CONSTRAINT students_in_groups_pk PRIMARY KEY ( user_id,
                                                         course_code,
                                                         semester,
                                                         group_number );
@@ -295,15 +295,16 @@ ALTER TABLE lecturers
     ADD CONSTRAINT lecturers_users_fk FOREIGN KEY ( user_id )
         REFERENCES users ( user_id );
 
-ALTER TABLE students_in_classes
-    ADD CONSTRAINT students_in_classes_groups_fk FOREIGN KEY ( course_code,
+ALTER TABLE students_in_groups
+    ADD CONSTRAINT students_in_groups_groups_fk FOREIGN KEY ( course_code,
                                                                semester,
                                                                group_number )
         REFERENCES groups ( course_code,
                             semester,
                             group_number );
 
-ALTER TABLE students_in_classes
-    ADD CONSTRAINT students_in_classes_users_fk FOREIGN KEY ( user_id )
+ALTER TABLE students_in_groups
+    ADD CONSTRAINT students_in_groups_users_fk FOREIGN KEY ( user_id )
         REFERENCES users ( user_id );
+ALTER TABLE users ADD CONSTRAINT mail_const UNIQUE ( mail );
 

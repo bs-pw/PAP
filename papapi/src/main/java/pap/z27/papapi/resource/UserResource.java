@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pap.z27.papapi.domain.Group;
+import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 import pap.z27.papapi.domain.User;
 
@@ -15,10 +17,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
-@AllArgsConstructor
 
 public class UserResource {
     private final UserRepo userRepo;
+    private final GroupRepo groupRepo;
+
+    @Autowired
+    public UserResource(UserRepo userRepo, GroupRepo groupRepo) {
+        this.userRepo = userRepo;
+        this.groupRepo = groupRepo;
+    }
 
     @GetMapping("/all")
     public List<User> getAllUsers() {
@@ -37,7 +45,7 @@ public class UserResource {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad credentials!\"}");
         }
-        return ResponseEntity.ok("{\"signed up\":\"ok\"}");
+        return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 
     @PutMapping(path = "{userId}")
@@ -49,7 +57,7 @@ public class UserResource {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"ID not found!\"}");
         }
         userRepo.updateUsersPassword(userId, password);
-        return ResponseEntity.ok("{\"password changed\":\"ok\"}");
+        return ResponseEntity.ok("{\"message\":\"ok\"}");
 
     }
 
@@ -67,9 +75,15 @@ public class UserResource {
 
         if (validStatus.contains(status)) {
             userRepo.updateUsersStatus(userId, status);
-            return ResponseEntity.ok("{\"status\":\"ok\"}");
+            return ResponseEntity.ok("{\"message\":\"ok\"}");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad status!\"}");
+    }
+
+    @GetMapping("/groups")
+    public List<Group> getUserGroups(HttpSession session) {
+        Integer userId = (Integer)session.getAttribute("userId");
+        return groupRepo.findAllUsersGroups(userId);
     }
 }
 

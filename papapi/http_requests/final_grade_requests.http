@@ -1,0 +1,31 @@
+###
+POST http://localhost:80/api/finalgrade
+Content-Type: application/json
+
+{
+  "semester": "24Z",
+  "course_code": "PAP",
+  "grade": 4.5,
+  "user_id": 1
+}
+
+###
+PUT http://localhost:80/api/finalgrade
+Content-Type: application/json
+
+{
+  "semester": "24Z",
+  "course_code": "PAP",
+  "grade": 2.5,
+  "user_id": 1
+}
+
+###
+DELETE http://localhost:80/api/finalgrade
+Content-Type: application/json
+
+{
+  "semester": "24Z",
+  "course_code": "PAP",
+  "user_id": 1
+}

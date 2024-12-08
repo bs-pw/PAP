@@ -1,0 +1,11 @@
+###
+POST http://localhost:80/api/group
+Content-Type: application/json
+
+{
+  "course_code": "PAP",
+  "semester": "24Z",
+  "group_number": 104
+}
+
+###

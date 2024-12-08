@@ -30,9 +30,15 @@ public class GroupRepo {
                 .list();
     }
     public List<Group> findAllUsersGroupsThisSemester(Integer user_id, String semester) {
-        return jdbcClient.sql("SELECT * from GROUPS g join STUDENTS_IN_CLASSES sic on(sic.course_code=g.course_code and sic.semester=g.semester and sic.group_number=g.group_number) where sic.user_id = ? and g.semester = ?")
+        return jdbcClient.sql("SELECT * from GROUPS g join STUDENTS_IN_GROUPS sic on(sic.course_code=g.course_code and sic.semester=g.semester and sic.group_number=g.group_number) where sic.user_id = ? and g.semester = ?")
                 .param(user_id)
                 .param(semester)
+                .query(Group.class)
+                .list();
+    }
+    public List<Group> findAllUsersGroups(Integer user_id) {
+        return jdbcClient.sql("SELECT * from GROUPS g join STUDENTS_IN_GROUPS sic on(sic.course_code=g.course_code and sic.semester=g.semester and sic.group_number=g.group_number) where sic.user_id = ?")
+                .param(user_id)
                 .query(Group.class)
                 .list();
     }
@@ -40,6 +46,12 @@ public class GroupRepo {
         return jdbcClient.sql("SELECT * from GROUPS g join LECTURERS l on(l.course_code=g.course_code and l.semester=g.semester and l.group_number=g.group_number) where l.user_id = ? and g.semester = ?")
                 .param(user_id)
                 .param(semester)
+                .query(Group.class)
+                .list();
+    }
+    public List<Group> findAllLecturersGroups(Integer user_id) {
+        return jdbcClient.sql("SELECT * from GROUPS g join LECTURERS l on(l.course_code=g.course_code and l.semester=g.semester and l.group_number=g.group_number) where l.user_id = ?")
+                .param(user_id)
                 .query(Group.class)
                 .list();
     }
@@ -51,7 +63,7 @@ public class GroupRepo {
                 .update();
     }
     public Integer addStudentToGroup(Integer userID, Group group) {
-        return jdbcClient.sql("INSERT INTO STUDENTS_IN_CLASSES (user_id,course_code,semester,group_number) VALUES (?,?,?,?)")
+        return jdbcClient.sql("INSERT INTO STUDENTS_IN_GROUPS (user_id,course_code,semester,group_number) VALUES (?,?,?,?)")
                 .param(userID)
                 .param(group.getCourse_code())
                 .param(group.getSemester())
@@ -60,7 +72,7 @@ public class GroupRepo {
     }
 
     public Integer removeStudentFromGroup(Integer userID, Group group) {
-        return jdbcClient.sql("DELETE FROM STUDENTS_IN_CLASSES WHERE user_id=? and course_code=? and semester=? and group_number=?")
+        return jdbcClient.sql("DELETE FROM STUDENTS_IN_GROUPS WHERE user_id=? and course_code=? and semester=? and group_number=?")
                 .param(userID)
                 .param(group.getCourse_code())
                 .param(group.getSemester())
@@ -79,6 +91,21 @@ public class GroupRepo {
     public Integer removeLecturerFromGroup(Integer userID, Group group) {
         return jdbcClient.sql("DELETE FROM LECTURERS WHERE user_id=? and course_code=? and semester=? and group_number=?")
                 .param(userID)
+                .param(group.getCourse_code())
+                .param(group.getSemester())
+                .param(group.getGroup_number())
+                .update();
+    }
+//    public Integer countGroups(Group group){
+//        return jdbcClient.sql("SELECT count(*) from GROUPS where course_code=? and semester=? and group_number=?")
+//                .param(group.getCourse_code())
+//                .param(group.getSemester())
+//                .param(group.getGroup_number())
+//                .query(Integer.class)
+//                .single();
+//    }
+    public Integer removeGroup(Group group){
+        return jdbcClient.sql("DELETE FROM GROUPS where course_code=? and semester=? and group_number=?")
                 .param(group.getCourse_code())
                 .param(group.getSemester())
                 .param(group.getGroup_number())

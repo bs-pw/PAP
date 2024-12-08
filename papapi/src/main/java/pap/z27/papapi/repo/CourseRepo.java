@@ -26,6 +26,10 @@ public class CourseRepo {
                 .param(course.getTitle())
                 .update();
     }
-    //delete if nothing is connected - change in ddl - cascade
+    public Integer removeCourse(String course_code) {
+        return jdbcClient.sql("DELETE FROM COURSES WHERE course_code=?")
+                .param(course_code)
+                .update();
+    }//delete if nothing is connected - change in ddl - cascade
 
 }

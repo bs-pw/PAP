@@ -1,0 +1,9 @@
+###
+POST http://localhost:80/api/courseinsemester
+Content-Type: application/json
+
+{
+  "course_code": "PAP",
+  "semester": "24Z"
+}
+###
