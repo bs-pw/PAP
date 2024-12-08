@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.Group;
 import pap.z27.papapi.domain.User;
+import pap.z27.papapi.domain.subclasses.UserInGroup;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 
 import java.util.List;
@@ -62,21 +63,21 @@ public class GroupRepo {
                 .param(group.getGroup_number())
                 .update();
     }
-    public Integer addStudentToGroup(Integer userID, Group group) {
+    public Integer addStudentToGroup(UserInGroup userInGroup) {
         return jdbcClient.sql("INSERT INTO STUDENTS_IN_GROUPS (user_id,course_code,semester,group_number) VALUES (?,?,?,?)")
-                .param(userID)
-                .param(group.getCourse_code())
-                .param(group.getSemester())
-                .param(group.getGroup_number())
+                .param(userInGroup.getUser_id())
+                .param(userInGroup.getCourse_code())
+                .param(userInGroup.getSemester())
+                .param(userInGroup.getGroup_number())
                 .update();
     }
 
-    public Integer removeStudentFromGroup(Integer userID, Group group) {
+    public Integer removeStudentFromGroup(UserInGroup userInGroup) {
         return jdbcClient.sql("DELETE FROM STUDENTS_IN_GROUPS WHERE user_id=? and course_code=? and semester=? and group_number=?")
-                .param(userID)
-                .param(group.getCourse_code())
-                .param(group.getSemester())
-                .param(group.getGroup_number())
+                .param(userInGroup.getUser_id())
+                .param(userInGroup.getCourse_code())
+                .param(userInGroup.getSemester())
+                .param(userInGroup.getGroup_number())
                 .update();
     }
     public Integer addLecturerToGroup(Integer userID, Group group) {
@@ -111,5 +112,24 @@ public class GroupRepo {
                 .param(group.getGroup_number())
                 .update();
     }
+    public Integer changeStudentsGroup(UserInGroup userInGroup, Integer newGroupNr)
+    {
+        return jdbcClient.sql("UPDATE STUDENTS_IN_GROUPS set GROUP_NUMBER=? where course_code=? and semester=? and group_number=? and USER_ID=?")
+                .param(userInGroup.getCourse_code())
+                .param(userInGroup.getSemester())
+                .param(userInGroup.getGroup_number())
+                .param(newGroupNr)
+                .update();
+    }
+    public Integer changeLecturersGroup(UserInGroup userInGroup, Integer newGroupNr)
+    {
+        return jdbcClient.sql("UPDATE LECTURERS set GROUP_NUMBER=? where course_code=? and semester=? and group_number=? and USER_ID=?")
+                .param(userInGroup.getCourse_code())
+                .param(userInGroup.getSemester())
+                .param(userInGroup.getGroup_number())
+                .param(newGroupNr)
+                .update();
+    }
+
 
 }

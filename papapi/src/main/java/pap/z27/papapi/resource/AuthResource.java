@@ -33,8 +33,8 @@ public class AuthResource {
             UserPublicInfo user = userRepo.findUsersInfoByMail(credentials.getMail());
             session.setAttribute("name", user.getName());
             session.setAttribute("surname", user.getSurname());
-            session.setAttribute("user_id", user.getUser_id());
-//            to add - status
+            session.setAttribute("userId", user.getUser_id());
+            session.setAttribute("status", user.getStatus());
             return ResponseEntity.ok("{\"logged\":\"ok\"}");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad credentials!\"}");

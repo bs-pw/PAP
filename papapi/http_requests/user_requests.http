@@ -12,3 +12,9 @@ Content-Type: application/json
 
 ###
 PUT http://localhost:80/api/user/s/1?status=admin
+
+###
+GET http://localhost:80/api/auth/login?mail=maci9@gmail.com&password=piotrMaciag123
+
+###
+GET http://localhost:80/api/user/usergroups

@@ -1,19 +1,20 @@
 ###
-POST http://localhost:80/api/group
+POST http://localhost:80/api/usersingroups
 Content-Type: application/json
 
 {
+  "user_id": 1,
   "course_code": "PAP",
   "semester": "24Z",
   "group_number": 104
 }
 
 ###
-POST http://localhost:80/api/group
+PUT http://localhost:80/api/usersingroups/105
 Content-Type: application/json
 
 {
+  "user_id": 1,
   "course_code": "PAP",
-  "semester": "24Z",
-  "group_number": 105
+  "semester": "24Z"
 }

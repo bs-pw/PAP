@@ -48,6 +48,7 @@ public class UserResource {
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 
+
     @PutMapping(path = "{userId}")
     public ResponseEntity<String> changePassword(
             @PathVariable("userId") Integer userId,
@@ -80,7 +81,7 @@ public class UserResource {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad status!\"}");
     }
 
-    @GetMapping("/groups")
+    @GetMapping("/usergroups")
     public List<Group> getUserGroups(HttpSession session) {
         Integer userId = (Integer)session.getAttribute("userId");
         return groupRepo.findAllUsersGroups(userId);

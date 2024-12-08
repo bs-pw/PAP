@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.CourseInSemester;
+import pap.z27.papapi.domain.FinalGrade;
 import pap.z27.papapi.domain.Group;
 import pap.z27.papapi.domain.User;
 import pap.z27.papapi.domain.subclasses.Password;
 import pap.z27.papapi.domain.subclasses.Status;
+import pap.z27.papapi.domain.subclasses.UserInGroup;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 
 import java.util.List;
@@ -38,9 +40,9 @@ public class UserRepo {
                 .single()
                 .getPassword();
     }
-    public UserPublicInfo findUsersInfoByID(Integer userID) {
+    public UserPublicInfo findUsersInfoByID(Integer userId) {
         return jdbcClient.sql("SELECT user_id, name, surname, mail, status FROM USERS where user_id=?")
-                .param(userID)
+                .param(userId)
                 .query(UserPublicInfo.class)
                 .single();
     }
@@ -73,8 +75,8 @@ public class UserRepo {
                 .query(UserPublicInfo.class)
                 .list();
     }
-    public void insertUser(User user) {
-        jdbcClient.sql("INSERT INTO USERS (name, surname, password, mail, status) VALUES (?,?,?,?,?)")
+    public Integer insertUser(User user) {
+        return jdbcClient.sql("INSERT INTO USERS (name, surname, password, mail, status) VALUES (?,?,?,?,?)")
                 .param(user.getName())
                 .param(user.getSurname())
                 .param(user.getPassword())
@@ -83,22 +85,36 @@ public class UserRepo {
                 .update();
     }
 
-    public void updateUsersPassword(Integer userID, String password) {
-        jdbcClient.sql("UPDATE USERS set password=? where user_id=?")
+    public Integer updateUsersPassword(Integer userId, String password) {
+        return jdbcClient.sql("UPDATE USERS set password=? where user_id=?")
                 .param(password)
-                .param(userID)
+                .param(userId)
                 .update();
     }
-    public void updateUsersStatus(Integer userID, String status) {
-        jdbcClient.sql("UPDATE USERS set status=? where user_id=?")
+    public Integer updateUsersStatus(Integer userId, String status) {
+        return jdbcClient.sql("UPDATE USERS set status=? where user_id=?")
                 .param(status)
-                .param(userID)
+                .param(userId)
                 .update();
     }
 
-//    public String getUserStatus(Integer userID) {
+    public Status findUsersStatus(Integer userId) {
+        return jdbcClient.sql("SELECT status from USERS where USER_ID=?")
+                .param(userId)
+                .query(Status.class)
+                .single();
+    }
+    public Integer countUsersFinalGrades(UserInGroup userInGroup){
+        return jdbcClient.sql("SELECT count(*) FROM FINAL_GRADES where user_id=? and COURSE_CODE=? and SEMESTER=?")
+                .param(userInGroup.getUser_id())
+                .param(userInGroup.getCourse_code())
+                .param(userInGroup.getSemester())
+                .query(Integer.class)
+                .single();
+    }
+//    public String getUserStatus(Integer userId) {
 //        return jdbcClient.sql("SELECT status from USERS where USER_ID=?")
-//                .param(userID)
+//                .param(userId)
 //                .query(Status.class);
 //    }
 
@@ -107,5 +123,12 @@ public class UserRepo {
 //        return jdbcClient.sql("SELECT * FROM USERS").query(User.class).list();
 //    }
 
-
+    public Integer checkIfIsCoordinator(UserInGroup userInGroup){
+        return jdbcClient.sql("SELECT count(*) FROM COORDINATORS where user_id=? and COURSE_CODE=? and SEMESTER=?")
+                .param(userInGroup.getUser_id())
+                .param(userInGroup.getCourse_code())
+                .param(userInGroup.getSemester())
+                .query(Integer.class)
+                .single();
+    }
 }
