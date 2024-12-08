@@ -30,8 +30,14 @@ public class GradeRepo {
                 .query(Grade.class)
                 .list();
     }
+    public List<Grade> getAllUserGrades(Integer userID) {
+        return jdbcClient.sql("SELECT * FROM GRADES WHERE USER_ID=?")
+                .param(userID)
+                .query(Grade.class)
+                .list();
+    }
     public Integer insertGrade(Grade grade) {
-        return jdbcClient.sql("INSERT INTO GRADES (category_id,course_code,semester,user_id,who_inserted_id,grade,'date',description) VALUES (?,?,?,?,?,?,?,?)")
+        return jdbcClient.sql("INSERT INTO GRADES (category_id,course_code,semester,user_id,who_inserted_id,grade,\"date\",description) VALUES (?,?,?,?,?,?,?,?)")
                 .param(grade.getCategory_id())
                 .param(grade.getCourse_code())
                 .param(grade.getSemester())
@@ -43,7 +49,7 @@ public class GradeRepo {
                 .update();
     }
     public Integer updateGrade(Grade grade) {
-        return jdbcClient.sql("UPDATE GRADES set grade=?,'date'=?,description=?, who_inserted_id=? where category_id=? and course_code=? and semester=? and user_id=?")
+        return jdbcClient.sql("UPDATE GRADES set grade=?,\"date\"=?,description=?, who_inserted_id=? where category_id=? and course_code=? and semester=? and user_id=?")
                 .param(grade.getGrade())
                 .param(grade.getDate())
                 .param(grade.getDescription())

@@ -15,10 +15,10 @@ public class GradeCategoryRepo {
     public GradeCategoryRepo(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
-    public List<GradeCategory> findAllCourseGradeCategories(CourseInSemester courseInSemester) {
+    public List<GradeCategory> findAllCourseGradeCategories(String courseCode, String semester) {
         return jdbcClient.sql("SELECT * FROM GRADE_CATEGORIES WHERE course_code=? and semester=?")
-                .param(courseInSemester.getCourse_code())
-                .param(courseInSemester.getSemester())
+                .param(courseCode)
+                .param(semester)
                 .query(GradeCategory.class)
                 .list();
     }

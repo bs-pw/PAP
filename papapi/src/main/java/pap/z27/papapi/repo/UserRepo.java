@@ -131,4 +131,14 @@ public class UserRepo {
                 .query(Integer.class)
                 .single();
     }
+
+    public Integer checkIfIsCoordinator(Integer userId, String courseCode, String semester) {
+        return jdbcClient.sql("SELECT count(*) FROM COORDINATORS where user_id=? and COURSE_CODE=? and SEMESTER=?")
+                .param(userId)
+                .param(courseCode)
+                .param(semester)
+                .query(Integer.class)
+                .single();
+    }
+
 }
