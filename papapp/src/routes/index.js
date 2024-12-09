@@ -5,6 +5,8 @@ import DashboardPage from "../pages/DashboardPage"
 import MainLayout from "../components/layout/MainLayout";
 import { Navigate, Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import LecturerPage from "../pages/LecturersPage";
+import RegisterPage from "../pages/RegisterPage";
 //import useAuthStatus from './useAuthStatus';
 
 const ProtectedRoute = ({ isAuthRequired = true }) => {
@@ -54,15 +56,35 @@ export const router = createBrowserRouter([
                 ],
             },
             {
-                path: "dashboard",
                 element: <ProtectedRoute />,
                 children: [
                     {
+                        path: "dashboard",
                         element: <MainLayout />,
                         children: [
                             {
                                 index: true,
                                 element: <DashboardPage />,
+                            },
+                        ],
+                    },
+                    {
+                        path: "lecturer",
+                        element: <MainLayout />,
+                        children: [
+                            {
+                                index: true,
+                                element: <LecturerPage />,
+                            },
+                        ],
+                    },
+                    {
+                        path: "register",
+                        element: <MainLayout />,
+                        children: [
+                            {
+                                index: true,
+                                element: <RegisterPage />,
                             },
                         ],
                     },

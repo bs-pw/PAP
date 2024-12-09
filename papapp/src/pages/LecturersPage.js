@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 
 const DashboardPage = () => {
 
-    const [users, setUsers] = useState([]);
+    const [lecturers, setLecturers] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch('http://localhost/api/user/all')
+        fetch('http://localhost/api/lecturer')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Błąd połączenia');
@@ -14,7 +14,7 @@ const DashboardPage = () => {
                 return response.json();
             })
             .then(data => {
-                setUsers(data);
+                setLecturers(data);
             })
             .catch(error => {
                 setError('Błąd podczas ładowania danych: ' + error.message);
@@ -24,7 +24,7 @@ const DashboardPage = () => {
 
     return (
         <div>
-            <h1>Lista użytkowników</h1>
+            <h1>Lista wykładowców</h1>
 
             {error && <p>{error}</p>}
 
@@ -38,12 +38,12 @@ const DashboardPage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {users.map((user) => (
-                        <tr key={user.user_id}>
-                            <td>{user.user_id}</td>
-                            <td>{user.name}</td>
-                            <td>{user.surname}</td>
-                            <td>{user.mail}</td>
+                    {lecturers.map((lecturer) => (
+                        <tr key={lecturer.user_id}>
+                            <td>{lecturer.user_id}</td>
+                            <td>{lecturer.name}</td>
+                            <td>{lecturer.surname}</td>
+                            <td>{lecturer.mail}</td>
                         </tr>
                     ))}
                 </tbody>

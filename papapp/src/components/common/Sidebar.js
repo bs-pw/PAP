@@ -24,18 +24,18 @@ const Sidebar = () => {
             <h2 className="mb-4">Menu</h2>
             <ul className="nav flex-column">
                 <li className="nav-item">
-                    <a className="nav-link text-white" href="#">
-                        Dummy
+                    <a className="nav-link text-white" href="/">
+                        Home
                     </a>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link text-white" href="#">
-                        Dummy
+                    <a className="nav-link text-white" href="lecturer">
+                        Wykładowcy
                     </a>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link text-white" href="#">
-                        Dummy
+                    <a className="nav-link text-white" href="register">
+                        Zarejestruj
                     </a>
                 </li>
                 <li className="nav-item">
