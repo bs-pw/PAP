@@ -20,27 +20,27 @@ const Sidebar = () => {
     };
 
     return (
-        <div className="bg-dark text-white p-3 vh-100" style={{ width: 250 }}>
+        <div className="bg-dark text-white p-3" style={{ width: 250 }}>
             <h2 className="mb-4">Menu</h2>
             <ul className="nav flex-column">
                 <li className="nav-item">
                     <a className="nav-link text-white" href="#">
-                        Home
+                        Dummy
                     </a>
                 </li>
                 <li className="nav-item">
                     <a className="nav-link text-white" href="#">
-                        About
+                        Dummy
                     </a>
                 </li>
                 <li className="nav-item">
                     <a className="nav-link text-white" href="#">
-                        Services
+                        Dummy
                     </a>
                 </li>
                 <li className="nav-item">
                     <a className="nav-link text-white" href="#">
-                        Contact
+                        Dummy
                     </a>
                 </li>
                 <li>

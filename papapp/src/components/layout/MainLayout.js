@@ -4,27 +4,24 @@ import Sidebar from '../common/Sidebar'
 import Header from '../common/Header'
 import { Outlet } from 'react-router-dom'
 
-const sidebarWidth = 350
-
 const MainLayout = () => {
     return (
-        <Box display="flex row-wrap">
+        <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
             <Header />
-            <Box className="d-flex">
-                {/* sidebar */}
+            <Box sx={{ display: "flex", flexGrow: 1 }}>
                 <Sidebar />
-                {/* sidebar */}
                 <Box component="main" sx={{
                     flexGrow: 1,
                     p: 3,
-                    height: "100vh",
-                    width: { sm: `calc(100%-${sidebarWidth}px)` }
+                    width: "100%",
+                    overflow: "auto"
                 }}>
                     <Outlet />
                 </Box>
             </Box>
-        </Box >
-    )
-}
+        </Box>
+    );
+};
+
 
 export default MainLayout
