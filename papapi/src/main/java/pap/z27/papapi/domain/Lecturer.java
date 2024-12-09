@@ -10,8 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Lecturer {
-    private Integer userId;
-    private String courseCode;
+    private Integer user_id;
+    private String course_code;
     private String semester;
-    private Integer groupNumber;
+    private Integer group_number;
 }

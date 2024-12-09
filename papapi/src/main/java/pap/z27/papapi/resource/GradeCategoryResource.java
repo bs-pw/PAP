@@ -1,10 +1,13 @@
 package pap.z27.papapi.resource;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.GradeCategory;
 import pap.z27.papapi.repo.GradeCategoryRepo;
+import pap.z27.papapi.repo.UserRepo;
 
 import java.util.List;
 
@@ -12,20 +15,29 @@ import java.util.List;
 @RequestMapping("/api/gradecategory")
 public class GradeCategoryResource {
     public final GradeCategoryRepo gradeCategoryRepo;
+    public final UserRepo userRepo;
 
     @Autowired
-    public GradeCategoryResource(GradeCategoryRepo gradeCategoryRepo) {
+    public GradeCategoryResource(GradeCategoryRepo gradeCategoryRepo, UserRepo userRepo) {
         this.gradeCategoryRepo = gradeCategoryRepo;
+        this.userRepo = userRepo;
     }
 
     @PostMapping
-    public ResponseEntity<String> insertGradeCategory(@RequestBody GradeCategory gradeCategory) {
+    public ResponseEntity<String> insertGradeCategory(@RequestBody GradeCategory gradeCategory, HttpSession session) {
 
+        String status = session.getAttribute("status").toString();
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if(!status.equals("admin"))
+        {
+            if(userRepo.checkIfIsCoordinator(userId,gradeCategory.getCourse_code(),gradeCategory.getSemester())==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can insert grade category \"}");
+        }
         if (gradeCategoryRepo.insertGradeCategory(gradeCategory) == 0)
         {
-            return ResponseEntity.badRequest().body("{\"messsage\":\"Could not insert grade category\"}");
+            return ResponseEntity.badRequest().body("{\"message\":\"Could not insert grade category\"}");
         }
-        return ResponseEntity.ok("{\"messsage\":\"grade category inserted\"}");
+        return ResponseEntity.ok("{\"message\":\"grade category inserted\"}");
     }
 
     @GetMapping

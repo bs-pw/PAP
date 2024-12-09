@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.Group;
+import pap.z27.papapi.domain.Lecturer;
 import pap.z27.papapi.domain.User;
 import pap.z27.papapi.domain.subclasses.UserInGroup;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
@@ -128,6 +129,39 @@ public class GroupRepo {
                 .param(userInGroup.getSemester())
                 .param(userInGroup.getGroup_number())
                 .param(newGroupNr)
+                .update();
+    }
+
+    public List<Group> getLecturerGroups(Integer userId) {
+        return jdbcClient.sql("SELECT COURSE_CODE, SEMESTER, GROUP_NUMBER FROM LECTURERS WHERE USER_ID=?")
+                .param(userId)
+                .query(Group.class)
+                .list();
+    }
+
+    public List<User> getAllLecturers() {
+        return jdbcClient.sql("SELECT DISTINCT u.USER_ID, NAME, SURNAME, MAIL FROM USERS u INNER JOIN LECTURERS l ON u.USER_ID = l.USER_ID")
+                .query(User.class)
+                .list();
+    }
+
+    public Integer isStudentInLecturerGroup(Integer studentId, Integer lecturerId, String semester, String course_code)
+    {
+        return jdbcClient.sql("SELECT count(*) from STUDENTS_IN_GROUPS sig inner join LECTURERS l on (l.GROUP_NUMBER=sig.GROUP_NUMBER and l.SEMESTER=sig.SEMESTER and l.COURSE_CODE=sig.COURSE_CODE) where sig.USER_ID=? and l.USER_ID=? and l.SEMESTER=? and l.COURSE_CODE=?")
+                .param(studentId)
+                .param(lecturerId)
+                .param(semester)
+                .param(course_code)
+                .query(Integer.class)
+                .single();
+    }
+
+    public Integer deleteLecturer(UserInGroup lecturer) {
+        return jdbcClient.sql("DELETE FROM LECTURERS WHERE USER_ID=? AND COURSE_CODE=? AND SEMESTER=? AND GROUP_NUMBER=?")
+                .param(lecturer.getUser_id())
+                .param(lecturer.getCourse_code())
+                .param(lecturer.getSemester())
+                .param(lecturer.getGroup_number())
                 .update();
     }
 
