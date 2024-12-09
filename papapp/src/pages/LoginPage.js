@@ -15,9 +15,9 @@ const LoginPage = () => {
             url.searchParams.append('mail', mail);
             url.searchParams.append('password', password);
 
-            const response = await fetch(url, { method: 'GET' });
+            const response = await fetch(url, { method: 'GET', credentials: 'include' });
             if (response.ok) {
-                navigate('/dashboard');
+                window.location.href = '/dashboard';
             } else {
                 const errorData = await response.json();
                 setErrorMessage(errorData.message || 'Błąd logowania!');

@@ -7,16 +7,14 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 //import useAuthStatus from './useAuthStatus';
 
-const ProtectedRoute = () => {
+const ProtectedRoute = ({ isAuthRequired = true }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const checkAuthStatus = async () => {
             try {
-                const response = await fetch('/api/auth/status', {
-                    credentials: 'include',
-                });
+                const response = await fetch('http://localhost:80/api/auth/status', { method: 'GET', credentials: 'include' });
                 const data = await response.json();
                 setIsAuthenticated(data.loggedIn);
             } catch (error) {
@@ -33,8 +31,13 @@ const ProtectedRoute = () => {
         return <div>Ładowanie...</div>;
     }
 
-    return isAuthenticated ? <Outlet /> : <Navigate to="/" />;
+    if (isAuthRequired) {
+        return isAuthenticated ? <Outlet /> : <Navigate to="/" />;
+    } else {
+        return !isAuthenticated ? <Outlet /> : <Navigate to="/dashboard" />;
+    }
 };
+
 
 export const router = createBrowserRouter([
     {
@@ -42,12 +45,17 @@ export const router = createBrowserRouter([
         element: <AppLayout />,
         children: [
             {
-                index: true,
-                element: <LoginPage />,
+                element: <ProtectedRoute isAuthRequired={false} />,
+                children: [
+                    {
+                        index: true,
+                        element: <LoginPage />
+                    },
+                ],
             },
             {
                 path: "dashboard",
-                element: <ProtectedRoute />, // Chroniona trasa
+                element: <ProtectedRoute />,
                 children: [
                     {
                         element: <MainLayout />,
@@ -62,4 +70,8 @@ export const router = createBrowserRouter([
             },
         ],
     },
+    {
+        path: "*",
+        element: <Navigate to="/" replace />,
+    }
 ]);

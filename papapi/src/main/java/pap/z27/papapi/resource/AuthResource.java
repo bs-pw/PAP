@@ -13,12 +13,11 @@ import pap.z27.papapi.repo.AuthRepo;
 import pap.z27.papapi.repo.UserRepo;
 
 @RestController
-@CrossOrigin(originPatterns = "http://localhost:*")
+@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping("/api/auth")
 @AllArgsConstructor
 
 public class AuthResource {
-    @Autowired
     private AuthRepo loginRepo;
     private UserRepo userRepo;
 
@@ -28,13 +27,17 @@ public class AuthResource {
         credentials.setMail(request.getParameter("mail"));
         credentials.setPassword(request.getParameter("password"));
         if(loginRepo.isPasswordCorrect(credentials.getMail(), new Password(credentials.getPassword()))) {
-            HttpSession session = request.getSession();
+            HttpSession session = request.getSession(false);
+            if (session == null) {
+                session = request.getSession(true);
+            }
             session.setAttribute("mail", credentials.getMail());
             UserPublicInfo user = userRepo.findUsersInfoByMail(credentials.getMail());
             session.setAttribute("name", user.getName());
             session.setAttribute("surname", user.getSurname());
             session.setAttribute("userId", user.getUser_id());
             session.setAttribute("status", user.getStatus());
+            session.setAttribute("loggedIn", true);
             return ResponseEntity.ok("{\"logged\":\"ok\"}");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad credentials!\"}");
@@ -45,5 +48,16 @@ public class AuthResource {
             session.invalidate();
         return ResponseEntity.ok("{\"logged out\":\"ok\"}");
     }
-
+    @GetMapping("/status")
+    public ResponseEntity<String> status(HttpSession session) {
+        try{
+            if((boolean) session.getAttribute("loggedIn")) {
+                return ResponseEntity.ok("{\"loggedIn\":true}");
+            }else {
+                return ResponseEntity.ok("{\"loggedIn\":false}");
+            }
+        }catch(Exception e) {
+            return ResponseEntity.ok("{\"loggedIn\":false}");
+        }
+    }
 }

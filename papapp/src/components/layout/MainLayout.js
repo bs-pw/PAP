@@ -10,7 +10,7 @@ const MainLayout = () => {
     return (
         <Box display="flex row-wrap">
             <Header />
-            <Box class="d-flex">
+            <Box className="d-flex">
                 {/* sidebar */}
                 <Sidebar />
                 {/* sidebar */}
