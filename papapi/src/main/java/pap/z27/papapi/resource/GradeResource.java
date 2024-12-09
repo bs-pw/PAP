@@ -50,7 +50,7 @@ public class GradeResource {
         if (!userStatus.equals("admin")) {
             // TODO: correct this if
             List<Lecturer> lecturerGroups = lecturerRepo.getLecturerGroups(userId);
-            Lecturer lecturer = new Lecturer(userId, grade.getCourse_code(), grade.getSemester(), );
+            Lecturer lecturer = new Lecturer(userId, grade.getCourse_code(), grade.getSemester(), 0); //TODO: zastąpić to zero, wstawiłem bo się nie kompilowało
             for (Lecturer group : lecturerGroups) {
 
             }
