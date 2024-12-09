@@ -165,5 +165,21 @@ public class GroupRepo {
                 .update();
     }
 
-
-}
+    public Integer isStudentInGroup(Integer userId, String semester, String course_code, Integer group_number) {
+        return jdbcClient.sql("SELECT count(*) from STUDENTS_IN_GROUPS where USER_ID=? and SEMESTER=? and COURSE_CODE=? and GROUP_NUMBER=?")
+                .param(userId)
+                .param(semester)
+                .param(course_code)
+                .param(group_number)
+                .query(Integer.class)
+                .single();
+    }
+    public Integer isLecturerOfGroup(Integer userId, String semester, String course_code, Integer group_number) {
+        return jdbcClient.sql("SELECT count(*) from LECTURERS where USER_ID=? and SEMESTER=? and COURSE_CODE=? and GROUP_NUMBER=?")
+                .param(userId)
+                .param(semester)
+                .param(course_code)
+                .param(group_number)
+                .query(Integer.class)
+                .single();
+    }}

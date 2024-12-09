@@ -118,7 +118,7 @@ ALTER TABLE final_grades
 
 CREATE TABLE grade_categories (
                                   category_id                              NUMBER(6) NOT NULL,
---  ERROR: Column name length exceeds maximum allowed length(30)
+--  category_id  NUMBER(6) GENERATED ALWAYS as IDENTITY(START with 1 INCREMENT by 1),
                                   course_code VARCHAR2(5 CHAR) NOT NULL,
                                   semester             VARCHAR2(4 CHAR) NOT NULL,
                                   description                              VARCHAR2(128 CHAR),

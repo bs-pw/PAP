@@ -18,7 +18,7 @@ public class Attendance {
     private String semester;
     private Integer group_number;
     private Integer class_id_for_group;
-    private Date date;
+    private LocalDate date;
     private String attendance_status;
     private Integer who_inserted_id;
 }

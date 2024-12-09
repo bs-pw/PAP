@@ -53,6 +53,14 @@ public class CourseInSemesterRepo {
                 .param(courseInSemester.getSemester())
                 .update();
     }
+
+    public Integer removeCoordinator(Integer userID, CourseInSemester courseInSemester) {
+        return jdbcClient.sql("DELETE FROM COORDINATORS WHERE user_id=? and course_code=? and semester=?")
+                .param(userID)
+                .param(courseInSemester.getCourse_code())
+                .param(courseInSemester.getSemester())
+                .update();
+    }
     public Integer removeCourseInSemester(CourseInSemester courseInSemester){
         return jdbcClient.sql("DELETE FROM COURSES_IN_SEMESTER where course_code=? and semester=?")
                 .param(courseInSemester.getCourse_code())

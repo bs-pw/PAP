@@ -52,7 +52,7 @@ public class UserRepo {
                 .query(UserPublicInfo.class)
                 .single();
     }
-    public List<UserPublicInfo> findAllCoordinators(CourseInSemester courseInSemester) {
+    public List<UserPublicInfo> findAllCourseCoordinators(CourseInSemester courseInSemester) {
         return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,u.mail, u.status from USERS u join COORDINATORS c ON u.user_id = c.user_id where c.course_code = ? and c.semester = ?")
                 .param(courseInSemester.getCourse_code())
                 .param(courseInSemester.getSemester())

@@ -35,7 +35,7 @@ public class AttendanceRepo {
                 .param(attendance.getUser_id())
                 .update();
     }
-    public Integer changeAttendance(Attendance attendance) {
+    public Integer updateAttendance(Attendance attendance) {
         return jdbcClient.sql("UPDATE ATTENDANCES set attendance_status=?,who_inserted_id=? where course_code=? and semester=? and group_number=? and "+
                         "class_id_for_group=? and \"date\"=? and user_id=?")
                 .param(attendance.getAttendance_status())
