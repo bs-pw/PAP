@@ -44,7 +44,7 @@ public class UserResource {
         try {
             userRepo.insertUser(user);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad credentials!\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\""+e.getMessage()+"\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

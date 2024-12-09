@@ -35,6 +35,7 @@ const DashboardPage = () => {
                         <th>Imię</th>
                         <th>Nazwisko</th>
                         <th>Email</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,6 +45,7 @@ const DashboardPage = () => {
                             <td>{user.name}</td>
                             <td>{user.surname}</td>
                             <td>{user.mail}</td>
+                            <td>{user.status}</td>
                         </tr>
                     ))}
                 </tbody>

@@ -6,7 +6,7 @@ import MainLayout from "../components/layout/MainLayout";
 import { Navigate, Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import LecturerPage from "../pages/LecturersPage";
-import RegisterPage from "../pages/RegisterPage";
+import RegistrationPage from "../pages/RegistrationPage";
 //import useAuthStatus from './useAuthStatus';
 
 const ProtectedRoute = ({ isAuthRequired = true }) => {
@@ -84,7 +84,7 @@ export const router = createBrowserRouter([
                         children: [
                             {
                                 index: true,
-                                element: <RegisterPage />,
+                                element: <RegistrationPage />,
                             },
                         ],
                     },
