@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping("/api/user")
 
 public class UserResource {
@@ -41,7 +42,7 @@ public class UserResource {
         try {
             userRepo.insertUser(user);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad credentials!\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\""+e.getMessage()+"\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

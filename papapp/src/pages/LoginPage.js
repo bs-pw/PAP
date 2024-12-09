@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router-dom'
 const LoginPage = () => {
     const [mail, setMail] = useState('');
     const [password, setPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    const navigate = useNavigate();
+    const [message, setMessage] = useState('');
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -15,15 +14,15 @@ const LoginPage = () => {
             url.searchParams.append('mail', mail);
             url.searchParams.append('password', password);
 
-            const response = await fetch(url, { method: 'GET' });
+            const response = await fetch(url, { method: 'GET', credentials: 'include' });
             if (response.ok) {
-                navigate('/dashboard');
+                window.location.href = '/dashboard';
             } else {
                 const errorData = await response.json();
-                setErrorMessage(errorData.message || 'Błąd logowania!');
+                setMessage(errorData.message || 'Błąd logowania!');
             }
         } catch (error) {
-            setErrorMessage('Wystąpił błąd! Spróbuj ponownie!');
+            setMessage('Wystąpił błąd! Spróbuj ponownie!');
             console.error(error)
         }
     };
@@ -59,7 +58,7 @@ const LoginPage = () => {
                             required
                         />
                     </div>
-                    {errorMessage && <p>{errorMessage}</p>}
+                    {message && <p>{message}</p>}
                     <button type="submit" className="btn btn-primary">
                         <i className='bi bi-box-arrow-in-right'></i> Zaloguj
                     </button>

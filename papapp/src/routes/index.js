@@ -3,6 +3,43 @@ import AppLayout from "../components/layout/AppLayout";
 import LoginPage from "../pages/LoginPage"
 import DashboardPage from "../pages/DashboardPage"
 import MainLayout from "../components/layout/MainLayout";
+import { Navigate, Outlet } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import LecturerPage from "../pages/LecturersPage";
+import RegistrationPage from "../pages/RegistrationPage";
+//import useAuthStatus from './useAuthStatus';
+
+const ProtectedRoute = ({ isAuthRequired = true }) => {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const checkAuthStatus = async () => {
+            try {
+                const response = await fetch('http://localhost:80/api/auth/status', { method: 'GET', credentials: 'include' });
+                const data = await response.json();
+                setIsAuthenticated(data.loggedIn);
+            } catch (error) {
+                console.error('Błąd sprawdzania statusu logowania', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        checkAuthStatus();
+    }, []);
+
+    if (loading) {
+        return <div>Ładowanie...</div>;
+    }
+
+    if (isAuthRequired) {
+        return isAuthenticated ? <Outlet /> : <Navigate to="/" />;
+    } else {
+        return !isAuthenticated ? <Outlet /> : <Navigate to="/dashboard" />;
+    }
+};
+
 
 export const router = createBrowserRouter([
     {
@@ -10,19 +47,53 @@ export const router = createBrowserRouter([
         element: <AppLayout />,
         children: [
             {
-                index: true,
-                element: <LoginPage />
-            },
-            {
-                path: "dashboard",
-                element: <MainLayout />,
+                element: <ProtectedRoute isAuthRequired={false} />,
                 children: [
                     {
                         index: true,
-                        element: <DashboardPage />
-                    }
-                ]
-            }
-        ]
+                        element: <LoginPage />
+                    },
+                ],
+            },
+            {
+                element: <ProtectedRoute />,
+                children: [
+                    {
+                        path: "dashboard",
+                        element: <MainLayout />,
+                        children: [
+                            {
+                                index: true,
+                                element: <DashboardPage />,
+                            },
+                        ],
+                    },
+                    {
+                        path: "lecturer",
+                        element: <MainLayout />,
+                        children: [
+                            {
+                                index: true,
+                                element: <LecturerPage />,
+                            },
+                        ],
+                    },
+                    {
+                        path: "register",
+                        element: <MainLayout />,
+                        children: [
+                            {
+                                index: true,
+                                element: <RegistrationPage />,
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        path: "*",
+        element: <Navigate to="/" replace />,
     }
-])
+]);
