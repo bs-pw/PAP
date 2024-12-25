@@ -1,0 +1,129 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="BC9C6FE5-B306-D09D-24D9-E3A26581164E" name="CLASSES">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:14:25 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="courses_code" id="6F578896-EB88-FE55-40F5-5A31D8DA77C4">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:17:28 UTC</createdTime>
+<generatorID>0B66846A-133F-7663-D440-E354563E6963</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>97FEC74B-EBA8-7EE0-5B82-C1BED917330C</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>5 CHAR</dataTypeSize>
+<ownDataTypeParameters>5 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="group_number" id="2BA1A798-501B-B230-F6E2-2CCDC38DD103">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:17:28 UTC</createdTime>
+<generatorID>0B66846A-133F-7663-D440-E354563E6963</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>C46AC48A-FC32-ADA1-B0EC-576FC5FBE966</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<ownDataTypeParameters>,3,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="semester_code" id="98FD1DF3-3384-5E00-0EC1-B018A1347136">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-25 19:46:19 UTC</createdTime>
+<generatorID>0B66846A-133F-7663-D440-E354563E6963</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>D9719E30-69DF-DA7B-712E-F5A83018960B</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>4 CHAR</dataTypeSize>
+<ownDataTypeParameters>4 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="class_id_for_group" id="80CB2A94-EB9A-536E-E55E-D0BCDEF405CC">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-05 23:31:56 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<ownDataTypeParameters>,3,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="day" id="C12A0D06-0492-C81D-13F0-C2E7D5E6B905">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:15:07 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>2</dataTypePrecision>
+<ownDataTypeParameters>,2,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="hour" id="21BF9948-421A-5663-434F-AAB80839E744">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:15:45 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>4</dataTypePrecision>
+<ownDataTypeParameters>,4,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="length" id="65DF6AF4-9245-0BFA-33C9-A5A673089497">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:16:08 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>4</dataTypePrecision>
+<ownDataTypeParameters>,4,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="where" id="3CEB0652-446C-AC96-7398-839408970C9B">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:16:52 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>32 CHAR</dataTypeSize>
+<ownDataTypeParameters>32 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="class_type_id" id="D9A45FBD-ADF4-9A25-F68A-C7EDD68A277C">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-13 00:44:03 UTC</createdTime>
+<generatorID>58FA9949-B68A-CAE6-CA41-8BAC5F2FF2BC</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>AC20761E-572D-3BC7-5C7D-58BBC8AB5655</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<ownDataTypeParameters>,3,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="DBAAEA0A-3EDF-485D-5B7D-2B61EB51DC7F" name="CLASSES PK">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:17:13 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>80CB2A94-EB9A-536E-E55E-D0BCDEF405CC</attributeRef>
+<attributeRef>2BA1A798-501B-B230-F6E2-2CCDC38DD103</attributeRef>
+<attributeRef>6F578896-EB88-FE55-40F5-5A31D8DA77C4</attributeRef>
+<attributeRef>98FD1DF3-3384-5E00-0EC1-B018A1347136</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

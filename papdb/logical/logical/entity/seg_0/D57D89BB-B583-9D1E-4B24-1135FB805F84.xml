@@ -1,0 +1,55 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="D57D89BB-B583-9D1E-4B24-1135FB805F84" name="SEMESTERS">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-19 11:02:11 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="semester_code" id="800511DC-4BD5-1EDF-EC36-1EB0B6D9E13C">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-19 11:02:20 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>4 CHAR</dataTypeSize>
+<ownDataTypeParameters>4 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="start_date" id="7C218E83-2803-7388-65EC-2A06685D7390">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-19 11:02:48 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="end_date" id="C576B75A-364F-DD28-9042-10A7FCDED674">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-19 11:03:06 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="DCF097B0-2F79-FBF3-81E2-8926DEA34C12" name="SEMESTERS PK">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-19 11:02:47 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>800511DC-4BD5-1EDF-EC36-1EB0B6D9E13C</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

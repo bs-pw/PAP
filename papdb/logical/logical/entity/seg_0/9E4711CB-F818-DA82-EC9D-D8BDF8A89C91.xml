@@ -1,0 +1,85 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="9E4711CB-F818-DA82-EC9D-D8BDF8A89C91" name="GRADE_CATEGORIES">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:04:35 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="category_id" id="2C5718F7-4BD7-8204-6C52-992CEAA481A4">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:04:45 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>6</dataTypePrecision>
+<ownDataTypeParameters>,6,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="courses_code" id="31A91DA5-42E5-5391-B6BA-FBC5F7B4A536">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:06:49 UTC</createdTime>
+<generatorID>14984F98-4332-BA1A-B6BE-52FD0C7A25DF</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>651A425E-EC82-549E-F375-8DDFDA31AFE2</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>5 CHAR</dataTypeSize>
+<ownDataTypeParameters>5 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="semester_code" id="26B80F96-24E4-3293-FADD-2D65B5164EF2">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-19 11:04:24 UTC</createdTime>
+<generatorID>14984F98-4332-BA1A-B6BE-52FD0C7A25DF</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>7CDD2618-3CFF-3F31-161E-F11CA341501E</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>4 CHAR</dataTypeSize>
+<ownDataTypeParameters>4 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="description" id="0C4A4F9D-0DAC-94FC-6126-5E505013EDD4">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:05:21 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>128 CHAR</dataTypeSize>
+<ownDataTypeParameters>128 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="max_grade" id="29B4127B-B8EE-7426-A221-BA2E34F9BE55">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:05:53 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>6</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<ownDataTypeParameters>,6,2</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="F39EE26F-85F5-57E7-4867-76ADCB00095B" name="GRADE_CATEGORIES PK">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:05:20 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>2C5718F7-4BD7-8204-6C52-992CEAA481A4</attributeRef>
+<attributeRef>31A91DA5-42E5-5391-B6BA-FBC5F7B4A536</attributeRef>
+<attributeRef>26B80F96-24E4-3293-FADD-2D65B5164EF2</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

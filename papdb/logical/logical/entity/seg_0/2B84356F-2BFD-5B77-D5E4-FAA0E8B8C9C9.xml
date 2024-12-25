@@ -1,0 +1,78 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="2B84356F-2BFD-5B77-D5E4-FAA0E8B8C9C9" name="LECTURERS">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 22:59:01 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="user_id" id="031FF392-35A1-0EE2-4200-DD9D4F49B625">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 22:59:36 UTC</createdTime>
+<generatorID>991A0CF9-8139-EAB6-F9CF-FAEEB517795D</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>DCB6B607-7FED-66AC-C29D-F29A58E8089C</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>6</dataTypePrecision>
+<ownDataTypeParameters>,6,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="courses_code" id="334F8C05-AF91-3100-8A74-68CDB087C549">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:03:10 UTC</createdTime>
+<generatorID>C08D884C-A187-16DE-8328-7B3CC7A1B6BC</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>97FEC74B-EBA8-7EE0-5B82-C1BED917330C</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>5 CHAR</dataTypeSize>
+<ownDataTypeParameters>5 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="semester_code" id="87C97FE3-30A8-B9EE-AF76-30D3B27F39BA">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-25 19:46:19 UTC</createdTime>
+<generatorID>C08D884C-A187-16DE-8328-7B3CC7A1B6BC</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>D9719E30-69DF-DA7B-712E-F5A83018960B</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>4 CHAR</dataTypeSize>
+<ownDataTypeParameters>4 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="group_number" id="674C4035-AF63-B5AC-FC54-6037B0AB5A84">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:03:10 UTC</createdTime>
+<generatorID>C08D884C-A187-16DE-8328-7B3CC7A1B6BC</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>C46AC48A-FC32-ADA1-B0EC-576FC5FBE966</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<ownDataTypeParameters>,3,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="168739EB-3269-7471-2991-993052A1F39C" name="LECTURERS PK">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-07 20:51:15 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>031FF392-35A1-0EE2-4200-DD9D4F49B625</attributeRef>
+<attributeRef>334F8C05-AF91-3100-8A74-68CDB087C549</attributeRef>
+<attributeRef>674C4035-AF63-B5AC-FC54-6037B0AB5A84</attributeRef>
+<attributeRef>87C97FE3-30A8-B9EE-AF76-30D3B27F39BA</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

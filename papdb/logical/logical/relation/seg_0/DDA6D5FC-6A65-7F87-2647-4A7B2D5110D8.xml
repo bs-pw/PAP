@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="goup_in_course" directorySegmentName="seg_0" id="DDA6D5FC-6A65-7F87-2647-4A7B2D5110D8">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 22:53:29 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<sourcePk>FC0D7926-0374-E545-2364-902ADC16DB22</sourcePk>
+<identifying>false</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>4FB0A9AF-65B3-AC46-6B3E-F144A5F9505C</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>CA1ADB6B-B933-B4E1-D40D-F9D5379E585D</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

@@ -1,0 +1,52 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="4FB0A9AF-65B3-AC46-6B3E-F144A5F9505C" name="COURSES_IN_SEMESTER">
+<createdBy>mborkow5</createdBy>
+<createdTime>2024-10-09 11:33:49 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="courses_code" id="651A425E-EC82-549E-F375-8DDFDA31AFE2">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 22:51:51 UTC</createdTime>
+<generatorID>73CB2A87-88EC-2044-FC58-950FCAD530A9</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>71F9D4F8-A519-A991-4871-13FB4267669E</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>5 CHAR</dataTypeSize>
+<ownDataTypeParameters>5 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="semester_code" id="7CDD2618-3CFF-3F31-161E-F11CA341501E">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-19 11:04:07 UTC</createdTime>
+<generatorID>127D3358-B843-EF9E-FEEC-54CE6259FCF1</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>800511DC-4BD5-1EDF-EC36-1EB0B6D9E13C</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>4 CHAR</dataTypeSize>
+<ownDataTypeParameters>4 CHAR,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="FC0D7926-0374-E545-2364-902ADC16DB22" name="coutry PK">
+<createdBy>mborkow5</createdBy>
+<createdTime>2024-10-09 11:34:13 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>651A425E-EC82-549E-F375-8DDFDA31AFE2</attributeRef>
+<attributeRef>7CDD2618-3CFF-3F31-161E-F11CA341501E</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

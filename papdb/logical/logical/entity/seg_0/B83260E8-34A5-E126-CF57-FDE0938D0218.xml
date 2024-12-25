@@ -1,0 +1,47 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B83260E8-34A5-E126-CF57-FDE0938D0218" name="CLASS_TYPES">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-13 00:41:29 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="class_type_id" id="AC20761E-572D-3BC7-5C7D-58BBC8AB5655">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-13 00:41:50 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<ownDataTypeParameters>,3,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="type" id="2933234D-B503-E68D-823E-10333A2C7A3E">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-13 00:42:30 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>32 CHAR</dataTypeSize>
+<ownDataTypeParameters>32 CHAR,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="9E7F3478-A491-61E6-1A2E-C2E4F40278D9" name="Classes_types PK">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-13 00:42:28 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>AC20761E-572D-3BC7-5C7D-58BBC8AB5655</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

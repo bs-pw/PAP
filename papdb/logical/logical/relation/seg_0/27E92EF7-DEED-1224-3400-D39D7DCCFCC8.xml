@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="attendance_status" directorySegmentName="seg_0" id="27E92EF7-DEED-1224-3400-D39D7DCCFCC8">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-25 19:39:25 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<sourcePk>85D6008D-5FCC-6BDA-AD01-4CC490788824</sourcePk>
+<identifying>false</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>5D7BA56C-C7A3-031A-E340-1491D6742A67</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>C6494E1F-52E9-6C8F-D677-CE921F0AB356</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

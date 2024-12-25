@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="grade_of_category" directorySegmentName="seg_0" id="5A8EED38-1D3F-430F-0D01-607BC21221D4">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:09:52 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<sourcePk>F39EE26F-85F5-57E7-4867-76ADCB00095B</sourcePk>
+<identifying>false</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>9E4711CB-F818-DA82-EC9D-D8BDF8A89C91</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>BF033ECE-DAB4-10EC-F0C4-3E87970B9C1A</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

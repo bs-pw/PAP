@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="final_grade_within_course" directorySegmentName="seg_0" id="3BF58822-F5CC-4C66-9A50-E140ED9F769D">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:07:01 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<sourcePk>FC0D7926-0374-E545-2364-902ADC16DB22</sourcePk>
+<identifying>false</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>4FB0A9AF-65B3-AC46-6B3E-F144A5F9505C</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>8E92ABE8-97F5-F30F-11A1-F540F070E36F</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

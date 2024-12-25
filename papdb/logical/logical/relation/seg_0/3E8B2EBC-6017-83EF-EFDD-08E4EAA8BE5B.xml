@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="attendance_at_class" directorySegmentName="seg_0" id="3E8B2EBC-6017-83EF-EFDD-08E4EAA8BE5B">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:17:42 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<sourcePk>DBAAEA0A-3EDF-485D-5B7D-2B61EB51DC7F</sourcePk>
+<identifying>false</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>BC9C6FE5-B306-D09D-24D9-E3A26581164E</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>C6494E1F-52E9-6C8F-D677-CE921F0AB356</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

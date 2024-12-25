@@ -1,0 +1,127 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="C6494E1F-52E9-6C8F-D677-CE921F0AB356" name="ATTENDANCES">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:12:33 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="user_id" id="1D1202D5-52EC-1EF3-FABA-6388D844E0E8">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:17:48 UTC</createdTime>
+<generatorID>6F65A5B7-5DAD-07B8-727A-C58FCB93B79C</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>DCB6B607-7FED-66AC-C29D-F29A58E8089C</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>6</dataTypePrecision>
+<ownDataTypeParameters>,6,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="courses_code" id="113D8F01-1885-0666-537F-0FA8B712DAAD">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-05 23:35:47 UTC</createdTime>
+<generatorID>3E8B2EBC-6017-83EF-EFDD-08E4EAA8BE5B</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>6F578896-EB88-FE55-40F5-5A31D8DA77C4</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>5 CHAR</dataTypeSize>
+<ownDataTypeParameters>5 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="semester_code" id="F559337F-112C-4C22-2C60-C92A6D7B05CE">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-25 19:54:37 UTC</createdTime>
+<generatorID>3E8B2EBC-6017-83EF-EFDD-08E4EAA8BE5B</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>98FD1DF3-3384-5E00-0EC1-B018A1347136</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>4 CHAR</dataTypeSize>
+<ownDataTypeParameters>4 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="group_number" id="570F7999-AF6C-B9BF-B656-0AE6B85BB118">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-05 23:34:33 UTC</createdTime>
+<generatorID>3E8B2EBC-6017-83EF-EFDD-08E4EAA8BE5B</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>2BA1A798-501B-B230-F6E2-2CCDC38DD103</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<ownDataTypeParameters>,3,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="class_id_for_group" id="C1F43728-36C1-7FF4-2B9E-A31F2B219ED8">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-05 23:32:35 UTC</createdTime>
+<generatorID>3E8B2EBC-6017-83EF-EFDD-08E4EAA8BE5B</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>80CB2A94-EB9A-536E-E55E-D0BCDEF405CC</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<ownDataTypeParameters>,3,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="date" id="9A97F301-4C3A-D87F-1622-3A55BE62C1F0">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-07 21:11:53 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="user_id1" id="32B42697-E609-96E6-7DE3-078D481B284B">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:18:03 UTC</createdTime>
+<generatorID>055235BF-0CFA-2090-2B96-9F6FD204EEB8</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>DCB6B607-7FED-66AC-C29D-F29A58E8089C</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>6</dataTypePrecision>
+<ownDataTypeParameters>,6,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="attendance_status_id" id="47EAB514-542C-3891-397C-C7BAE04C6026">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-25 19:39:25 UTC</createdTime>
+<generatorID>27E92EF7-DEED-1224-3400-D39D7DCCFCC8</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>7422A089-EDF3-B1F3-C8BC-B1F0AD5A9A80</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>6</dataTypePrecision>
+<ownDataTypeParameters>,6,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="CA8C060B-E800-3958-C16F-D38EF9ABE4F7" name="ATTENDANCES PK">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-07 21:12:50 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>1D1202D5-52EC-1EF3-FABA-6388D844E0E8</attributeRef>
+<attributeRef>113D8F01-1885-0666-537F-0FA8B712DAAD</attributeRef>
+<attributeRef>570F7999-AF6C-B9BF-B656-0AE6B85BB118</attributeRef>
+<attributeRef>C1F43728-36C1-7FF4-2B9E-A31F2B219ED8</attributeRef>
+<attributeRef>9A97F301-4C3A-D87F-1622-3A55BE62C1F0</attributeRef>
+<attributeRef>F559337F-112C-4C22-2C60-C92A6D7B05CE</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

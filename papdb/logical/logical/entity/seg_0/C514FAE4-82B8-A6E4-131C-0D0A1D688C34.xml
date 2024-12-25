@@ -1,0 +1,47 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="C514FAE4-82B8-A6E4-131C-0D0A1D688C34" name="COURSES">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-10-15 20:23:37 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="courses_code" id="71F9D4F8-A519-A991-4871-13FB4267669E">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-10-15 20:23:49 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>5 CHAR</dataTypeSize>
+<ownDataTypeParameters>5 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="title" id="EA6ACA94-D32D-A778-080B-F7728CA9FF0E">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-10-15 20:24:17 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>64 CHAR</dataTypeSize>
+<ownDataTypeParameters>64 CHAR,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="D6559FBF-BB93-575A-4351-39368BACAB25" name="Address PK">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-10-15 20:24:15 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>71F9D4F8-A519-A991-4871-13FB4267669E</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

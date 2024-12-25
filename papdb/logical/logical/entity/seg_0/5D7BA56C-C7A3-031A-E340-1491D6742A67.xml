@@ -1,0 +1,47 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="5D7BA56C-C7A3-031A-E340-1491D6742A67" name="ATTENDANCE_STATUSES">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-25 19:38:32 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="attendance_status_id" id="7422A089-EDF3-B1F3-C8BC-B1F0AD5A9A80">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-25 19:38:47 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>6</dataTypePrecision>
+<ownDataTypeParameters>,6,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="status" id="95EB1B84-3DDB-3FBA-C387-E5A3EF2FFECC">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-25 19:39:08 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>32 CHAR</dataTypeSize>
+<ownDataTypeParameters>32 CHAR,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="85D6008D-5FCC-6BDA-AD01-4CC490788824" name="ATTENDANCE_STATUSES PK">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-25 19:39:07 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>7422A089-EDF3-B1F3-C8BC-B1F0AD5A9A80</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

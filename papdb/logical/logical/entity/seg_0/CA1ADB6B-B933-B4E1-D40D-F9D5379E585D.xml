@@ -1,0 +1,63 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="CA1ADB6B-B933-B4E1-D40D-F9D5379E585D" name="GROUPS">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-10-15 20:20:58 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="courses_code" id="97FEC74B-EBA8-7EE0-5B82-C1BED917330C">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 22:53:29 UTC</createdTime>
+<generatorID>DDA6D5FC-6A65-7F87-2647-4A7B2D5110D8</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>651A425E-EC82-549E-F375-8DDFDA31AFE2</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>5 CHAR</dataTypeSize>
+<ownDataTypeParameters>5 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="group_number" id="C46AC48A-FC32-ADA1-B0EC-576FC5FBE966">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-11-22 23:02:26 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<ownDataTypeParameters>,3,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="semester_code" id="D9719E30-69DF-DA7B-712E-F5A83018960B">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-12-19 11:04:24 UTC</createdTime>
+<generatorID>DDA6D5FC-6A65-7F87-2647-4A7B2D5110D8</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>7CDD2618-3CFF-3F31-161E-F11CA341501E</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>4 CHAR</dataTypeSize>
+<ownDataTypeParameters>4 CHAR,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="174E576C-2043-8117-A879-B7050FC727AB" name="Region PK">
+<createdBy>Maci9</createdBy>
+<createdTime>2024-10-15 20:21:44 UTC</createdTime>
+<ownerDesignName>logical</ownerDesignName>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>97FEC74B-EBA8-7EE0-5B82-C1BED917330C</attributeRef>
+<attributeRef>C46AC48A-FC32-ADA1-B0EC-576FC5FBE966</attributeRef>
+<attributeRef>D9719E30-69DF-DA7B-712E-F5A83018960B</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>
