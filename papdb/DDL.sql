@@ -338,9 +338,5 @@ ALTER TABLE users
 
 ALTER TABLE users ADD CONSTRAINT mail_const UNIQUE ( mail );
 
-ALTER TABLE classes ADD CONSTRAINT class_time_const CHECK ( hour >= 0 AND hour <= 2359  AND MOD(hour, 100) < 60 );
-
-ALTER TABLE classes ADD CONSTRAINT class_length_const CHECK ( length >= 0 AND length <= 2359  AND MOD(length, 100) < 60 );
-
 ALTER TABLE final_grades ADD CONSTRAINT grade_const CHECK ( grade >= 0 AND grade <= 5 AND MOD(grade, 0.5) = 0 );  
 
