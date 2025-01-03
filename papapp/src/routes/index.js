@@ -6,7 +6,8 @@ import MainLayout from "../components/layout/MainLayout";
 import { Navigate, Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import LecturerPage from "../pages/LecturersPage";
-import RegistrationPage from "../pages/RegistrationPage";
+import RegistrationPage from "../pages/admin/user/RegistrationPage";
+import CreateCourse from "../pages/admin/course/CreateCourse";
 //import useAuthStatus from './useAuthStatus';
 
 const ProtectedRoute = ({ isAuthRequired = true }) => {
@@ -79,12 +80,28 @@ export const router = createBrowserRouter([
                         ],
                     },
                     {
-                        path: "register",
+                        path: "admin",
                         element: <MainLayout />,
                         children: [
                             {
-                                index: true,
-                                element: <RegistrationPage />,
+                                path: "register",
+                                element: <MainLayout />,
+                                children: [
+                                    {
+                                        index: true,
+                                        element: <RegistrationPage />,
+                                    },
+                                ],
+                            },
+                            {
+                                path: "create-course",
+                                element: <MainLayout />,
+                                children: [
+                                    {
+                                        index: true,
+                                        element: <CreateCourse />,
+                                    },
+                                ],
                             },
                         ],
                     },
