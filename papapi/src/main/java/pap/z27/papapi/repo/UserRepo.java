@@ -4,13 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.CourseInSemester;
-import pap.z27.papapi.domain.FinalGrade;
 import pap.z27.papapi.domain.Group;
 import pap.z27.papapi.domain.User;
-import pap.z27.papapi.domain.subclasses.Password;
-import pap.z27.papapi.domain.subclasses.Status;
-import pap.z27.papapi.domain.subclasses.UserInGroup;
-import pap.z27.papapi.domain.subclasses.UserPublicInfo;
+import pap.z27.papapi.domain.subclasses.*;
 
 import java.util.List;
 
@@ -28,9 +24,10 @@ public class UserRepo {
                 .query(Integer.class)
                 .single();
     }
-    public List<User> findAllUsers() {
-        return jdbcClient.sql("SELECT * FROM USERS")
-                .query(User.class)
+    public List<UserDTO> findAllUsers() {
+        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.password,u.mail" +
+                        " FROM USERS u join USER_TYPES ut using(USER_TYPES)")
+                .query(UserDTO.class)
                 .list();
     }
     public String findPasswordByMail(String mail) {
@@ -41,26 +38,32 @@ public class UserRepo {
                 .getPassword();
     }
     public UserPublicInfo findUsersInfoByID(Integer userId) {
-        return jdbcClient.sql("SELECT user_id, name, surname, mail, status FROM USERS where user_id=?")
+        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.mail" +
+                        " FROM USERS u join USER_TYPES ut using(USER_TYPES) where user_id=?")
                 .param(userId)
                 .query(UserPublicInfo.class)
                 .single();
     }
     public UserPublicInfo findUsersInfoByMail(String mail) {
-        return jdbcClient.sql("SELECT user_id, name, surname, mail, status FROM USERS where mail=?")
+        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.mail" +
+                        " FROM USERS u join USER_TYPES ut using(USER_TYPES) where mail=?")
                 .param(mail)
                 .query(UserPublicInfo.class)
                 .single();
     }
     public List<UserPublicInfo> findAllCourseCoordinators(CourseInSemester courseInSemester) {
-        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,u.mail, u.status from USERS u join COORDINATORS c ON u.user_id = c.user_id where c.course_code = ? and c.semester = ?")
+        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.mail" +
+                        " FROM USERS u join COORDINATORS c ON u.user_id = c.user_id join USER_TYPES ut using(USER_TYPES)" +
+                        " where c.course_code = ? and c.semester = ?")
                 .param(courseInSemester.getCourse_code())
                 .param(courseInSemester.getSemester())
                 .query(UserPublicInfo.class)
                 .list();
     }
     public List<UserPublicInfo> findAllUsersInGroup(Group group) {
-        return jdbcClient.sql("SELECT user_id,u.name,u.surname,u.mail from USERS u join STUDENTS_IN_GROUPS sin using(user_id) WHERE sin.course_code = ? AND sin.semester = ? AND sin.group_number = ?")
+        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.mail" +
+                        " FROM USERS u join STUDENTS_IN_GROUPS sin using(user_id) join USER_TYPES ut using(USER_TYPES)" +
+                        " WHERE sin.course_code = ? AND sin.semester = ? AND sin.group_number = ?")
                 .param(group.getCourse_code())
                 .param(group.getSemester())
                 .param(group.getGroup_number())
@@ -68,7 +71,9 @@ public class UserRepo {
                 .list();
     }
     public List<UserPublicInfo> findAllLecturersInGroup(Group group) {
-        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,u.mail, u.status from USERS u join LECTURERS l on(l.user_id=u.user_id) where l.course_code = ? and l.semester = ? and l.group_number=?")
+        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.mail" +
+                        " FROM USERS u join LECTURERS l on(l.user_id=u.user_id) join USER_TYPES ut using(USER_TYPES)" +
+                        " where l.course_code = ? and l.semester = ? and l.group_number=?")
                 .param(group.getCourse_code())
                 .param(group.getSemester())
                 .param(group.getGroup_number())
@@ -76,12 +81,12 @@ public class UserRepo {
                 .list();
     }
     public Integer insertUser(User user) {
-        return jdbcClient.sql("INSERT INTO USERS (name, surname, password, mail, status) VALUES (?,?,?,?,?)")
+        return jdbcClient.sql("INSERT INTO USERS (name, surname, password, mail, user_type_id) VALUES (?,?,?,?,?)")
                 .param(user.getName())
                 .param(user.getSurname())
                 .param(user.getPassword())
                 .param(user.getMail())
-                .param(user.getStatus())
+                .param(user.getUser_type_id())
                 .update();
     }
 
@@ -91,17 +96,17 @@ public class UserRepo {
                 .param(userId)
                 .update();
     }
-    public Integer updateUsersStatus(Integer userId, String status) {
-        return jdbcClient.sql("UPDATE USERS set status=? where user_id=?")
-                .param(status)
+    public Integer updateUsersStatus(Integer userId, Integer type) {
+        return jdbcClient.sql("UPDATE USERS set USER_TYPE_ID=? where user_id=?")
+                .param(type)
                 .param(userId)
                 .update();
     }
 
-    public Status findUsersStatus(Integer userId) {
+    public Type findUsersStatus(Integer userId) {
         return jdbcClient.sql("SELECT status from USERS where USER_ID=?")
                 .param(userId)
-                .query(Status.class)
+                .query(Type.class)
                 .single();
     }
     public Integer countUsersFinalGrades(UserInGroup userInGroup){

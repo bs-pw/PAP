@@ -19,6 +19,6 @@ public class Attendance {
     private Integer group_number;
     private Integer class_id_for_group;
     private LocalDate date;
-    private String attendance_status;
+    private Integer attendance_status_id;
     private Integer who_inserted_id;
 }

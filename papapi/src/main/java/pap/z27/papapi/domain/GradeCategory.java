@@ -15,12 +15,12 @@ public class GradeCategory implements Serializable {
     private String course_code;
     private String semester;
     private String description;
-    private Double wage;
-    GradeCategory(Integer category_id, String course_code, String semester, Double wage) {
+    private Double max_grade;
+    GradeCategory(Integer category_id, String course_code, String semester, Double max_grade) {
         this.category_id = category_id;
         this.course_code = course_code;
         this.semester = semester;
-        this.wage = wage;
+        this.max_grade = max_grade;
         this.description = "";
     }
 }

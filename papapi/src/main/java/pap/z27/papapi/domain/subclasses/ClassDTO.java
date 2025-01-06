@@ -1,26 +1,22 @@
-package pap.z27.papapi.domain;
+package pap.z27.papapi.domain.subclasses;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
-
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MyClass implements Serializable {
+public class ClassDTO {
     private String course_code;
     private String semester;
     private Integer group_number;
     private Integer class_id_for_group;
-    private Integer class_type_id;
+    private String type;
     private Integer day;
     private Integer hour;
     private Integer length;
     private String where;
-//    public MyClass(String)
 }

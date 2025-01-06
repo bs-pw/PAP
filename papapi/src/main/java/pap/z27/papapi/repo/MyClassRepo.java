@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.MyClass;
+import pap.z27.papapi.domain.subclasses.ClassDTO;
 
 import java.util.List;
 
@@ -21,18 +22,20 @@ public class MyClassRepo {
                 .query(MyClass.class)
                 .list();
     }
-    public List<MyClass> findAllLecturersClasses(Integer userID) {
-        return jdbcClient.sql("SELECT c.* FROM CLASSES c JOIN (SELECT * FROM LECTURERS ) uic ON (c.GROUP_NUMBER = uic.GROUP_NUMBER and c.SEMESTER = uic.SEMESTER and c.COURSE_CODE = uic.COURSE_CODE ) WHERE uic.user_id = ?")
+    public List<ClassDTO> findAllLecturersClasses(Integer userID) {
+        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,ct.type,c.day,c.hour,c.length,c.where " +
+                        "FROM CLASSES c JOIN (SELECT * FROM LECTURERS ) uic ON (c.GROUP_NUMBER = uic.GROUP_NUMBER and c.SEMESTER = uic.SEMESTER and c.COURSE_CODE = uic.COURSE_CODE ) join CLASS_TYPES cs using (class_type_id) " +
+                        "WHERE uic.user_id = ?")
                 .param(userID)
-                .query(MyClass.class)
+                .query(ClassDTO.class)
                 .list();
     }
     public Integer insertClass(MyClass myClass) {
-        return jdbcClient.sql("INSERT INTO CLASSES (course_code,semester,group_number,type,day,hour,length,\"where\") VALUES (?,?,?,?,?,?,?,?)")
+        return jdbcClient.sql("INSERT INTO CLASSES (course_code,semester,group_number,class_type_id,day,hour,length,\"where\") VALUES (?,?,?,?,?,?,?,?)")
                 .param(myClass.getCourse_code())
                 .param(myClass.getSemester())
                 .param(myClass.getGroup_number())
-                .param(myClass.getType())
+                .param(myClass.getClass_type_id())
                 .param(myClass.getDay())
                 .param(myClass.getHour())
                 .param(myClass.getLength())

@@ -23,13 +23,13 @@ public class GradeCategoryRepo {
                 .list();
     }
     public Integer insertGradeCategory(GradeCategory gradeCategory) {
-        return jdbcClient.sql("INSERT INTO GRADE_CATEGORIES (category_id,course_code,semester,description,wage)"+
+        return jdbcClient.sql("INSERT INTO GRADE_CATEGORIES (category_id,course_code,semester,description,max_grade)"+
                 "VALUES (?,?,?,?,?)")
                 .param(gradeCategory.getCategory_id())
                 .param(gradeCategory.getCourse_code())
                 .param(gradeCategory.getSemester())
                 .param(gradeCategory.getDescription())
-                .param(gradeCategory.getWage())
+                .param(gradeCategory.getMax_grade())
                 .update();
     }
     public Integer removeGradeCategory(GradeCategory gradeCategory) {
