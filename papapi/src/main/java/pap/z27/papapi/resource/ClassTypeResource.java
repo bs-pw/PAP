@@ -12,7 +12,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/classtype")
-public class ClassTypeResource {private final ClassTypeRepo classTypeRepo;
+public class ClassTypeResource {
+    private final ClassTypeRepo classTypeRepo;
     @Autowired
     public ClassTypeResource(ClassTypeRepo classTypeRepo){this.classTypeRepo=classTypeRepo;}
     @GetMapping
@@ -23,8 +24,8 @@ public class ClassTypeResource {private final ClassTypeRepo classTypeRepo;
     @PostMapping
     public ResponseEntity<String> insertClassType (@RequestBody ClassType classType, HttpSession session)
     {
-        Integer classTypeId = (Integer)session.getAttribute("user_type_id");
-        if (classTypeId != 0) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert class types\"}\"");
         }
         if(classTypeRepo.insertClassType(classType)==0)
@@ -34,8 +35,8 @@ public class ClassTypeResource {private final ClassTypeRepo classTypeRepo;
     @PutMapping
     public ResponseEntity<String> updateClassType (@RequestBody ClassType classType, HttpSession session)
     {
-        Integer classTypeId = (Integer)session.getAttribute("user_type_id");
-        if (classTypeId != 0) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can update class types\"}\"");
         }
         if(classTypeRepo.updateClassType(classType)==0)
@@ -43,13 +44,13 @@ public class ClassTypeResource {private final ClassTypeRepo classTypeRepo;
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
     @DeleteMapping
-    public ResponseEntity<String> removeClassType (@RequestParam Integer ClassTypeId, HttpSession session)
+    public ResponseEntity<String> removeClassType (@RequestParam Integer classTypeId, HttpSession session)
     {
-        Integer classTypeId = (Integer)session.getAttribute("user_type_id");
-        if (classTypeId != 0) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can remove class types\"}\"");
         }
-        if(classTypeRepo.removeClassType(ClassTypeId)==0)
+        if(classTypeRepo.removeClassType(classTypeId)==0)
             return ResponseEntity.badRequest().body("{\"message\":\"Couldn't remove class type\"}\"");
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

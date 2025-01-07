@@ -37,7 +37,7 @@ public class AttendanceStatusResource {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can delete attendance statuses\"}");
         if (attendanceStatusRepo.removeAttendanceStatus(statusId)==0)
             return ResponseEntity.badRequest().body("{\"message\":\"couldn't delete attendance status\"}");
-        return ResponseEntity.ok("{\"message\":\"delete attendance status\"}");
+        return ResponseEntity.ok("{\"message\":\"deleted attendance status\"}");
     }
 
     @PutMapping

@@ -55,7 +55,7 @@ public class SemesterResource {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can update semesters\"}\"");
         }
         if (semesterRepo.updateSemester(semester) == 0)
-            return ResponseEntity.badRequest().body("{\"message\":\"semester couldn't be removed\"}\"");
-        return ResponseEntity.ok("{\"message\":\"semester removed\"}\"");
+            return ResponseEntity.badRequest().body("{\"message\":\"semester couldn't be updated\"}\"");
+        return ResponseEntity.ok("{\"message\":\"semester updated\"}\"");
     }
 }

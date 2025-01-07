@@ -44,13 +44,13 @@ public class UserTypeResource {
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
     @DeleteMapping
-    public ResponseEntity<String> removeUserType (@RequestParam Integer UserTypeId, HttpSession session)
+    public ResponseEntity<String> removeUserType (@RequestParam Integer userTypeId, HttpSession session)
     {
-        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
-        if (userTypeId != 0) {
+        Integer thisUserTypeId = (Integer)session.getAttribute("user_type_id");
+        if (thisUserTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can remove user types\"}\"");
         }
-        if(userTypeRepo.removeUserType(UserTypeId)==0)
+        if(userTypeRepo.removeUserType(userTypeId)==0)
             return ResponseEntity.badRequest().body("{\"message\":\"Couldn't remove user type\"}\"");
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
