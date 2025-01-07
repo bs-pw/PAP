@@ -68,9 +68,9 @@ ALTER TABLE class_types ADD CONSTRAINT class_types_pk PRIMARY KEY ( class_type_i
 
 CREATE TABLE classes (
     course_code       VARCHAR2(5 CHAR) NOT NULL,
-    group_number       NUMBER(3)  GENERATED ALWAYS as IDENTITY(START with 1 INCREMENT by 1),
+    group_number       NUMBER(3) NOT NULL,
     semester      VARCHAR2(4 CHAR) NOT NULL,
-    class_id_for_group        NUMBER(3) NOT NULL,
+    class_id_for_group        NUMBER(3)  GENERATED ALWAYS as IDENTITY(START with 1 INCREMENT by 1),
     day                       NUMBER(2) NOT NULL,
     hour                      NUMBER(4) NOT NULL,
     length                    NUMBER(4) NOT NULL,
