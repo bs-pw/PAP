@@ -23,8 +23,8 @@ public class MyClassRepo {
                 .list();
     }
     public List<ClassDTO> findAllLecturersClasses(Integer userID) {
-        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,ct.type,c.day,c.hour,c.length,c.where " +
-                        "FROM CLASSES c JOIN (SELECT * FROM LECTURERS ) uic ON (c.GROUP_NUMBER = uic.GROUP_NUMBER and c.SEMESTER = uic.SEMESTER and c.COURSE_CODE = uic.COURSE_CODE ) join CLASS_TYPES cs using (class_type_id) " +
+        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,ct.type,c.day,c.hour,c.length,c.\"where\" " +
+                        "FROM CLASSES c JOIN (SELECT * FROM LECTURERS ) uic ON (c.GROUP_NUMBER = uic.GROUP_NUMBER and c.SEMESTER = uic.SEMESTER and c.COURSE_CODE = uic.COURSE_CODE ) join CLASS_TYPES ct using (class_type_id) " +
                         "WHERE uic.user_id = ?")
                 .param(userID)
                 .query(ClassDTO.class)
@@ -50,5 +50,4 @@ public class MyClassRepo {
                 .param(myClass.getClass_id_for_group())
                 .update();
     }
-
 }

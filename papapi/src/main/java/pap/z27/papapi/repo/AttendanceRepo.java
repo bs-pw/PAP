@@ -17,7 +17,7 @@ public class AttendanceRepo {
         this.jdbcClient = jdbcClient;
     }
     public List<AttendanceDTO> findAllUsersAttendances(Integer userID) {
-        return jdbcClient.sql("SELECT a.user_id,a.course_code,a.semester,a.group_number,a.class_id_for_group,as.status from ATTENDANCES a join ATTENDANCE_STATUSES on a.attendance_status_id=as.attendance_status_id as WHERE user_id=?")
+        return jdbcClient.sql("SELECT a.user_id,a.course_code,a.semester,a.group_number,a.class_id_for_group,ats.status from ATTENDANCES a join ATTENDANCE_STATUSES ats on a.attendance_status_id=ats.attendance_status_id WHERE user_id=?")
                 .param(userID)
                 .query(AttendanceDTO.class)
                 .list();

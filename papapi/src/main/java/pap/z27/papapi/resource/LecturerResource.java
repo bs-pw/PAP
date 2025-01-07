@@ -29,15 +29,17 @@ public class LecturerResource {
     @PostMapping(path = "{lecturerId}")
     public ResponseEntity<String> insertLecturer(@PathVariable Integer lecturerId,
                                                      @RequestBody Group group, HttpSession session) {
-        String userStatus = session.getAttribute("status").toString();
-        if (!userStatus.equals("admin")) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can add lecturers\"}");
         }
-        String insertedStatus = userRepo.findUsersStatus(lecturerId).toString();
-        if (insertedStatus.equals("student")) {
+        Integer insertedTypeId = userRepo.findUsersTypeId(lecturerId);
+        if (insertedTypeId == 3) {
             return ResponseEntity.badRequest().body("{\"message\":\"students cannot be lecturers\"}");
         }
-
+        else if (insertedTypeId == 4) {
+            return ResponseEntity.badRequest().body("{\"message\":\"inactive users cannot be lecturers\"}");
+        }
         groupRepo.addLecturerToGroup(lecturerId, group);
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
@@ -58,8 +60,8 @@ public class LecturerResource {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteLecturer(@RequestBody UserInGroup lecturer) {
-        if (groupRepo.deleteLecturer(lecturer) == 0) {
+    public ResponseEntity<String> removeLecturer(@RequestBody UserInGroup lecturer) {
+        if (groupRepo.removeLecturer(lecturer) == 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"Couldn't delete lecturer (lecturer might not exist).\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");

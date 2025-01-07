@@ -22,54 +22,56 @@ public class UsersInGroupsResource {
     }
 
     @PostMapping
-    public ResponseEntity<String> addStudentToGroup(@RequestBody UserInGroup userInGroup) {
+    public ResponseEntity<String> addStudentToGroup(@RequestBody UserInGroup userInGroup, HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        Integer coordinatorId = (Integer) session.getAttribute("user_id");
+        if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
+                userInGroup.getCourse_code(), 
+                userInGroup.getSemester())==0)) {
+            return ResponseEntity.badRequest().body("{\"message\":\"Only admins/coordinators can add students to groups\"}");
+        }
+
         Integer userId = userInGroup.getUser_id();
-        if (!userRepo.findUsersStatus(userId)
-                .getStatus()
-                .equals("student")) {
+        if (userRepo.findUsersTypeId(userId) != 3 && userRepo.findUsersTypeId(userId)!= 2) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("{\"message\":\"User is not a student.\"}");
         }
         if (userRepo.countUsersFinalGrades(userInGroup)==0)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("{\"message\":\"User is not signed for this course.\"}");
+                    .body("{\"message\":\"User is not signed up for this course.\"}");
         groupRepo.addStudentToGroup(userInGroup);
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 
     @PutMapping(path = "{newGroupNr}")
-    public ResponseEntity<String> changeUserGroup(@PathVariable("newGroupNr") Integer newGroupNr,
+    public ResponseEntity<String> updateUserGroup(@PathVariable("newGroupNr") Integer newGroupNr,
                                                   @RequestBody UserInGroup userInGroup,
                                                   HttpSession session) {
         Integer affectedUsersId = userInGroup.getUser_id();
-        String affectedUsersStatus = userRepo.findUsersStatus(affectedUsersId).getStatus();
+        Integer affectedUsersTypeId = userRepo.findUsersTypeId(affectedUsersId);
 
-        String status = session.getAttribute("status").toString();
-        if (status.equals("student")) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId == 3) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("{\"message\":\"Students cannot change groups by themselves.\"}");
         }
-        if (status.equals("admin")) {
-           if (affectedUsersStatus.equals("student")) {
-               try {
-                   groupRepo.changeStudentsGroup(userInGroup, newGroupNr);
-               } catch (Exception e) {
-                   return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        if (userTypeId == 0) {
+           if (affectedUsersTypeId == 3) {
+                   if(groupRepo.updateStudentsGroup(userInGroup, newGroupNr)==0)
+                       return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                            .body("{\"message\":\"Couldn't change student's group.\"}");
-               }
+
                return ResponseEntity.ok("{\"message\":\"ok\"}");
            }
         }
-        if (status.equals("teacher")) {
+        if (userTypeId==1) {
             if (userRepo.checkIfIsCoordinator(userInGroup)==0)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("{\"message\":\"Teacher that is not a coordinator of the course cannot change groups.\"}");
-            try {
-                groupRepo.changeStudentsGroup(userInGroup, newGroupNr);
-            } catch (Exception e) {
+                        .body("{\"message\":\"Lecturer that is not a coordinator of the course cannot change groups.\"}");
+            if(groupRepo.updateStudentsGroup(userInGroup, newGroupNr)==0)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("{\"message\":\"Couldn't change student's group.\"}");
-            }
+                    .body("{\"message\":\"Couldn't change student's group.\"}");
+
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

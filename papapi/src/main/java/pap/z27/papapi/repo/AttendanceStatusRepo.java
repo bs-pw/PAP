@@ -15,27 +15,26 @@ public class AttendanceStatusRepo {
     public AttendanceStatusRepo(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
-    public List<AttendanceStatus> findAllAttendanceStatuss() {
-        return jdbcClient.sql("SELECT * from ATTENCANCE_STATUSES")
+    public List<AttendanceStatus> findAllAttendanceStatuses() {
+        return jdbcClient.sql("SELECT * from ATTENDANCE_STATUSES")
                 .query(AttendanceStatus.class)
                 .list();
     }
-    public Integer insertAttendanceStatus(AttendanceStatus AttendanceStatus) {
-        return jdbcClient.sql("INSERT INTO ATTENCANCE_STATUSES (ATTENCANCE_STATUSES_ID, status) VALUES (?,?)")
-                .param(AttendanceStatus.getAttendance_status_id())
-                .param(AttendanceStatus.getStatus())
+    public Integer insertAttendanceStatus(AttendanceStatus attendanceStatus) {
+        return jdbcClient.sql("INSERT INTO ATTENDANCE_STATUSES (ATTENDANCE_STATUS_ID, status) VALUES (?,?)")
+                .param(attendanceStatus.getAttendance_status_id())
+                .param(attendanceStatus.getStatus())
                 .update();
     }
-    public Integer updateAttendanceStatus(AttendanceStatus AttendanceStatus){
-        return jdbcClient.sql("UPDATE ATTENCANCE_STATUSES set status=? where ATTENCANCE_STATUSES_ID=?")
-                .param(AttendanceStatus.getStatus())
-                .param(AttendanceStatus.getAttendance_status_id())
+    public Integer updateAttendanceStatus(AttendanceStatus attendanceStatus){
+        return jdbcClient.sql("UPDATE ATTENDANCE_STATUSES set status=? where ATTENDANCE_STATUS_ID=?")
+                .param(attendanceStatus.getStatus())
+                .param(attendanceStatus.getAttendance_status_id())
                 .update();
     }
-    public Integer removeAttendanceStatus(AttendanceStatus AttendanceStatus){
-        return jdbcClient.sql("DELETE FROM ATTENCANCE_STATUSES where ATTENCANCE_STATUSES_ID=? and status=?")
-                .param(AttendanceStatus.getAttendance_status_id())
-                .param(AttendanceStatus.getStatus())
+    public Integer removeAttendanceStatus(Integer attendanceStatusId){
+        return jdbcClient.sql("DELETE FROM ATTENDANCE_STATUSES where ATTENDANCE_STATUS_ID=?")
+                .param(attendanceStatusId)
                 .update();
     }
 }

@@ -16,22 +16,29 @@ public class SemesterRepo {
         this.jdbcClient = jdbcClient;
     }
     public List<Semester> findAllSemesters() {
-        return jdbcClient.sql("SELECT * from SEMESTER")
+        return jdbcClient.sql("SELECT * from SEMESTERS")
                 .query(Semester.class)
                 .list();
     }
     public Integer insertSemester(Semester semester) {
-        return jdbcClient.sql("INSERT INTO SEMESTER (semester_code, start_date, end_date) VALUES (?,?,?)")
+        return jdbcClient.sql("INSERT INTO SEMESTERS (semester_code, start_date, end_date) VALUES (?,?,?)")
                 .param(semester.getSemester_code())
                 .param(semester.getStart_date())
                 .param(semester.getEnd_date())
                 .update();
     }
-    public Integer removeSemester(Semester semester){
-        return jdbcClient.sql("DELETE FROM SEMESTER where semester_code=? and start_date=? and end_date=?")
-                .param(semester.getSemester_code())
+    public Integer removeSemester(String semester_code){
+        return jdbcClient.sql("DELETE FROM SEMESTERS where semester_code=?")
+                .param(semester_code)
+                .update();
+    }
+
+    public Integer updateSemester(Semester semester) {
+        return jdbcClient.sql("UPDATE SEMESTERS SET START_DATE=?, END_DATE=?" +
+                "WHERE SEMESTER_CODE=?")
                 .param(semester.getStart_date())
                 .param(semester.getEnd_date())
+                .param(semester.getSemester_code())
                 .update();
     }
 }

@@ -26,9 +26,9 @@ public class GradeCategoryResource {
     @PostMapping
     public ResponseEntity<String> insertGradeCategory(@RequestBody GradeCategory gradeCategory, HttpSession session) {
 
-        String status = session.getAttribute("status").toString();
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         Integer userId = (Integer) session.getAttribute("user_id");
-        if(!status.equals("admin"))
+        if(userTypeId != 0)
         {
             if(userRepo.checkIfIsCoordinator(userId,gradeCategory.getCourse_code(),gradeCategory.getSemester())==0)
                 return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can insert grade category \"}");

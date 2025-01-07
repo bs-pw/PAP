@@ -34,12 +34,40 @@ public class ClassResource {
     }
 
     @PostMapping
-    public ResponseEntity<String> createNewClass(@RequestBody MyClass myClass) {
-        try {
-            classRepo.insertClass(myClass);
-        }catch(Exception e)
+    public ResponseEntity<String> insertClass(@RequestBody MyClass myClass,
+                                                 HttpSession session) {
+        // DAY
+        // 0-6: mon-sun
+        // 10-16: mon-sun every 2 weeks (even weeks)
+        // 20-26: mon-sun every 2 weeks (odd weeks)
+
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, myClass.getCourse_code(), myClass.getSemester(), myClass.getGroup_number())==0)
+                && userRepo.checkIfIsCoordinator(userId, myClass.getCourse_code(), myClass.getSemester())==0)
+        {
+            ResponseEntity.badRequest().body("{\"message\":\"only admins, lecturers or coordinators of courses can create classes\"}");
+        }
+
+        if(classRepo.insertClass(myClass)==0)
         {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot insert class\"}");
+        }
+        return ResponseEntity.ok("{\"message\":\"ok\"}");
+    }
+    @DeleteMapping
+    public ResponseEntity<String> removeClass(@RequestBody MyClass myClass,
+                                                 HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, myClass.getCourse_code(), myClass.getSemester(), myClass.getGroup_number())==0)
+                && userRepo.checkIfIsCoordinator(userId, myClass.getCourse_code(), myClass.getSemester())==0)
+        {
+            ResponseEntity.badRequest().body("{\"message\":\"only admins, lecturers or coordinators of courses can remove classes\"}");
+        }
+        if(classRepo.removeClass(myClass)==0)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot remove class\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

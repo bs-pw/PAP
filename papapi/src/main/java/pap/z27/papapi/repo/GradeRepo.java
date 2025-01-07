@@ -61,7 +61,7 @@ public class GradeRepo {
                 .update();
     }
 
-    public Integer deleteGrade(Grade grade) {
+    public Integer removeGrade(Grade grade) {
         return jdbcClient.sql("DELETE FROM GRADES WHERE USER_ID=? AND COURSE_CODE=? AND SEMESTER=? AND CATEGORY_ID=?")
                 .param(grade.getUser_id())
                 .param(grade.getCourse_code())

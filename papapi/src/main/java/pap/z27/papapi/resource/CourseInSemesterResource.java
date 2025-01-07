@@ -1,5 +1,6 @@
 package pap.z27.papapi.resource;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,16 @@ public class CourseInSemesterResource {
     }
 
     @PostMapping
-    public ResponseEntity<String> createNewCourseInSemester(@RequestBody CourseInSemester course) {
+    public ResponseEntity<String> insertCourseInSemester(@RequestBody CourseInSemester course, HttpSession session)
+    {
+    Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+    if (userTypeId != 0) {
+        return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert courses\"}\"");
+    }
         try {
             courseRepo.insertCourseInSemester(course);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot insert course in the semester\"}");
+            return ResponseEntity.badRequest().body("{\"message\":\"cannot insert course in the semester\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

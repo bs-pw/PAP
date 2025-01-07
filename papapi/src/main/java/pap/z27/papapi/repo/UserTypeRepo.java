@@ -33,10 +33,9 @@ public class UserTypeRepo {
                 .param(userType.getUser_type_id())
                 .update();
     }
-    public Integer removeUserType(UserType userType){
-        return jdbcClient.sql("DELETE FROM USER_TYPES where USER_TYPE_ID=? and type=?")
-                .param(userType.getUser_type_id())
-                .param(userType.getType())
+    public Integer removeUserType(Integer userTypeId){
+        return jdbcClient.sql("DELETE FROM USER_TYPES where USER_TYPE_ID=?")
+                .param(userTypeId)
                 .update();
     }
 }

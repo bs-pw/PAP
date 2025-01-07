@@ -6,11 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.Group;
+import pap.z27.papapi.domain.subclasses.UserDTO;
 import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 import pap.z27.papapi.domain.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -28,9 +28,10 @@ public class UserResource {
     }
 
     @GetMapping("/all")
-    public List<User> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         return userRepo.findAllUsers();
     }
+
     @GetMapping("/password")
     public String getpass(HttpSession session) {
         String m=(String)session.getAttribute("mail");
@@ -49,7 +50,7 @@ public class UserResource {
 
 
     @PutMapping(path = "{userId}")
-    public ResponseEntity<String> changePassword(
+    public ResponseEntity<String> updatePassword(
             @PathVariable("userId") Integer userId,
             @RequestParam String password
     ) {
@@ -61,23 +62,18 @@ public class UserResource {
 
     }
 
-    @PutMapping(path = "/s/{userId}")
-    public ResponseEntity<String> changeStatus (
+    @PutMapping(path = "/type/{userId}")
+    public ResponseEntity<String> updateType(
             @PathVariable("userId") Integer userId,
-            @RequestParam String status
+            @RequestParam Integer user_type_id,
+            HttpSession session
     ) {
-        List<String> validStatus = new ArrayList<>();
-
-        validStatus.add("student");
-        validStatus.add("teacher");
-        validStatus.add("admin");
-        validStatus.add("assistant");
-
-        if (validStatus.contains(status)) {
-            userRepo.updateUsersStatus(userId, status);
+        if((Integer)session.getAttribute("user_type_id") == 0) {
+            if(userRepo.updateUsersType(userId, user_type_id)==0)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad type id!\"}");
             return ResponseEntity.ok("{\"message\":\"ok\"}");
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad status!\"}");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"No Permission!\"}");
     }
 
     @GetMapping("/usergroups")

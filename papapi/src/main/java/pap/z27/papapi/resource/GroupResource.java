@@ -1,5 +1,6 @@
 package pap.z27.papapi.resource;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,12 @@ public class GroupResource {
     }
 
     @PostMapping
-    public ResponseEntity<String> createNewGroup(@RequestBody Group group) {
+    public ResponseEntity<String> insertGroup(@RequestBody Group group,
+                                                 HttpSession session) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId != 0) {
+            return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert groups\"}\"");
+        }
         try {
             groupRepo.insertGroup(group);
         } catch (Exception e) {
@@ -31,7 +37,7 @@ public class GroupResource {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteGroup(@RequestBody Group group) {
+    public ResponseEntity<String> removeGroup(@RequestBody Group group) {
         if (groupRepo.removeGroup(group) == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("{\"message\":\"Group not found\"}");

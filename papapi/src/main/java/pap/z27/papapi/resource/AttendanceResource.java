@@ -10,7 +10,6 @@ import pap.z27.papapi.repo.AttendanceRepo;
 import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 
-import java.time.LocalDate;
 
 
 @RestController
@@ -28,10 +27,10 @@ public class AttendanceResource {
     }
     @PostMapping
     public ResponseEntity<String> insertAttendance(@RequestBody Attendance attendance, HttpSession session){
-        Integer userId=(Integer)session.getAttribute("userId");
-        String status=session.getAttribute("status").toString();
+        Integer userId=(Integer)session.getAttribute("user_id");
+        Integer user_type_id=(Integer)session.getAttribute("user_type_id");
 
-        if(status.equals("teacher")) {
+        if (user_type_id==1) {
             if(groupRepo.isLecturerOfGroup(userId,
                     attendance.getCourse_code(),
                     attendance.getSemester(),

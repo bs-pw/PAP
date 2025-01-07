@@ -31,10 +31,9 @@ public class ClassTypeRepo {
                 .param(classType.getClass_type_id())
                 .update();
     }
-    public Integer removeClassType(ClassType classType){
-        return jdbcClient.sql("DELETE FROM CLASS_TYPES where class_type_id=? and type=?")
-                .param(classType.getClass_type_id())
-                .param(classType.getType())
+    public Integer removeClassType(Integer classTypeId){
+        return jdbcClient.sql("DELETE FROM CLASS_TYPES where class_type_id=?")
+                .param(classTypeId)
                 .update();
     }
 }

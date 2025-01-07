@@ -29,19 +29,17 @@ public class CoordinatorResource {
        return userRepo.findAllCourseCoordinators(courseInSemester);
     }
 
-    private boolean isUserNotAdmin(HttpSession session) {
-        return !session.getAttribute("status").equals("admin");
-    }
 
     @PostMapping(path = "{coordinatorId}")
     public ResponseEntity<String> insertCoordinator(@PathVariable Integer coordinatorId,
                                                     @RequestBody CourseInSemester courseInSemester,
                                                     HttpSession session) {
-        if (isUserNotAdmin(session)) {
-            return ResponseEntity.badRequest().body("{\"message\":\"Only admins can insert coordinators\"}");
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId != 0) {
+            return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert coordinator\"}\"");
         }
 
-        if (!userRepo.findUsersStatus(coordinatorId).getStatus().equals("teacher")) {
+        if (userRepo.findUsersTypeId(coordinatorId)==1 && userRepo.findUsersTypeId(coordinatorId)==2) {
             return ResponseEntity.badRequest().body("{\"message\":\"Only teachers can be coordinators\"}");
         }
 
@@ -53,10 +51,11 @@ public class CoordinatorResource {
     }
 
     @DeleteMapping(path = "{coordinatorId}")
-    public ResponseEntity<String> deleteCoordinator(@PathVariable Integer coordinatorId,
+    public ResponseEntity<String> removeCoordinator(@PathVariable Integer coordinatorId,
                                                     @RequestBody CourseInSemester courseInSemester,
                                                     HttpSession session) {
-        if (isUserNotAdmin(session)) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"Only admins can delete coordinators\"}");
         }
 

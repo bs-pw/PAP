@@ -26,10 +26,10 @@ public class GradeResource {
         this.groupRepo = groupRepo;
     }
 
-    private String canUserChangeGrade(Grade grade, HttpSession session) {
-        Integer userId = (Integer)session.getAttribute("userId");
-        String userStatus = session.getAttribute("status").toString();
-        if (userStatus.equals("student")) {
+    private String canUserUpdateGrade(Grade grade, HttpSession session) {
+        Integer userId = (Integer)session.getAttribute("user_id");
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == 3) {
             return "{\"message\":\"Students cannot manipulate grades\"}";
         }
 
@@ -38,7 +38,7 @@ public class GradeResource {
             grade.setDate(LocalDate.now());
         }
 
-        if (!userStatus.equals("admin")) {
+        if (userTypeId != 0) {
             // Check if lecturer is inserting a grade for student in his group
             if (groupRepo.isStudentInLecturerGroup(grade.getUser_id(),
                     userId,
@@ -53,9 +53,9 @@ public class GradeResource {
 
     @GetMapping(path = "{userId}")
     public List<Grade> getAllGrades(@PathVariable Integer userId) {
-        String userStatus = userRepo.findUsersStatus(userId).getStatus();
+        Integer userTypeId = userRepo.findUsersTypeId(userId);
 
-        if (!userStatus.equals("student")) {
+        if (userTypeId!=2 && userTypeId!=3) {
             throw new IllegalStateException("User is not student");
         }
         return gradeRepo.getAllUserGrades(userId);
@@ -63,7 +63,7 @@ public class GradeResource {
 
     @PostMapping
     public ResponseEntity<String> insertGrade(@RequestBody Grade grade, HttpSession session) {
-        String status = canUserChangeGrade(grade, session);
+        String status = canUserUpdateGrade(grade, session);
         if (!status.equals("ok")) {
             return ResponseEntity.badRequest().body(status);
         }
@@ -75,8 +75,8 @@ public class GradeResource {
     }
 
     @PutMapping
-    public ResponseEntity<String> changeGrade(@RequestBody Grade grade, HttpSession session) {
-        String status = canUserChangeGrade(grade, session);
+    public ResponseEntity<String> updateGrade(@RequestBody Grade grade, HttpSession session) {
+        String status = canUserUpdateGrade(grade, session);
         if (!status.equals("ok")) {
             return ResponseEntity.badRequest().body(status);
         }
@@ -88,13 +88,13 @@ public class GradeResource {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteGrade(@RequestBody Grade grade, HttpSession session) {
-        String status = canUserChangeGrade(grade, session);
+    public ResponseEntity<String> removeGrade(@RequestBody Grade grade, HttpSession session) {
+        String status = canUserUpdateGrade(grade, session);
         if (!status.equals("ok")) {
             return ResponseEntity.badRequest().body(status);
         }
 
-        if(gradeRepo.deleteGrade(grade)==0) {
+        if(gradeRepo.removeGrade(grade)==0) {
             return ResponseEntity.badRequest().body("{\"message\":\"Grade could not be deleted\"}");
         }
         return ResponseEntity.ok("{\"message\":\"Grade deleted\"}");

@@ -5,10 +5,8 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.Group;
-import pap.z27.papapi.domain.Lecturer;
 import pap.z27.papapi.domain.User;
 import pap.z27.papapi.domain.subclasses.UserInGroup;
-import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 
 import java.util.List;
 @Repository
@@ -113,7 +111,7 @@ public class GroupRepo {
                 .param(group.getGroup_number())
                 .update();
     }
-    public Integer changeStudentsGroup(UserInGroup userInGroup, Integer newGroupNr)
+    public Integer updateStudentsGroup(UserInGroup userInGroup, Integer newGroupNr)
     {
         return jdbcClient.sql("UPDATE STUDENTS_IN_GROUPS set GROUP_NUMBER=? where course_code=? and semester=? and group_number=? and USER_ID=?")
                 .param(userInGroup.getCourse_code())
@@ -122,7 +120,7 @@ public class GroupRepo {
                 .param(newGroupNr)
                 .update();
     }
-    public Integer changeLecturersGroup(UserInGroup userInGroup, Integer newGroupNr)
+    public Integer updateLecturersGroup(UserInGroup userInGroup, Integer newGroupNr)
     {
         return jdbcClient.sql("UPDATE LECTURERS set GROUP_NUMBER=? where course_code=? and semester=? and group_number=? and USER_ID=?")
                 .param(userInGroup.getCourse_code())
@@ -156,7 +154,7 @@ public class GroupRepo {
                 .single();
     }
 
-    public Integer deleteLecturer(UserInGroup lecturer) {
+    public Integer removeLecturer(UserInGroup lecturer) {
         return jdbcClient.sql("DELETE FROM LECTURERS WHERE USER_ID=? AND COURSE_CODE=? AND SEMESTER=? AND GROUP_NUMBER=?")
                 .param(lecturer.getUser_id())
                 .param(lecturer.getCourse_code())
