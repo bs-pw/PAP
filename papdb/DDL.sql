@@ -339,3 +339,6 @@ ALTER TABLE users
 ALTER TABLE users ADD CONSTRAINT mail_const UNIQUE ( mail );
 
 ALTER TABLE final_grades ADD CONSTRAINT grade_const CHECK ( grade >= 0 AND grade <= 5 AND MOD(grade, 0.5) = 0 );  
+ALTER TABLE attendance_statuses ADD CONSTRAINT unique_attendance_status UNIQUE ( status );
+ALTER TABLE class_types ADD CONSTRAINT unique_class_type UNIQUE ( type );
+ALTER TABLE user_types ADD CONSTRAINT unique_user_type UNIQUE ( type );
