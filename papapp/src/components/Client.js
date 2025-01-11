@@ -125,11 +125,13 @@ class Client {
             headers: this.headers,
             credentials: this.credentials,
             body: JSON.stringify(data),
-        }).then(response => {
+        }).then(async response => {
+            let data = await response.json();
             if (response.ok) {
-                return response.json();
+                return data;
+            } else {
+                throw new Error(`Error registering user`);
             }
-            throw new Error(`Error registering user: ${response.statusText}`);
         }).catch(error => {
             throw new Error(error.message);
         });

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useClient } from '../ClientContext';
 import { useNavigate } from 'react-router-dom'
+import SidebarItem from './SidebarItem';
 
 const Sidebar = () => {
     const client = useClient();
@@ -15,35 +16,37 @@ const Sidebar = () => {
         }
     };
 
+    const usersItems = [
+        { link: '/', label: 'Strona główna' },
+        { link: '/lecturer', label: 'Wykładowcy' },
+    ];
+
+    const adminItems = [
+        { link: '/admin/courses', label: 'Kursy' },
+        { link: '/admin/users', label: 'Użytkownicy' },
+        { link: '/admin/lecturers', label: 'Wykładowcy' },
+    ];
+
     return (
         <div className="bg-dark text-white p-3" style={{ width: 250 }}>
             <h2 className="mb-4">Menu</h2>
             <ul className="nav flex-column">
-                <li className="nav-item">
-                    <a className="nav-link text-white" href="/">
-                        Home
-                    </a>
-                </li>
-                <li className="nav-item">
-                    <a className="nav-link text-white" href="/lecturer">
-                        Wykładowcy
-                    </a>
-                </li>
-                <li className="nav-item">
-                    <a className="nav-link text-white" href="/admin/register">
-                        Zarejestruj
-                    </a>
-                </li>
-                <li className="nav-item">
-                    <a className="nav-link text-white" href="#">
-                        Dummy
-                    </a>
-                </li>
-                <li>
-                    <a className="nav-link text-white" href="#" onClick={handleLogout}>
-                        <i className="bi bi-power"></i> Wyloguj
-                    </a>
-                </li>
+                {usersItems.map((item, index) => (
+                    <SidebarItem key={index} link={item.link} label={item.label} />
+                ))}
+
+                {client.userTypeId == 0 && (
+                    <>
+                        <SidebarItem link="#" label='<i class="bi bi-gear"></i> Panel Administracyjny' />
+                        <ul className="nav flex-column mx-3">
+                            {adminItems.map((item, index) => (
+                                <SidebarItem key={index} link={item.link} label={item.label} />
+                            ))}
+                        </ul>
+                    </>
+                )}
+
+                <SidebarItem link="#" label='<i class="bi bi-power"></i> Wyloguj' onClick={handleLogout} />
             </ul>
         </div>
 

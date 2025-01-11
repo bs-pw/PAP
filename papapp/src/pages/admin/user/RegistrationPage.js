@@ -7,7 +7,7 @@ const RegistrationPage = () => {
         surname: "",
         mail: "",
         password: "",
-        status: "",
+        user_type_id: "",
     });
 
     const [message, setMessage] = useState('');
@@ -37,7 +37,7 @@ const RegistrationPage = () => {
             await client.registerUser(formData);
             setMessage('Użytkownik został zarejestrowany');
         } catch (error) {
-            setMessage(error.message || 'Wystąpił błąd! Spróbuj ponownie!');
+            setMessage('Błąd podczas rejestracji');
         }
     };
 
@@ -101,9 +101,8 @@ const RegistrationPage = () => {
                     />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="text" className="form-label">Status</label>
-                    <select className="form-select" name="status" value={formData.status} onChange={handleChange}>
-                        <option value="">Wybierz status</option>
+                    <label htmlFor="text" className="form-label">Typ użytkownika</label>
+                    <select className="form-select" name="user_type_id" value={formData.user_type_id} onChange={handleChange}>
                         {userTypes.map((userType) => (
                             <option key={userType.user_type_id} value={userType.user_type_id}>
                                 {userType.type}
