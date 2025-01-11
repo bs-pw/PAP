@@ -17,16 +17,6 @@ const UsersList = ({ adminButtons = false }) => {
         }
     };
 
-    const handleUserTypes = async () => {
-        try {
-            const data = await client.getUserTypes();
-            console.log(data);
-            setUserTypes(data);
-        } catch (error) {
-            console.log(error.message);
-        }
-    };
-
     const handleDeleteUser = async (e) => {
         e.preventDefault();
         if (e.target.value == client.userId) {
@@ -45,7 +35,6 @@ const UsersList = ({ adminButtons = false }) => {
 
     useEffect(() => {
         getUsers();
-        handleUserTypes();
     }, []);
 
 
@@ -73,7 +62,7 @@ const UsersList = ({ adminButtons = false }) => {
                             <td>{user.name}</td>
                             <td>{user.surname}</td>
                             <td>{user.mail}</td>
-                            <td>{userTypes[user.status]}</td>
+                            <td>{user.type}</td>
                             {adminButtons && <td>
                                 <button className='btn btn-sm btn-danger' value={user.user_id} onClick={handleDeleteUser}>Usuń</button>
                                 {' '}
