@@ -82,8 +82,8 @@ public class UserResource {
         return groupRepo.findAllUsersGroups(userId);
     }
 
-    @DeleteMapping
-    public ResponseEntity<String> removeUser(@RequestParam Integer userId, HttpSession session) {
+    @DeleteMapping("{userId}")
+    public ResponseEntity<String> removeUser(@PathVariable("userId") Integer userId, HttpSession session) {
         Integer userTypeId = (Integer)session.getAttribute("user_type_id");
         if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"Only admin can remove users!\"}\"");
