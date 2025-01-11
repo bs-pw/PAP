@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useClient } from '../components/ClientContext';
 
 const DashboardPage = () => {
     return (

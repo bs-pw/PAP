@@ -7,7 +7,7 @@ import MainLayout from "../components/layout/MainLayout";
 import { Navigate, Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import LecturerPage from "../pages/LecturersPage";
-import RegistrationPage from "../pages/admin/user/RegistrationPage";
+import UserForm from "../pages/admin/user/UserForm";
 import CreateCourse from "../pages/admin/course/CreateCourse";
 import UsersPage from "../pages/admin/user/UsersPage";
 //import useAuthStatus from './useAuthStatus';
@@ -101,7 +101,16 @@ export const router = createBrowserRouter([
                                         children: [
                                             {
                                                 index: true,
-                                                element: <RegistrationPage />,
+                                                element: <UserForm />,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        path: "edit/:userId",
+                                        children: [
+                                            {
+                                                index: true,
+                                                element: <UserForm />,
                                             },
                                         ],
                                     },

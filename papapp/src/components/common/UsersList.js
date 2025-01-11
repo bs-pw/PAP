@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useClient } from '../ClientContext';
+import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const UsersList = ({ adminButtons = false }) => {
     const [users, setUsers] = useState([]);
     const [userTypes, setUserTypes] = useState([]);
     const [error, setError] = useState(null);
     const client = useClient();
+    const navigate = useNavigate();
 
     const getUsers = async () => {
         try {
@@ -30,6 +33,12 @@ const UsersList = ({ adminButtons = false }) => {
         } catch (error) {
             setError('Błąd podczas usuwania użytkownika!');
         }
+    }
+
+    const handleEditUser = async (e) => {
+        e.preventDefault();
+        navigate(`/admin/users/edit/` + e.target.value);
+
     }
 
 
@@ -66,7 +75,7 @@ const UsersList = ({ adminButtons = false }) => {
                             {adminButtons && <td>
                                 <button className='btn btn-sm btn-danger' value={user.user_id} onClick={handleDeleteUser}>Usuń</button>
                                 {' '}
-                                <button className='btn btn-sm btn-warning'>Edytuj</button>
+                                <button className='btn btn-sm btn-warning' value={user.user_id} onClick={handleEditUser}>Edytuj</button>
                             </td>}
                         </tr>
                     ))}

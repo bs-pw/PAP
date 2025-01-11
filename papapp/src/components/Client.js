@@ -77,6 +77,21 @@ class Client {
         });
     }
 
+    async getUser(userId) {
+        return fetch(`${this.baseUrl}/user/${userId}`, {
+            method: 'GET',
+            headers: this.headers,
+            credentials: this.credentials,
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error(`Error fetching user: ${response.statusText}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+
     async getUsers() {
         return fetch(`${this.baseUrl}/user/all`, {
             method: 'GET',
