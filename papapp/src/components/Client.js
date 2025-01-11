@@ -2,6 +2,7 @@ import { data } from "react-router-dom";
 
 class Client {
     loggedIn = null;
+    userId = null;
     name = null;
     surname = null;
     userTypeId = null;
@@ -25,6 +26,7 @@ class Client {
             return response.json();
         }).then(data => {
             this.loggedIn = data.loggedIn;
+            this.userId = data.user_id;
             this.name = data.name;
             this.surname = data.surname;
             this.userTypeId = data.userTypeId;
@@ -45,6 +47,7 @@ class Client {
             console.log(data);
             if (response.ok) {
                 this.loggedIn = data.loggedIn;
+                this.userId = data.user_id;
                 this.name = data.name;
                 this.surname = data.surname;
                 this.userTypeId = data.userTypeId;
@@ -84,6 +87,21 @@ class Client {
                 return response.json();
             }
             throw new Error(`Error fetching users: ${response.statusText}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+
+    async deleteUser(userId) {
+        return fetch(`${this.baseUrl}/user/${userId}`, {
+            method: 'DELETE',
+            headers: this.headers,
+            credentials: this.credentials,
+        }).then(response => {
+            if (response.ok) {
+                return true;
+            }
+            throw new Error(`Error deleting user: ${response.statusText}`);
         }).catch(error => {
             throw new Error(error.message);
         });

@@ -27,6 +27,22 @@ const UsersList = ({ adminButtons = false }) => {
         }
     };
 
+    const handleDeleteUser = async (e) => {
+        e.preventDefault();
+        if (e.target.value == client.userId) {
+            setError('Nie możesz usunąć samego siebie');
+            return;
+        }
+        try {
+            if (await client.deleteUser(e.target.value)) {
+                getUsers();
+            }
+        } catch (error) {
+            setError('Błąd podczas usuwania użytkownika!');
+        }
+    }
+
+
     useEffect(() => {
         getUsers();
         handleUserTypes();
@@ -59,7 +75,8 @@ const UsersList = ({ adminButtons = false }) => {
                             <td>{user.mail}</td>
                             <td>{userTypes[user.status]}</td>
                             {adminButtons && <td>
-                                <button className='btn btn-sm btn-danger'>Usuń</button>
+                                <button className='btn btn-sm btn-danger' value={user.user_id} onClick={handleDeleteUser}>Usuń</button>
+                                {' '}
                                 <button className='btn btn-sm btn-warning'>Edytuj</button>
                             </td>}
                         </tr>
