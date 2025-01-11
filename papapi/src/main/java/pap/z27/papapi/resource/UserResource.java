@@ -42,7 +42,7 @@ public class UserResource {
     public ResponseEntity<String> insertUser(@RequestBody User user, HttpSession session) {
         Integer userTypeId = (Integer)session.getAttribute("user_type_id");
         if (userTypeId != 0) {
-            return ResponseEntity.badRequest().body("{\"message\":\"Only admin can insert users!\"}\"");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admin can insert users!\"}\"");
         }
             if(userRepo.insertUser(user)==0)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Couldn't insert user! \"}");
@@ -73,7 +73,7 @@ public class UserResource {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad type id!\"}");
             return ResponseEntity.ok("{\"message\":\"ok\"}");
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"No Permission!\"}");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"No Permission!\"}");
     }
 
     @GetMapping("/usergroups")
@@ -93,7 +93,7 @@ public class UserResource {
         }
         Integer thisUserId = (Integer)session.getAttribute("user_id");
         if(thisUserId.equals(userId))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Can't remove your own profile! \"}");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Can't remove your own profile! \"}");
         if(userRepo.removeUser(userId)==0)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Couldn't remove user! \"}");
         return ResponseEntity.ok("{\"message\":\"ok\"}");
