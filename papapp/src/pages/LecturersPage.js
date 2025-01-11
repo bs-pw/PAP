@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import { useClient } from '../components/ClientContext';
 
 const DashboardPage = () => {
 
     const [lecturers, setLecturers] = useState([]);
     const [error, setError] = useState(null);
+    const client = useClient();
+
+    const getLecturers = async () => {
+        try {
+            const data = await client.getLecturers();
+            console.log(data);
+            setLecturers(data);
+        } catch (error) {
+            setError('Błąd podczas ładowania danych: ' + error.message);
+        }
+    };
 
     useEffect(() => {
-        fetch('http://localhost/api/lecturer')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Błąd połączenia');
-                }
-                return response.json();
-            })
-            .then(data => {
-                setLecturers(data);
-            })
-            .catch(error => {
-                setError('Błąd podczas ładowania danych: ' + error.message);
-            });
+        getLecturers();
     }, []);
-
 
     return (
         <div>

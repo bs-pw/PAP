@@ -1,29 +1,25 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useClient } from '../components/ClientContext';
 
 const LoginPage = () => {
     const [mail, setMail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const navigate = useNavigate();
+    const client = useClient();
 
     const handleLogin = async (e) => {
         e.preventDefault();
 
         try {
-            const url = new URL('http://localhost/api/auth/login');
-            url.searchParams.append('mail', mail);
-            url.searchParams.append('password', password);
-
-            const response = await fetch(url, { method: 'GET', credentials: 'include' });
-            if (response.ok) {
-                window.location.href = '/dashboard';
-            } else {
-                const errorData = await response.json();
-                setMessage(errorData.message || 'Błąd logowania!');
-            }
+            const data = await client.login(mail, password);
+            console.log("logged in: " + data.loggedIn);
+            if (data.loggedIn) navigate('/dashboard');
+            else setMessage(data.message || 'Nieprawidłowe dane logowania!');
         } catch (error) {
-            setMessage('Wystąpił błąd! Spróbuj ponownie!');
-            console.error(error)
+            console.log(error.message);
+            setMessage(error.message || 'Wystąpił błąd! Spróbuj ponownie!');
         }
     };
 

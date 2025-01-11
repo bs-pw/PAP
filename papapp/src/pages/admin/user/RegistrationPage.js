@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useClient } from '../../../components/ClientContext'
 
 const RegistrationPage = () => {
     const [formData, setFormData] = useState({
@@ -10,40 +11,39 @@ const RegistrationPage = () => {
     });
 
     const [message, setMessage] = useState('');
+    const [userTypes, setUserTypes] = useState([]);
+
+    const client = useClient();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log("Dane formularza:", formData);
+    const handleUserTypes = async () => {
         try {
-            const url = new URL('http://localhost/api/user');
-
-            const response = await fetch(url, {
-                method: 'POST', credentials: 'include',
-                body: JSON.stringify({
-                    name: formData["name"],
-                    surname: formData["surname"],
-                    mail: formData["mail"],
-                    password: formData["password"],
-                    status: formData["status"]
-                }),
-                headers: { 'content-type': 'application/json' },
-            });
-            if (response.ok) {
-                setMessage('Zarejestrowano!');
-            } else {
-                const errorData = await response.json();
-                setMessage(errorData.message || 'Błąd!');
-            }
+            const data = await client.getUserTypes();
+            console.log(data);
+            setUserTypes(data);
         } catch (error) {
-            setMessage('Wystąpił błąd! Spróbuj ponownie!');
-            console.error(error)
+            console.log(error.message);
         }
     };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            await client.registerUser(formData);
+            setMessage('Użytkownik został zarejestrowany');
+        } catch (error) {
+            setMessage(error.message || 'Wystąpił błąd! Spróbuj ponownie!');
+        }
+    };
+
+    useEffect(() => {
+        handleUserTypes();
+    }, []);
 
     return (
         <div className="container mt-5">
@@ -102,15 +102,14 @@ const RegistrationPage = () => {
                 </div>
                 <div className="mb-3">
                     <label htmlFor="text" className="form-label">Status</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="status"
-                        name="status"
-                        value={formData.status}
-                        onChange={handleChange}
-                        required
-                    />
+                    <select className="form-select" name="status" value={formData.status} onChange={handleChange}>
+                        <option value="">Wybierz status</option>
+                        {userTypes.map((userType) => (
+                            <option key={userType.user_type_id} value={userType.user_type_id}>
+                                {userType.type}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 {message && <p>{message}</p>}
                 <button type="submit" className="btn btn-primary">
@@ -121,4 +120,4 @@ const RegistrationPage = () => {
     );
 }
 
-export default RegistrationPage
+export default RegistrationPage;

@@ -1,19 +1,15 @@
 import React from 'react'
+import { useClient } from '../ClientContext';
 import { useNavigate } from 'react-router-dom'
 
 const Sidebar = () => {
+    const client = useClient();
+    const navigate = useNavigate();
+
     const handleLogout = async () => {
         try {
-            const response = await fetch('http://localhost/api/auth/logout', {
-                method: 'GET',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                window.location.href = '/';
-            } else {
-                console.error('Błąd podczas wylogowania');
-            }
+            const data = await client.logout();
+            navigate('/');
         } catch (error) {
             console.error('Błąd połączenia z serwerem:', error);
         }
@@ -29,12 +25,12 @@ const Sidebar = () => {
                     </a>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link text-white" href="lecturer">
+                    <a className="nav-link text-white" href="/lecturer">
                         Wykładowcy
                     </a>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link text-white" href="register">
+                    <a className="nav-link text-white" href="/admin/register">
                         Zarejestruj
                     </a>
                 </li>

@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import { useClient } from "../components/ClientContext";
 import AppLayout from "../components/layout/AppLayout";
 import LoginPage from "../pages/LoginPage"
 import DashboardPage from "../pages/DashboardPage"
@@ -11,33 +12,37 @@ import CreateCourse from "../pages/admin/course/CreateCourse";
 //import useAuthStatus from './useAuthStatus';
 
 const ProtectedRoute = ({ isAuthRequired = true }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
+    const client = useClient();
 
-    useEffect(() => {
-        const checkAuthStatus = async () => {
-            try {
-                const response = await fetch('http://localhost:80/api/auth/status', { method: 'GET', credentials: 'include' });
-                const data = await response.json();
-                setIsAuthenticated(data.loggedIn);
-            } catch (error) {
-                console.error('Błąd sprawdzania statusu logowania', error);
-            } finally {
+    const checkAuthStatus = async () => {
+        try {
+            const data = await client.checkAuthStatus();
+            if (data) {
                 setLoading(false);
             }
-        };
+        } catch (error) {
+            console.error('Błąd podczas sprawdzania autoryzacji:', error);
+        }
+    };
 
-        checkAuthStatus();
-    }, []);
+    useEffect(() => {
+        if (client.loggedIn === null) {
+            checkAuthStatus();
+        } else {
+            setLoading(false);
+        }
+    }, [client.loggedIn]);
 
     if (loading) {
         return <div>Ładowanie...</div>;
     }
 
+    console.log(isAuthRequired, client.loggedIn);
     if (isAuthRequired) {
-        return isAuthenticated ? <Outlet /> : <Navigate to="/" />;
+        return client.loggedIn ? <Outlet /> : <Navigate to="/" />;
     } else {
-        return !isAuthenticated ? <Outlet /> : <Navigate to="/dashboard" />;
+        return !client.loggedIn ? <Outlet /> : <Navigate to="/dashboard" />;
     }
 };
 
@@ -85,7 +90,6 @@ export const router = createBrowserRouter([
                         children: [
                             {
                                 path: "register",
-                                element: <MainLayout />,
                                 children: [
                                     {
                                         index: true,

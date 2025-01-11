@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import { useClient } from '../components/ClientContext';
 
 const DashboardPage = () => {
 
     const [users, setUsers] = useState([]);
     const [error, setError] = useState(null);
+    const client = useClient();
+
+    const getUsers = async () => {
+        try {
+            const data = await client.getUsers();
+            console.log(data);
+            setUsers(data);
+        } catch (error) {
+            setError('Błąd podczas ładowania danych: ' + error.message);
+        }
+    };
 
     useEffect(() => {
-        fetch('http://localhost/api/user/all')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Błąd połączenia');
-                }
-                return response.json();
-            })
-            .then(data => {
-                setUsers(data);
-            })
-            .catch(error => {
-                setError('Błąd podczas ładowania danych: ' + error.message);
-            });
+        getUsers();
     }, []);
 
 

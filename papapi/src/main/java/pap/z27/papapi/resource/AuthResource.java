@@ -20,12 +20,9 @@ public class AuthResource {
     private AuthRepo loginRepo;
     private UserRepo userRepo;
 
-    @GetMapping("/login")
-    public ResponseEntity<String> login(HttpServletRequest request) {
-        Credentials credentials = new Credentials();
-        credentials.setMail(request.getParameter("mail"));
-        credentials.setPassword(request.getParameter("password"));
-        if(loginRepo.isPasswordCorrect(credentials.getMail(), new Password(credentials.getPassword()))) {
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody Credentials credentials, HttpServletRequest request) {
+        if (loginRepo.isPasswordCorrect(credentials.getMail(), new Password(credentials.getPassword()))) {
             HttpSession session = request.getSession(false);
             if (session == null) {
                 session = request.getSession(true);
@@ -37,21 +34,26 @@ public class AuthResource {
             session.setAttribute("user_id", user.getUser_id());
             session.setAttribute("user_type_id", user.getUser_type_id());
             session.setAttribute("loggedIn", true);
-            return ResponseEntity.ok("{\"logged\":\"ok\"}");
+            String response = "{\"loggedIn\":true, \"name\":\""+session.getAttribute("name")+"\", \"surname\":\""+session.getAttribute("surname")+"\", \"userTypeId\":\""+session.getAttribute("user_type_id")+"\"}";
+            return ResponseEntity.ok(response);
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad credentials!\"}");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\":\"Złe dane logowania!\"}");
     }
-    @GetMapping("/logout")
-    public ResponseEntity<String> logout(HttpSession session) {
-        if (session != null)
+
+    @DeleteMapping("/logout")
+    public ResponseEntity<Void> logout(HttpSession session) {
+        if (session != null) {
             session.invalidate();
-        return ResponseEntity.ok("{\"logged out\":\"ok\"}");
+        }
+        return ResponseEntity.noContent().build(); // 204 No Content
     }
+
     @GetMapping("/status")
     public ResponseEntity<String> status(HttpSession session) {
         try{
             if((boolean) session.getAttribute("loggedIn")) {
-                return ResponseEntity.ok("{\"loggedIn\":true}");
+                String response = "{\"loggedIn\":true, \"name\":\""+session.getAttribute("name")+"\", \"surname\":\""+session.getAttribute("surname")+"\", \"userTypeId\":\""+session.getAttribute("user_type_id")+"\"}";
+                return ResponseEntity.ok(response);
             }else {
                 return ResponseEntity.ok("{\"loggedIn\":false}");
             }
