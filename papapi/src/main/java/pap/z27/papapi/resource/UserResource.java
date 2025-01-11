@@ -39,15 +39,15 @@ public class UserResource {
     }
 
     @PostMapping
-    public ResponseEntity<String> signUp(@RequestBody User user) {
-        try {
-            userRepo.insertUser(user);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\""+e.getMessage()+"\"}");
+    public ResponseEntity<String> insertUser(@RequestBody User user, HttpSession session) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId != 0) {
+            return ResponseEntity.badRequest().body("{\"message\":\"Only admin can insert users!\"}\"");
         }
+            if(userRepo.insertUser(user)==0)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Couldn't insert user! \"}");
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
-
 
     @PutMapping(path = "{userId}")
     public ResponseEntity<String> updatePassword(
@@ -82,8 +82,12 @@ public class UserResource {
         return groupRepo.findAllUsersGroups(userId);
     }
 
-    @DeleteMapping()
+    @DeleteMapping
     public ResponseEntity<String> removeUser(@RequestParam Integer userId, HttpSession session) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId != 0) {
+            return ResponseEntity.badRequest().body("{\"message\":\"Only admin can remove users!\"}\"");
+        }
         if (userRepo.countUserById(userId) == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"ID not found!\"}");
         }
