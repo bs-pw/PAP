@@ -8,8 +8,9 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import LecturerPage from "../pages/LecturersPage";
 import UserForm from "../pages/admin/user/UserForm";
-import CreateCourse from "../pages/admin/course/CreateCourse";
+import CourseForm from "../pages/admin/course/CourseForm";
 import UsersPage from "../pages/admin/user/UsersPage";
+import CoursePage from "../pages/admin/course/CoursePage";
 //import useAuthStatus from './useAuthStatus';
 
 const ProtectedRoute = ({ isAuthRequired = true }) => {
@@ -117,12 +118,29 @@ export const router = createBrowserRouter([
                                 ],
                             },
                             {
-                                path: "create-course",
-                                element: <MainLayout />,
+                                path: "courses",
                                 children: [
                                     {
                                         index: true,
-                                        element: <CreateCourse />,
+                                        element: <CoursePage />,
+                                    },
+                                    {
+                                        path: "create",
+                                        children: [
+                                            {
+                                                index: true,
+                                                element: <CourseForm />,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        path: "edit/:userId",
+                                        children: [
+                                            {
+                                                index: true,
+                                                element: <CourseForm />,
+                                            },
+                                        ],
                                     },
                                 ],
                             },

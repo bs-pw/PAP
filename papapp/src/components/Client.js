@@ -122,6 +122,22 @@ class Client {
         });
     }
 
+    async updateUser(userId, data) {
+        return fetch(`${this.baseUrl}/user/${userId}`, {
+            method: 'PUT',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: JSON.stringify(data),
+        }).then(response => {
+            if (response.ok) {
+                return true;
+            }
+            throw new Error(`Error updating user: ${response.statusText}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+
     async getLecturers() {
         return fetch(`${this.baseUrl}/lecturer`, {
             method: 'GET',
@@ -168,41 +184,6 @@ class Client {
         }).catch(error => {
             throw new Error(error.message);
         });
-    }
-    async getClientData(clientId) {
-        const response = await fetch(`${this.baseUrl}/clients/${clientId}`, {
-            method: 'GET',
-            headers: this.headers,
-        });
-        if (!response.ok) {
-            throw new Error(`Error fetching client data: ${response.statusText}`);
-        }
-        return await response.json();
-    }
-
-    // Method to update client data
-    async updateClientData(clientId, data) {
-        const response = await fetch(`${this.baseUrl}/clients/${clientId}`, {
-            method: 'PUT',
-            headers: this.headers,
-            body: JSON.stringify(data),
-        });
-        if (!response.ok) {
-            throw new Error(`Error updating client data: ${response.statusText}`);
-        }
-        return await response.json();
-    }
-
-    // Method to delete a client
-    async deleteClient(clientId) {
-        const response = await fetch(`${this.baseUrl}/clients/${clientId}`, {
-            method: 'DELETE',
-            headers: this.headers,
-        });
-        if (!response.ok) {
-            throw new Error(`Error deleting client: ${response.statusText}`);
-        }
-        return await response.json();
     }
 }
 

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CreateCourse = () => {
+const CourseForm = () => {
 
     return (
         <header className="bg-primary text-white text-center py-4">
@@ -10,4 +10,4 @@ const CreateCourse = () => {
 
 }
 
-export default CreateCourse
+export default CourseForm
