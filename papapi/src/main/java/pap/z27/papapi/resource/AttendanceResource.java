@@ -57,7 +57,7 @@ public class AttendanceResource {
 
     @PutMapping
     public ResponseEntity<String> updateAttendance(@RequestBody Attendance attendance, HttpSession session) {
-        Integer userId=(Integer)session.getAttribute("userId");
+        Integer userId=(Integer)session.getAttribute("user_id");
         String status=session.getAttribute("status").toString();
         if(status.equals("teacher")) {
             if(groupRepo.isLecturerOfGroup(userId,attendance.getCourse_code(),attendance.getSemester(),attendance.getGroup_number()) == 0)

@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.Group;
-import pap.z27.papapi.domain.subclasses.UserDTO;
+import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 import pap.z27.papapi.domain.User;
@@ -28,7 +28,7 @@ public class UserResource {
     }
 
     @GetMapping("/all")
-    public List<UserDTO> getAllUsers() {
+    public List<UserPublicInfo> getAllUsers() {
         return userRepo.findAllUsers();
     }
 
@@ -78,8 +78,21 @@ public class UserResource {
 
     @GetMapping("/usergroups")
     public List<Group> getUserGroups(HttpSession session) {
-        Integer userId = (Integer)session.getAttribute("userId");
+        Integer userId = (Integer)session.getAttribute("user_id");
         return groupRepo.findAllUsersGroups(userId);
+    }
+
+    @DeleteMapping()
+    public ResponseEntity<String> removeUser(@RequestParam Integer userId, HttpSession session) {
+        if (userRepo.countUserById(userId) == 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"ID not found!\"}");
+        }
+        Integer thisUserId = (Integer)session.getAttribute("user_id");
+        if(thisUserId.equals(userId))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Can't remove your own profile! \"}");
+        if(userRepo.removeUser(userId)==0)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Couldn't remove user! \"}");
+        return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 }
 

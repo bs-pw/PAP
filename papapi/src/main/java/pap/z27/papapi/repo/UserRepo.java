@@ -24,10 +24,10 @@ public class UserRepo {
                 .query(Integer.class)
                 .single();
     }
-    public List<UserDTO> findAllUsers() {
-        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.password,u.mail" +
+    public List<UserPublicInfo> findAllUsers() {
+        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.mail" +
                         " FROM USERS u join USER_TYPES ut using(USER_TYPE_ID)")
-                .query(UserDTO.class)
+                .query(UserPublicInfo.class)
                 .list();
     }
     public String findPasswordByMail(String mail) {
@@ -166,5 +166,10 @@ public class UserRepo {
                 .param(group_number)
                 .query(Integer.class)
                 .single();
+    }
+    public Integer removeUser(Integer userId) {
+        return jdbcClient.sql("DELETE FROM USERS where user_id=?")
+                .param(userId)
+                .update();
     }
 }
