@@ -1,10 +1,10 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const SidebarItem = ({ link, label, onClick = '' }) => {
     return (
         <li className="nav-item">
-            <a className="nav-link text-white" href={link} onClick={onClick} dangerouslySetInnerHTML={{ __html: label }}>
-            </a>
+            <Link to={link} className="nav-link text-white" onClick={onClick} dangerouslySetInnerHTML={{ __html: label }}></Link>
         </li>
     )
 }

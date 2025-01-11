@@ -22,8 +22,8 @@ const Sidebar = () => {
     ];
 
     const adminItems = [
-        { link: '/admin/courses', label: 'Kursy' },
         { link: '/admin/users', label: 'Użytkownicy' },
+        { link: '/admin/courses', label: 'Kursy' },
         { link: '/admin/lecturers', label: 'Wykładowcy' },
     ];
 

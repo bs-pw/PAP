@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import LecturerPage from "../pages/LecturersPage";
 import RegistrationPage from "../pages/admin/user/RegistrationPage";
 import CreateCourse from "../pages/admin/course/CreateCourse";
+import UsersPage from "../pages/admin/user/UsersPage";
 //import useAuthStatus from './useAuthStatus';
 
 const ProtectedRoute = ({ isAuthRequired = true }) => {
@@ -89,11 +90,20 @@ export const router = createBrowserRouter([
                         element: <MainLayout />,
                         children: [
                             {
-                                path: "register",
+                                path: "users",
                                 children: [
                                     {
                                         index: true,
-                                        element: <RegistrationPage />,
+                                        element: <UsersPage />,
+                                    },
+                                    {
+                                        path: "register",
+                                        children: [
+                                            {
+                                                index: true,
+                                                element: <RegistrationPage />,
+                                            },
+                                        ],
                                     },
                                 ],
                             },
