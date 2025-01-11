@@ -75,7 +75,7 @@ CREATE TABLE classes (
     hour                      NUMBER(4) NOT NULL,
     length                    NUMBER(4) NOT NULL,
     "where"                   VARCHAR2(32 CHAR) NOT NULL,
-    class_type_id NUMBER(3)
+    class_type_id NUMBER(3) NOT NULL
 );
 
 ALTER TABLE classes
@@ -210,7 +210,7 @@ CREATE TABLE users (
     surname                 VARCHAR2(64 CHAR) NOT NULL,
     password                VARCHAR2(64 CHAR) NOT NULL,
     mail                    VARCHAR2(64 CHAR) NOT NULL,
-    user_type_id NUMBER(3)
+    user_type_id NUMBER(3) NOT NULL
 );
 
 ALTER TABLE users ADD CONSTRAINT users_pk PRIMARY KEY ( user_id );
