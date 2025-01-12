@@ -19,6 +19,7 @@ const Sidebar = () => {
     const usersItems = [
         { link: '/', label: 'Strona główna' },
         { link: '/lecturer', label: 'Wykładowcy' },
+        { link: '/settings', label: 'Ustawienia' },
     ];
 
     const adminItems = [

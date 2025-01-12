@@ -34,7 +34,7 @@ public class AuthResource {
             session.setAttribute("user_id", user.getUser_id());
             session.setAttribute("user_type_id", user.getUser_type_id());
             session.setAttribute("loggedIn", true);
-            String response = "{\"loggedIn\":true, \"user_id\":\""+session.getAttribute("user_id")+"\", \"name\":\""+session.getAttribute("name")+"\", \"surname\":\""+session.getAttribute("surname")+"\", \"userTypeId\":\""+session.getAttribute("user_type_id")+"\"}";
+            String response = "{\"loggedIn\":true, \"user_id\":\""+session.getAttribute("user_id")+"\", \"name\":\""+session.getAttribute("name")+"\", \"surname\":\""+session.getAttribute("surname")+"\", \"mail\":\""+session.getAttribute("mail")+"\", \"userTypeId\":\""+session.getAttribute("user_type_id")+"\"}";
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\":\"Złe dane logowania!\"}");
@@ -52,7 +52,7 @@ public class AuthResource {
     public ResponseEntity<String> status(HttpSession session) {
         try{
             if((boolean) session.getAttribute("loggedIn")) {
-                String response = "{\"loggedIn\":true, \"user_id\":\""+session.getAttribute("user_id")+"\", \"name\":\""+session.getAttribute("name")+"\", \"surname\":\""+session.getAttribute("surname")+"\", \"userTypeId\":\""+session.getAttribute("user_type_id")+"\"}";
+                String response = "{\"loggedIn\":true, \"user_id\":\""+session.getAttribute("user_id")+"\", \"name\":\""+session.getAttribute("name")+"\", \"surname\":\""+session.getAttribute("surname")+"\", \"mail\":\""+session.getAttribute("mail")+"\", \"userTypeId\":\""+session.getAttribute("user_type_id")+"\"}";
                 return ResponseEntity.ok(response);
             }else {
                 return ResponseEntity.ok("{\"loggedIn\":false}");
