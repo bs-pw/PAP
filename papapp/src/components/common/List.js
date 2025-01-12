@@ -11,7 +11,7 @@ const List = ({ listName, adminButtons, columnNames, data, error, handleDelete, 
                 <thead>
                     <tr>
                         {columnNames.map((columnName) => (
-                            <th>{columnName}</th>
+                            <th key={columnName}>{columnName}</th>
                         ))}
                         {adminButtons && <th>Akcje</th>}
                     </tr>
@@ -21,7 +21,7 @@ const List = ({ listName, adminButtons, columnNames, data, error, handleDelete, 
                         <tr>
                             {
                                 Object.keys(item).map((key) => (
-                                    <td>{item[key]}</td>
+                                    <td key={key}>{item[key]}</td>
                                 ))
                             }
                             {adminButtons && <td>
