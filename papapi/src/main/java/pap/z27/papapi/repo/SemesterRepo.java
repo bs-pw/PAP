@@ -20,6 +20,12 @@ public class SemesterRepo {
                 .query(Semester.class)
                 .list();
     }
+    public Semester getSemester(String semesterCode) {
+        return jdbcClient.sql("SELECT * from SEMESTERS where semester_code=?")
+                .param(semesterCode)
+                .query(Semester.class)
+                .single();
+    }
     public Integer insertSemester(Semester semester) {
         return jdbcClient.sql("INSERT INTO SEMESTERS (semester_code, start_date, end_date) VALUES (?,?,?)")
                 .param(semester.getSemester_code())

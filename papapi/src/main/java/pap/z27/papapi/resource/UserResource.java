@@ -27,9 +27,18 @@ public class UserResource {
         this.groupRepo = groupRepo;
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserPublicInfo> getAllUsers(@PathVariable("userId") Integer userId, HttpSession session) {
+        if(session.getAttribute("user_type_id")==null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        return ResponseEntity.ok(userRepo.findUsersInfoByID(userId));
+    }
+
     @GetMapping("/all")
-    public List<UserPublicInfo> getAllUsers() {
-        return userRepo.findAllUsers();
+    public ResponseEntity<List<UserPublicInfo>> getAllUsers(HttpSession session) {
+        if(session.getAttribute("user_type_id")==null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        return ResponseEntity.ok(userRepo.findAllUsers());
     }
 
     @GetMapping("/password")
@@ -77,9 +86,9 @@ public class UserResource {
     }
 
     @GetMapping("/usergroups")
-    public List<Group> getUserGroups(HttpSession session) {
+    public ResponseEntity<List<Group>> getUserGroups(HttpSession session) {
         Integer userId = (Integer)session.getAttribute("user_id");
-        return groupRepo.findAllUsersGroups(userId);
+        return ResponseEntity.ok(groupRepo.findAllUsersGroups(userId));
     }
 
     @DeleteMapping("{userId}")
