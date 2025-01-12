@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import StudentCourses from './student/StudentCourses';
 
 const DashboardPage = () => {
     return (
-        <h1>Dashboard</h1>
+        <StudentCourses />
     )
 }
 

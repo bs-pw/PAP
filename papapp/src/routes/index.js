@@ -13,6 +13,7 @@ import UsersPage from "../pages/admin/user/UsersPage";
 import CoursePage from "../pages/admin/course/CoursePage";
 import SemesterPage from "../pages/admin/semester/SemesterPage";
 import SemesterForm from "../pages/admin/semester/SemesterForm";
+import StudentCourses from "../pages/student/StudentCourses";
 //import useAuthStatus from './useAuthStatus';
 
 const ProtectedRoute = ({ isAuthRequired = true }) => {
@@ -125,6 +126,66 @@ export const router = createBrowserRouter([
                                     {
                                         index: true,
                                         element: <CoursePage />,
+                                    },
+                                    {
+                                        path: "create",
+                                        children: [
+                                            {
+                                                index: true,
+                                                element: <CourseForm />,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        path: "edit/:id",
+                                        children: [
+                                            {
+                                                index: true,
+                                                element: <CourseForm />,
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                            {
+                                path: "semesters",
+                                children: [
+                                    {
+                                        index: true,
+                                        element: <SemesterPage />,
+                                    },
+                                    {
+                                        path: "create",
+                                        children: [
+                                            {
+                                                index: true,
+                                                element: <SemesterForm />,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        path: "edit/:id",
+                                        children: [
+                                            {
+                                                index: true,
+                                                element: <SemesterForm />,
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        path: "student",
+                        element: <MainLayout />,
+                        children: [
+                            {
+                                path: "courses",
+                                children: [
+                                    {
+                                        index: true,
+                                        element: <StudentCourses />,
                                     },
                                     {
                                         path: "create",

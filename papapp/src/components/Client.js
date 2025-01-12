@@ -248,6 +248,21 @@ class Client {
             throw new Error(error.message);
         });
     }
+
+    async getStudentCourses() {
+        return fetch(`${this.baseUrl}/class`, {
+            method: 'GET',
+            headers: this.headers,
+            credentials: this.credentials,
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error(`Error fetching student courses: ${response.statusText}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
 }
 
 export default Client;

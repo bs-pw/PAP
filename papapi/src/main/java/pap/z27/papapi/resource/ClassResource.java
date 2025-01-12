@@ -12,6 +12,7 @@ import pap.z27.papapi.repo.UserRepo;
 import java.util.List;
 
 @RestController
+@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping(path = "api/class")
 public class ClassResource {
     private final MyClassRepo classRepo;
@@ -25,11 +26,12 @@ public class ClassResource {
 
     @GetMapping
     public List<MyClass> getStudentClasses(HttpSession session) {
-        String status = (String) session.getAttribute("status");
-        if (!status.equals("student")) {
-            throw new IllegalStateException("You're not a student.");
-        }
-        Integer userId = (Integer) session.getAttribute("userId");
+//TODO: Naprawić !!!
+//        String status = (String) session.getAttribute("user_type_id");
+//        if (!status.equals("3")) {
+//            throw new IllegalStateException("You're not a student.");
+//        }
+        Integer userId = (Integer) session.getAttribute("user_id");
         return classRepo.findAllUsersClasses(userId);
     }
 
