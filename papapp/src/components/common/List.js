@@ -1,9 +1,6 @@
 import React from 'react'
 
-const List = ({ listName, adminButtons, columnNames, data, error, handleDelete, handleEdit }) => {
-    data.map((item) => (
-        console.log(item)
-    ))
+const List = ({ listName, adminButtons, columnNames, data, error, handleDelete, handleEdit, id }) => {
     return (
         <div>
             <h1>{listName}</h1>
@@ -28,9 +25,9 @@ const List = ({ listName, adminButtons, columnNames, data, error, handleDelete, 
                                 ))
                             }
                             {adminButtons && <td>
-                                <button className='btn btn-sm btn-danger' value={item.user_id} onClick={handleDelete}>Usuń</button>
+                                <button className='btn btn-sm btn-danger' value={item[id]} onClick={handleDelete}>Usuń</button>
                                 {' '}
-                                <button className='btn btn-sm btn-warning' value={item.user_id} onClick={handleEdit}>Edytuj</button>
+                                <button className='btn btn-sm btn-warning' value={item[id]} onClick={handleEdit}>Edytuj</button>
                             </td>}
                         </tr>
                     ))}

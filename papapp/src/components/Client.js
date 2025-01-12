@@ -200,6 +200,54 @@ class Client {
             throw new Error(error.message);
         });
     }
+
+    async getSemesters() {
+        return fetch(`${this.baseUrl}/semester`, {
+            method: 'GET',
+            headers: this.headers,
+            credentials: this.credentials,
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error(`Error fetching semesters: ${response.statusText}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+
+    async getSemester(semesterId) {
+        return fetch(`${this.baseUrl}/semester/${semesterId}`, {
+            method: 'GET',
+            headers: this.headers,
+            credentials: this.credentials,
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error(`Error fetching semester: ${response.statusText}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+
+    async createSemester(data) {
+        return fetch(`${this.baseUrl}/semester`, {
+            method: 'POST',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: JSON.stringify(data),
+        }).then(async response => {
+            let data = await response.json();
+            if (response.ok) {
+                return data;
+            } else {
+                throw new Error(`Error creating semester`);
+            }
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
 }
 
 export default Client;

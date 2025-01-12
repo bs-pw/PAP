@@ -11,6 +11,8 @@ import UserForm from "../pages/admin/user/UserForm";
 import CourseForm from "../pages/admin/course/CourseForm";
 import UsersPage from "../pages/admin/user/UsersPage";
 import CoursePage from "../pages/admin/course/CoursePage";
+import SemesterPage from "../pages/admin/semester/SemesterPage";
+import SemesterForm from "../pages/admin/semester/SemesterForm";
 //import useAuthStatus from './useAuthStatus';
 
 const ProtectedRoute = ({ isAuthRequired = true }) => {
@@ -107,7 +109,7 @@ export const router = createBrowserRouter([
                                         ],
                                     },
                                     {
-                                        path: "edit/:userId",
+                                        path: "edit/:id",
                                         children: [
                                             {
                                                 index: true,
@@ -134,11 +136,38 @@ export const router = createBrowserRouter([
                                         ],
                                     },
                                     {
-                                        path: "edit/:userId",
+                                        path: "edit/:id",
                                         children: [
                                             {
                                                 index: true,
                                                 element: <CourseForm />,
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                            {
+                                path: "semesters",
+                                children: [
+                                    {
+                                        index: true,
+                                        element: <SemesterPage />,
+                                    },
+                                    {
+                                        path: "create",
+                                        children: [
+                                            {
+                                                index: true,
+                                                element: <SemesterForm />,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        path: "edit/:id",
+                                        children: [
+                                            {
+                                                index: true,
+                                                element: <SemesterForm />,
                                             },
                                         ],
                                     },

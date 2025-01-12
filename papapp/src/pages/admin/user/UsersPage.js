@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom'
 
 const UsersPage = () => {
     const [users, setUsers] = useState([]);
-    const [userTypes, setUserTypes] = useState([]);
     const [error, setError] = useState(null);
     const client = useClient();
     const navigate = useNavigate();
@@ -51,7 +50,7 @@ const UsersPage = () => {
     return (
         <>
             <Link to="/admin/users/register" className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i class="bi bi-plus-lg"></i> Nowy</Link >
-            <List listName='Lista użytkowników' adminButtons={true} columnNames={columnNames} data={users} error={error} handleDelete={handleDeleteUser} handleEdit={handleEditUser} />
+            <List listName='Lista użytkowników' adminButtons={true} columnNames={columnNames} data={users} error={error} handleDelete={handleDeleteUser} handleEdit={handleEditUser} id="user_id" />
         </>
     )
 }

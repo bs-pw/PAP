@@ -2,15 +2,15 @@ import React from 'react'
 import FormInput from './FormInput'
 import FormSelect from './FormSelect'
 
-const Form = ({ formName, onSubmit, inputData, selectData, buttonName, message }) => {
+const Form = ({ formName, onSubmit, inputData = null, selectData = null, buttonName, message }) => {
     return (
         <div className="container mt-5">
             <h2>{formName}</h2>
             <form onSubmit={onSubmit}>
-                {inputData.map((input) => (
+                {inputData && inputData.map((input) => (
                     <FormInput key={input.name} {...input} />
                 ))}
-                {selectData.map((select) => (
+                {selectData && selectData.map((select) => (
                     <FormSelect key={select.name} {...select} />
                 ))}
 

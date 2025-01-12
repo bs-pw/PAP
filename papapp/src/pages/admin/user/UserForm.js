@@ -19,7 +19,7 @@ const UserForm = () => {
     const [buttonName, setButtonName] = useState('Zarejestruj');
 
     const client = useClient();
-    const { userId } = useParams();
+    const { id } = useParams();
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -60,14 +60,14 @@ const UserForm = () => {
 
     useEffect(() => {
         handleUserTypes();
-        if (userId) {
+        if (id) {
             setFormName('Edycja użytkownika');
             setButtonName('Zapisz');
-            handleGetUser(userId);
+            handleGetUser(id);
         }
     }, []);
 
-    console.log(userId);
+    console.log(id);
 
     const inputData = [
         { name: "name", type: "text", label: "Imię", value: formData.name, onChange: handleChange, required: true },
