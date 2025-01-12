@@ -20,6 +20,12 @@ public class CourseRepo {
                 .query(Course.class)
                 .list();
     }
+    public Course findCourse(String courseCode) {
+        return jdbcClient.sql("SELECT * from COURSES where course_code=?")
+                .param(courseCode)
+                .query(Course.class)
+                .single();
+    }
     public Integer insertCourse(Course course) {
         return jdbcClient.sql("INSERT INTO COURSES (course_code, title) VALUES (?,?)")
                 .param(course.getCourse_code())

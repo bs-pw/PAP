@@ -5,10 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.Course;
 import pap.z27.papapi.domain.MyClass;
 import pap.z27.papapi.repo.CourseRepo;
@@ -22,6 +19,11 @@ public class CourseResource {
     @Autowired
     public CourseResource(CourseRepo courseRepo) {
         this.courseRepo = courseRepo;
+    }
+
+    @GetMapping("/{courseCode}")
+    public ResponseEntity<Course> getCourse(@PathVariable String courseCode) {
+        return ResponseEntity.ok(courseRepo.findCourse(courseCode));
     }
 
     @PostMapping

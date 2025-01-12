@@ -8,6 +8,7 @@ import pap.z27.papapi.domain.Group;
 import pap.z27.papapi.domain.Lecturer;
 import pap.z27.papapi.domain.User;
 import pap.z27.papapi.domain.subclasses.UserInGroup;
+import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 
@@ -55,7 +56,7 @@ public class LecturerResource {
     }
 
     @GetMapping
-    public List<User> getAllLecturers() {
+    public List<UserPublicInfo> getAllLecturers() {
         return groupRepo.getAllLecturers();
     }
 

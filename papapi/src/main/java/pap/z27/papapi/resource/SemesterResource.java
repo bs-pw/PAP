@@ -21,11 +21,19 @@ public class SemesterResource {
     public SemesterResource(SemesterRepo semesterRepo) {
         this.semesterRepo = semesterRepo;
     }
+
     @GetMapping
     public List<Semester> getAllSemesters()
     {
         return semesterRepo.findAllSemesters();
     }
+
+    @GetMapping("/{semesterCode}")
+    public Semester getSemester(@PathVariable String semesterCode)
+    {
+        return semesterRepo.getSemester(semesterCode);
+    }
+
     @PostMapping
     public ResponseEntity<String> insertSemester (@RequestBody Semester semester, HttpSession session)
     {

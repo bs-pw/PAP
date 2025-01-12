@@ -7,6 +7,7 @@ import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.Group;
 import pap.z27.papapi.domain.User;
 import pap.z27.papapi.domain.subclasses.UserInGroup;
+import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 
 import java.util.List;
 @Repository
@@ -137,9 +138,9 @@ public class GroupRepo {
                 .list();
     }
 
-    public List<User> getAllLecturers() {
-        return jdbcClient.sql("SELECT DISTINCT u.USER_ID, NAME, SURNAME, MAIL FROM USERS u INNER JOIN LECTURERS l ON u.USER_ID = l.USER_ID")
-                .query(User.class)
+    public List<UserPublicInfo> getAllLecturers() {
+        return jdbcClient.sql("SELECT DISTINCT u.USER_ID, NAME, SURNAME, ut.TYPE, MAIL FROM USERS u INNER JOIN LECTURERS l ON u.USER_ID = l.USER_ID INNER JOIN USER_TYPES ut USING (USER_TYPE_ID)")
+                .query(UserPublicInfo.class)
                 .list();
     }
 
