@@ -2,6 +2,7 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.Group;
@@ -31,8 +32,14 @@ public class LecturerResource {
     public ResponseEntity<String> insertLecturer(@PathVariable Integer lecturerId,
                                                      @RequestBody Group group, HttpSession session) {
         Integer userTypeId = (Integer)session.getAttribute("user_type_id");
-        if (userTypeId != 0) {
-            return ResponseEntity.badRequest().body("{\"message\":\"only admin can add lecturers\"}");
+        Integer userId = (Integer)session.getAttribute("user_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if(userTypeId != 0)
+        {
+            if(userRepo.checkIfIsCoordinator(userId,group.getCourse_code(),group.getSemester())==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can insert lecturers \"}");
         }
         Integer insertedTypeId = userRepo.findUsersTypeId(lecturerId);
         if (insertedTypeId == 3) {
@@ -46,13 +53,18 @@ public class LecturerResource {
     }
 
     @GetMapping(path = "{lecturerId}")
-    public List<Group> getLecturerGroups(
-            @PathVariable("lecturerId") Integer lecturerId
+    public ResponseEntity<List<Group>> getLecturerGroups(
+            @PathVariable("lecturerId") Integer lecturerId,
+            HttpSession session
             ) {
-        if (groupRepo.getLecturerGroups(lecturerId).isEmpty()) {
-            throw new IllegalArgumentException("No lecturer groups found for lecturer " + lecturerId);
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return groupRepo.getLecturerGroups(lecturerId);
+        if (groupRepo.getLecturerGroups(lecturerId).isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(groupRepo.getLecturerGroups(lecturerId));
     }
 
     @GetMapping
@@ -61,7 +73,17 @@ public class LecturerResource {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> removeLecturer(@RequestBody UserInGroup lecturer) {
+    public ResponseEntity<String> removeLecturer(@RequestBody UserInGroup lecturer, HttpSession session) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        Integer userId = (Integer)session.getAttribute("user_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if(userTypeId != 0)
+        {
+            if(userRepo.checkIfIsCoordinator(userId,lecturer.getCourse_code(),lecturer.getSemester())==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can remove lecturers \"}");
+        }
         if (groupRepo.removeLecturer(lecturer) == 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"Couldn't delete lecturer (lecturer might not exist).\"}");
         }

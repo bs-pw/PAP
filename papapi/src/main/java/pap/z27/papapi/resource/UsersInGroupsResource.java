@@ -23,12 +23,15 @@ public class UsersInGroupsResource {
 
     @PostMapping
     public ResponseEntity<String> addStudentToGroup(@RequestBody UserInGroup userInGroup, HttpSession session) {
-        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
         if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
                 userInGroup.getCourse_code(), 
                 userInGroup.getSemester())==0)) {
-            return ResponseEntity.badRequest().body("{\"message\":\"Only admins/coordinators can add students to groups\"}");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admins/coordinators can add students to groups\"}");
         }
 
         Integer userId = userInGroup.getUser_id();
@@ -51,6 +54,9 @@ public class UsersInGroupsResource {
         Integer affectedUsersTypeId = userRepo.findUsersTypeId(affectedUsersId);
 
         Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (userTypeId == 3) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("{\"message\":\"Students cannot change groups by themselves.\"}");

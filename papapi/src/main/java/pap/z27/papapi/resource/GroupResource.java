@@ -9,35 +9,52 @@ import pap.z27.papapi.domain.Course;
 import pap.z27.papapi.domain.Group;
 import pap.z27.papapi.repo.CourseRepo;
 import pap.z27.papapi.repo.GroupRepo;
+import pap.z27.papapi.repo.UserRepo;
 
 @RestController
 @RequestMapping(path = "api/group")
 public class GroupResource {
     private final GroupRepo groupRepo;
+    private final UserRepo userRepo;
 
     @Autowired
-    public GroupResource(GroupRepo groupRepo) {
+    public GroupResource(GroupRepo groupRepo, UserRepo userRepo) {
         this.groupRepo = groupRepo;
+        this.userRepo = userRepo;
     }
 
     @PostMapping
     public ResponseEntity<String> insertGroup(@RequestBody Group group,
                                                  HttpSession session) {
-        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
-        if (userTypeId != 0) {
-            return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert groups\"}\"");
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        try {
-            groupRepo.insertGroup(group);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        if(userTypeId != 0)
+        {
+            if(userRepo.checkIfIsCoordinator(userId,group.getCourse_code(),group.getSemester())==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can insert groups \"}");
+        }
+            if(groupRepo.insertGroup(group)==0)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("{\"message\":\"Cannot insert group (group might already exist)\"}");
-        }
+
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 
     @DeleteMapping
-    public ResponseEntity<String> removeGroup(@RequestBody Group group) {
+    public ResponseEntity<String> removeGroup(@RequestBody Group group, HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if(userTypeId != 0)
+        {
+            if(userRepo.checkIfIsCoordinator(userId,group.getCourse_code(),group.getSemester())==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can remove groups \"}");
+        }
         if (groupRepo.removeGroup(group) == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("{\"message\":\"Group not found\"}");

@@ -16,6 +16,7 @@ import pap.z27.papapi.repo.UserRepo;
 public class FinalGradeResource {
     private final FinalGradeRepo finalGradeRepo;
     private final UserRepo userRepo;
+
     @Autowired
     public FinalGradeResource(FinalGradeRepo finalGradeRepo, UserRepo userRepo) {
         this.finalGradeRepo = finalGradeRepo;
@@ -27,6 +28,10 @@ public class FinalGradeResource {
                                                       HttpSession session) {
 
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
         if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
                 finalGrade.getCourse_code(),
@@ -48,6 +53,10 @@ public class FinalGradeResource {
                                                    HttpSession session) {
 
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
         if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
                 finalGrade.getCourse_code(),
@@ -64,7 +73,17 @@ public class FinalGradeResource {
     }
 
     @PutMapping
-    public ResponseEntity<String> updateFinalGrade(@RequestBody FinalGrade finalGrade) {
+    public ResponseEntity<String> updateFinalGrade(@RequestBody FinalGrade finalGrade, HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(userId,
+                finalGrade.getCourse_code(),
+                finalGrade.getSemester())==0)) {
+            return ResponseEntity.badRequest().body("{\"message\":\"Only admins/coordinators can change final grades \"}");
+        }
         if (finalGradeRepo.updateFinalGrade(finalGrade) == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("{\"message\":\"Couldn't update final grade\"}");

@@ -29,7 +29,10 @@ public class CourseResource {
     @PostMapping
     public ResponseEntity<String> insertCourse(@RequestBody Course course,
                                                   HttpSession session) {
-        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert courses\"}\"");
         }

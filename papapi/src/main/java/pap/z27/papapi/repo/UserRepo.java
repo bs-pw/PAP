@@ -8,6 +8,7 @@ import pap.z27.papapi.domain.Group;
 import pap.z27.papapi.domain.User;
 import pap.z27.papapi.domain.subclasses.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -96,12 +97,67 @@ public class UserRepo {
                 .param(user.getUser_type_id())
                 .update();
     }
+    public Integer updateUser(Integer userId, User user) {
+        StringBuilder query = new StringBuilder("UPDATE USERS set ");
+        List<Object> params=new ArrayList<>(){};
+        if(user.getName()!=null)
+        {
+            query.append("name=?, ");
+            params.add(user.getName());
+        }
+        if(user.getSurname()!=null)
+        {
+            query.append("surname=?, ");
+            params.add(user.getSurname());
+        }
+        if(user.getPassword()!=null)
+        {
+            query.append("password=?, ");
+            params.add(user.getPassword());
+        }
+        if(user.getMail()!=null)
+        {
+            query.append("mail=?, ");
+            params.add(user.getMail());
+        }
+        if(user.getUser_type_id()!=null)
+        {
+            query.append("user_type_id=?, ");
+            params.add(user.getUser_type_id());
+        }
+        if(params.isEmpty()) return 0;
+        else {
+            query.setLength(query.length() - 2);
+            query.append(" WHERE user_id=?");
+            params.add(userId);
+            return jdbcClient.sql(query.toString())
+                    .params(params)
+                    .update();
+        }
+    }
 
-    public Integer updateUsersPassword(Integer userId, String password) {
-        return jdbcClient.sql("UPDATE USERS set password=? where user_id=?")
-                .param(password)
-                .param(userId)
-                .update();
+    public Integer updateUsersPasswordOrMail(Integer userId, User user) {
+        StringBuilder query = new StringBuilder("UPDATE USERS set ");
+        List<Object> params=new ArrayList<>(){};
+        if(user.getPassword()!=null)
+        {
+            query.append("password=?, ");
+            params.add(user.getPassword());
+        }
+        if(user.getMail()!=null)
+        {
+            query.append("mail=?, ");
+            params.add(user.getMail());
+        }
+        if(params.isEmpty()) return 0;
+        else {
+            query.setLength(query.length() - 2);
+            query.append(" WHERE user_id=?");
+            params.add(userId);
+            return jdbcClient.sql(query.toString())
+                    .params(params)
+                    .update();
+        }
     }
     public Integer updateUsersType(Integer userId, Integer type) {
         return jdbcClient.sql("UPDATE USERS set USER_TYPE_ID=? where user_id=?")
