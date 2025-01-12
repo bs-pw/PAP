@@ -38,7 +38,7 @@ const SemesterForm = () => {
         try {
             const data = await client.getSemester(semesterId);
             console.log(data);
-            setFormData({ ...formData, data });
+            setFormData(data);
         } catch (error) {
             //navigate('/admin/semesters');
         }

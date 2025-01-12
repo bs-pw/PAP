@@ -14,6 +14,7 @@ import CoursePage from "../pages/admin/course/CoursePage";
 import SemesterPage from "../pages/admin/semester/SemesterPage";
 import SemesterForm from "../pages/admin/semester/SemesterForm";
 import StudentCourses from "../pages/student/StudentCourses";
+import MyDetails from "../pages/MyDetails";
 //import useAuthStatus from './useAuthStatus';
 
 const ProtectedRoute = ({ isAuthRequired = true }) => {
@@ -86,6 +87,16 @@ export const router = createBrowserRouter([
                             {
                                 index: true,
                                 element: <LecturerPage />,
+                            },
+                        ],
+                    },
+                    {
+                        path: "settings",
+                        element: <MainLayout />,
+                        children: [
+                            {
+                                index: true,
+                                element: <MyDetails />,
                             },
                         ],
                     },

@@ -41,7 +41,10 @@ const UserForm = () => {
         try {
             const data = await client.getUser(userId);
             console.log(data);
-            setFormData({ ...formData, data });
+            setFormData(data)
+
+            // setFormData({ ...formData, [name]: data });
+            console.log(formData)
         } catch (error) {
             //navigate('/admin/users');
         }
@@ -75,6 +78,8 @@ const UserForm = () => {
         { name: "mail", type: "email", label: "Email", value: formData.mail, onChange: handleChange, required: true },
         { name: "password", type: "password", label: "Hasło", value: formData.password, onChange: handleChange, required: true },
     ];
+
+    if (id) { inputData[3].label += "(zostaw puste, jeśli nie zmieniasz hasła)"; inputData[3].required = false }
 
     const selectData = [
         { name: "user_type_id", label: "Typ użytkownika", userTypes: userTypes, user_type_id: formData.user_type_id, onChange: handleChange },

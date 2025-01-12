@@ -208,7 +208,7 @@ CREATE TABLE users (
     user_id                 NUMBER(6)  GENERATED ALWAYS as IDENTITY(START with 1 INCREMENT by 1),
     name                    VARCHAR2(64 CHAR) NOT NULL,
     surname                 VARCHAR2(64 CHAR) NOT NULL,
-    password                VARCHAR2(64 CHAR) NOT NULL,
+    password                VARCHAR2(100 CHAR) NOT NULL,
     mail                    VARCHAR2(64 CHAR) NOT NULL,
     user_type_id NUMBER(3) NOT NULL
 );

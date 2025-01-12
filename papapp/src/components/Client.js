@@ -1,10 +1,11 @@
-import { data } from "react-router-dom";
+import { data, useParams } from "react-router-dom";
 
 class Client {
     loggedIn = null;
     userId = null;
     name = null;
     surname = null;
+    main = null;
     userTypeId = null;
 
     constructor(baseUrl) {
@@ -29,6 +30,7 @@ class Client {
             this.userId = data.user_id;
             this.name = data.name;
             this.surname = data.surname;
+            this.mail = data.mail;
             this.userTypeId = data.userTypeId;
             return true;
         }).catch(error => {
@@ -50,6 +52,7 @@ class Client {
                 this.userId = data.user_id;
                 this.name = data.name;
                 this.surname = data.surname;
+                this.mail = data.mail;
                 this.userTypeId = data.userTypeId;
                 console.log("client logged in: " + data.loggedIn);
             }
@@ -122,12 +125,13 @@ class Client {
         });
     }
 
-    async updateUser(userId, data) {
-        return fetch(`${this.baseUrl}/user/${userId}`, {
+    async updateUserPassword(userId, password) {
+        return fetch(`${this.baseUrl}/user/${userId}?password=${password}`, {
             method: 'PUT',
             headers: this.headers,
             credentials: this.credentials,
-            body: JSON.stringify(data),
+            // body: JSON.stringify({ password: password })
+
         }).then(response => {
             if (response.ok) {
                 return true;
