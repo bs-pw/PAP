@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.SecurityConfig;
 import pap.z27.papapi.domain.Group;
+import pap.z27.papapi.domain.subclasses.UserInfo;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
@@ -32,13 +33,14 @@ public class UserResource {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserPublicInfo> getUsersInfo(@PathVariable("userId") Integer userId, HttpSession session) {
+    public ResponseEntity<UserInfo> getUsersInfo(@PathVariable("userId") Integer userId, HttpSession session) {
         Integer thisUserTypeId = (Integer)session.getAttribute("user_type_id");
+        Integer thisUserId = (Integer)session.getAttribute("user_id");
         if (thisUserTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Integer userTypeId = userRepo.findUsersTypeId(userId);
-        if(!thisUserTypeId.equals(0) && (userTypeId.equals(3) || userTypeId.equals(4))) {
+        if(!thisUserTypeId.equals(0) && (userTypeId.equals(3) || userTypeId.equals(4)) && !thisUserId.equals(userId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(userRepo.findUsersInfoByID(userId));

@@ -38,11 +38,11 @@ public class UserRepo {
                 .single()
                 .getPassword();
     }
-    public UserPublicInfo findUsersInfoByID(Integer userId) {
-        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.mail" +
+    public UserInfo findUsersInfoByID(Integer userId) {
+        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,USER_TYPE_ID,ut.type,u.mail" +
                         " FROM USERS u join USER_TYPES ut using(USER_TYPE_ID) where user_id=?")
                 .param(userId)
-                .query(UserPublicInfo.class)
+                .query(UserInfo.class)
                 .single();
     }
     public UserPublicInfo findUsersInfoByMail(String mail) {
