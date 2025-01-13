@@ -91,6 +91,7 @@ public class UserResource {
             HttpSession session
     ) {
         Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        Integer thisUserId = (Integer)session.getAttribute("user_id");
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -108,7 +109,7 @@ public class UserResource {
             if(userRepo.updateUser(userId, user)==0)
                 return ResponseEntity.badRequest().body("{\"message\":\"Incorrect data! \"}\"");
         }
-        else if(!user.getUser_id().equals(userId))
+        else if(!thisUserId.equals(userId))
         {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admin and user himself can update his profile! \"}\"");
         }
