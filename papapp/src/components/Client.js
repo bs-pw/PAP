@@ -347,6 +347,39 @@ class Client {
             throw new Error(error.message);
         });
     }
+
+    async getCoursesInSemesterBySemester(semesterId) {
+        return fetch(`${this.baseUrl}/courseinsemester/bysemester/${semesterId}`, {
+            method: 'GET',
+            headers: this.headers,
+            credentials: this.credentials,
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error(`Error fetching courses in semester: ${response.statusText}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+
+    async deleteCourseInSemester(semesterId, courseId) {
+        return fetch(`${this.baseUrl}/courseinsemester`, {
+            method: 'DELETE',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: JSON.stringify({ semester_code: semesterId, course_code: courseId }),
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error(`Error deleting course in semester: ${response.statusText}`);
+            }
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
 }
+
 
 export default Client;

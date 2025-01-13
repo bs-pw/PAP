@@ -26,6 +26,7 @@ const Sidebar = () => {
         { link: '/admin/users', label: 'Użytkownicy' },
         { link: '/admin/courses', label: 'Kursy' },
         { link: '/admin/semesters', label: 'Semestry' },
+        // { link: '/admin/coursesinsemester/24Z', label: 'Kursy w semestrach' },
     ];
 
     return (

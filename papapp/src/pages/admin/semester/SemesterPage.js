@@ -30,9 +30,14 @@ const SemesterPage = () => {
         }
     }
 
-    const handleEditSemester = async (e) => {
+    const handleEditSemester = (e) => {
         e.preventDefault();
         navigate(`/admin/semesters/edit/` + e.target.value);
+    }
+
+    const handleVievCoursesInSemester = (e) => {
+        e.preventDefault();
+        navigate(`/admin/semesters/${e.target.value}/courses`);
     }
 
     useEffect(() => {
@@ -44,7 +49,7 @@ const SemesterPage = () => {
     return (
         <>
             <Link to="/admin/semesters/create" className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i class="bi bi-plus-lg"></i> Nowy</Link >
-            <List listName='Lista semestrów' columnNames={['Kod', 'Data początku', 'Data końca']} data={semesters} error={error} adminButtons={true} handleDelete={handleDeleteSemester} handleEdit={handleEditSemester} id="semester_code" />
+            <List listName='Lista semestrów' columnNames={['Kod', 'Data początku', 'Data końca']} data={semesters} error={error} adminButtons={true} userButtons={true} handleDelete={handleDeleteSemester} handleEdit={handleEditSemester} handleViev={handleVievCoursesInSemester} id="semester_code" />
         </>
     )
 }

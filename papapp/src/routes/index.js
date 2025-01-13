@@ -15,6 +15,8 @@ import SemesterPage from "../pages/admin/semester/SemesterPage";
 import SemesterForm from "../pages/admin/semester/SemesterForm";
 import StudentCourses from "../pages/student/StudentCourses";
 import MyDetails from "../pages/MyDetails";
+import CourseInSemesterPage from "../pages/admin/courseInSemester/CourseInSemesterPage";
+import CourseInSemesterForm from "../pages/admin/courseInSemester/CourseInSemesterForm";
 //import useAuthStatus from './useAuthStatus';
 
 const ProtectedRoute = ({ isAuthRequired = true }) => {
@@ -113,21 +115,11 @@ export const router = createBrowserRouter([
                                     },
                                     {
                                         path: "register",
-                                        children: [
-                                            {
-                                                index: true,
-                                                element: <UserForm />,
-                                            },
-                                        ],
+                                        element: <UserForm />,
                                     },
                                     {
                                         path: "edit/:id",
-                                        children: [
-                                            {
-                                                index: true,
-                                                element: <UserForm />,
-                                            },
-                                        ],
+                                        element: <UserForm />,
                                     },
                                 ],
                             },
@@ -140,21 +132,12 @@ export const router = createBrowserRouter([
                                     },
                                     {
                                         path: "create",
-                                        children: [
-                                            {
-                                                index: true,
-                                                element: <CourseForm />,
-                                            },
-                                        ],
+                                        element: <CourseForm />,
+
                                     },
                                     {
                                         path: "edit/:id",
-                                        children: [
-                                            {
-                                                index: true,
-                                                element: <CourseForm />,
-                                            },
-                                        ],
+                                        element: <CourseForm />,
                                     },
                                 ],
                             },
@@ -167,20 +150,29 @@ export const router = createBrowserRouter([
                                     },
                                     {
                                         path: "create",
-                                        children: [
-                                            {
-                                                index: true,
-                                                element: <SemesterForm />,
-                                            },
-                                        ],
+                                        element: <SemesterForm />,
                                     },
                                     {
                                         path: "edit/:id",
+                                        element: <SemesterForm />,
+                                    },
+                                    {
+                                        path: ":semesterId",
                                         children: [
                                             {
-                                                index: true,
-                                                element: <SemesterForm />,
+                                                path: "courses",
+                                                children: [
+                                                    {
+                                                        index: true,
+                                                        element: <CourseInSemesterPage />,
+                                                    },
+                                                    {
+                                                        path: "add",
+                                                        element: <CourseInSemesterForm />,
+                                                    },
+                                                ]
                                             },
+
                                         ],
                                     },
                                 ],
@@ -198,24 +190,6 @@ export const router = createBrowserRouter([
                                         index: true,
                                         element: <StudentCourses />,
                                     },
-                                    {
-                                        path: "create",
-                                        children: [
-                                            {
-                                                index: true,
-                                                element: <CourseForm />,
-                                            },
-                                        ],
-                                    },
-                                    {
-                                        path: "edit/:id",
-                                        children: [
-                                            {
-                                                index: true,
-                                                element: <CourseForm />,
-                                            },
-                                        ],
-                                    },
                                 ],
                             },
                             {
@@ -224,24 +198,6 @@ export const router = createBrowserRouter([
                                     {
                                         index: true,
                                         element: <SemesterPage />,
-                                    },
-                                    {
-                                        path: "create",
-                                        children: [
-                                            {
-                                                index: true,
-                                                element: <SemesterForm />,
-                                            },
-                                        ],
-                                    },
-                                    {
-                                        path: "edit/:id",
-                                        children: [
-                                            {
-                                                index: true,
-                                                element: <SemesterForm />,
-                                            },
-                                        ],
                                     },
                                 ],
                             },
