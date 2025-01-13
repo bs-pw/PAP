@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.GradeCategory;
 import pap.z27.papapi.repo.GradeCategoryRepo;
+import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 
 import java.util.List;
@@ -16,17 +17,23 @@ import java.util.List;
 public class GradeCategoryResource {
     public final GradeCategoryRepo gradeCategoryRepo;
     public final UserRepo userRepo;
+    public final GroupRepo groupRepo;
 
     @Autowired
-    public GradeCategoryResource(GradeCategoryRepo gradeCategoryRepo, UserRepo userRepo) {
+    public GradeCategoryResource(GradeCategoryRepo gradeCategoryRepo, UserRepo userRepo, GroupRepo groupRepo) {
         this.gradeCategoryRepo = gradeCategoryRepo;
         this.userRepo = userRepo;
+        this.groupRepo = groupRepo;
     }
 
     @PostMapping
     public ResponseEntity<String> insertGradeCategory(@RequestBody GradeCategory gradeCategory, HttpSession session) {
 
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         Integer userId = (Integer) session.getAttribute("user_id");
         if(userTypeId != 0)
         {
@@ -41,10 +48,21 @@ public class GradeCategoryResource {
     }
 
     @GetMapping
-    public List<GradeCategory> findCategoryByCourse(
+    public ResponseEntity<List<GradeCategory>> findCategoryByCourse(
             @RequestParam String courseCode,
-            @RequestParam String semester
+            @RequestParam String semester,
+            HttpSession session
     ) {
-        return gradeCategoryRepo.findAllCourseGradeCategories(courseCode, semester);
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if(groupRepo.isLecturerOfCourse(userId,semester,courseCode)==0 && !userTypeId.equals(0))
+        {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        return ResponseEntity.ok(gradeCategoryRepo.findAllCourseGradeCategories(courseCode, semester));
     }
 }

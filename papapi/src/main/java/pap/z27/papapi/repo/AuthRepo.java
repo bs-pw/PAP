@@ -11,6 +11,7 @@ public class AuthRepo {
     private final JdbcClient jdbcClient;
     public AuthRepo(JdbcClient jdbcClient) {this.jdbcClient = jdbcClient;}
 
+
     public boolean isPasswordCorrect(String mail, Password password) {
         try{
             String passwordFromDB = jdbcClient.sql("SELECT password FROM USERS where mail=?")

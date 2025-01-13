@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pap.z27.papapi.SecurityConfig;
 import pap.z27.papapi.domain.subclasses.Credentials;
 import pap.z27.papapi.domain.subclasses.Password;
 import pap.z27.papapi.domain.subclasses.UserLoginInfo;
@@ -19,10 +20,12 @@ import pap.z27.papapi.repo.UserRepo;
 public class AuthResource {
     private AuthRepo loginRepo;
     private UserRepo userRepo;
+    private SecurityConfig securityConfig;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Credentials credentials, HttpServletRequest request) {
-        if (loginRepo.isPasswordCorrect(credentials.getMail(), new Password(credentials.getPassword()))) {
+        String hash_pass = userRepo.findPasswordByMail(credentials.getMail());
+        if (securityConfig.passwordEncoder().matches(credentials.getPassword(), hash_pass)) {
             HttpSession session = request.getSession(false);
             if (session == null) {
                 session = request.getSession(true);

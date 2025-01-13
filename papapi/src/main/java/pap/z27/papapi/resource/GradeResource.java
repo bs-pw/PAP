@@ -2,6 +2,7 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.Grade;
@@ -52,17 +53,25 @@ public class GradeResource {
 
 
     @GetMapping(path = "{userId}")
-    public List<Grade> getAllGrades(@PathVariable Integer userId) {
-        Integer userTypeId = userRepo.findUsersTypeId(userId);
-
-        if (userTypeId!=2 && userTypeId!=3) {
-            throw new IllegalStateException("User is not student");
+    public ResponseEntity<List<Grade>> getAllGrades(@PathVariable Integer userId, HttpSession session){
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        Integer thisUserId = (Integer) session.getAttribute("user_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return gradeRepo.getAllUserGrades(userId);
+        if (userTypeId.equals(3) && !thisUserId.equals(userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        return ResponseEntity.ok(gradeRepo.getAllUserGrades(userId));
     }
 
     @PostMapping
     public ResponseEntity<String> insertGrade(@RequestBody Grade grade, HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         String status = canUserUpdateGrade(grade, session);
         if (!status.equals("ok")) {
             return ResponseEntity.badRequest().body(status);
@@ -89,6 +98,11 @@ public class GradeResource {
 
     @DeleteMapping
     public ResponseEntity<String> removeGrade(@RequestBody Grade grade, HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         String status = canUserUpdateGrade(grade, session);
         if (!status.equals("ok")) {
             return ResponseEntity.badRequest().body(status);

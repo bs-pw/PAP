@@ -3,6 +3,7 @@ package pap.z27.papapi.resource;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.ClassType;
@@ -38,6 +39,10 @@ public class SemesterResource {
     public ResponseEntity<String> insertSemester (@RequestBody Semester semester, HttpSession session)
     {
         Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert semesters\"}\"");
         }

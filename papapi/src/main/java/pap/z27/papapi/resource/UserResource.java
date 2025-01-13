@@ -4,7 +4,9 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+//import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import pap.z27.papapi.SecurityConfig;
 import pap.z27.papapi.domain.Group;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 import pap.z27.papapi.repo.GroupRepo;
@@ -20,53 +22,100 @@ import java.util.List;
 public class UserResource {
     private final UserRepo userRepo;
     private final GroupRepo groupRepo;
+    private final SecurityConfig securityConfig;
 
     @Autowired
-    public UserResource(UserRepo userRepo, GroupRepo groupRepo) {
+    public UserResource(UserRepo userRepo, GroupRepo groupRepo, SecurityConfig securityConfig) {
         this.userRepo = userRepo;
         this.groupRepo = groupRepo;
+        this.securityConfig = securityConfig;
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserPublicInfo> getAllUsers(@PathVariable("userId") Integer userId, HttpSession session) {
-        if(session.getAttribute("user_type_id")==null)
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    public ResponseEntity<UserPublicInfo> getUsersInfo(@PathVariable("userId") Integer userId, HttpSession session) {
+        Integer thisUserTypeId = (Integer)session.getAttribute("user_type_id");
+        if (thisUserTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Integer userTypeId = userRepo.findUsersTypeId(userId);
+        if(!thisUserTypeId.equals(0) && (userTypeId.equals(3) || userTypeId.equals(4))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         return ResponseEntity.ok(userRepo.findUsersInfoByID(userId));
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<UserPublicInfo>> getAllUsers(HttpSession session) {
-        if(session.getAttribute("user_type_id")==null)
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (!userTypeId.equals(0))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         return ResponseEntity.ok(userRepo.findAllUsers());
     }
 
-    @GetMapping("/password")
-    public String getpass(HttpSession session) {
-        String m=(String)session.getAttribute("mail");
-        return userRepo.findPasswordByMail(m);
-    }
+    // Do usunięcia???
+//    @GetMapping("/password")
+//    public String getpass(HttpSession session) {
+//        String m=(String)session.getAttribute("mail");
+//        return userRepo.findPasswordByMail(m);
+//    }
 
     @PostMapping
     public ResponseEntity<String> insertUser(@RequestBody User user, HttpSession session) {
         Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (userTypeId != 0) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admin can insert users!\"}\"");
         }
-            if(userRepo.insertUser(user)==0)
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Couldn't insert user! \"}");
+
+        User usr = new User(user.getName(),
+                            user.getSurname(),
+                            user.getPassword(),
+                            user.getMail(),
+                            user.getUser_type_id());
+
+
+        if(userRepo.insertUser(usr)==0)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Couldn't insert user! \"}");
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 
     @PutMapping(path = "{userId}")
-    public ResponseEntity<String> updatePassword(
+    public ResponseEntity<String> updateUser(
             @PathVariable("userId") Integer userId,
-            @RequestParam String password
+            @RequestBody User user,
+            HttpSession session
     ) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         if (userRepo.countUserById(userId) == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"ID not found!\"}");
         }
-        userRepo.updateUsersPassword(userId, password);
+        if(user.getPassword()!=null)
+        {
+            String hash_pass = securityConfig.passwordEncoder().encode(user.getPassword());
+            user.setPassword(hash_pass);
+        }
+
+        if (userTypeId == 0) {
+            if(userRepo.updateUser(userId, user)==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Incorrect data! \"}\"");
+        }
+        else if(!user.getUser_id().equals(userId))
+        {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admin and user himself can update his profile! \"}\"");
+        }
+        else {
+            if(userRepo.updateUsersPasswordOrMail(userId, user)==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Incorrect data! \"}\"");
+        }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
 
     }
@@ -77,6 +126,10 @@ public class UserResource {
             @RequestParam Integer user_type_id,
             HttpSession session
     ) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if((Integer)session.getAttribute("user_type_id") == 0) {
             if(userRepo.updateUsersType(userId, user_type_id)==0)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad type id!\"}");
@@ -87,6 +140,11 @@ public class UserResource {
 
     @GetMapping("/usergroups")
     public ResponseEntity<List<Group>> getUserGroups(HttpSession session) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         Integer userId = (Integer)session.getAttribute("user_id");
         return ResponseEntity.ok(groupRepo.findAllUsersGroups(userId));
     }

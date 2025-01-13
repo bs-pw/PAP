@@ -6,10 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.MyClass;
+import pap.z27.papapi.domain.subclasses.ClassDTO;
 import pap.z27.papapi.repo.MyClassRepo;
 import pap.z27.papapi.repo.UserRepo;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
@@ -24,15 +26,23 @@ public class ClassResource {
         this.userRepo = userRepo;
     }
 
-    @GetMapping
-    public List<MyClass> getStudentClasses(HttpSession session) {
-//TODO: Naprawić !!!
-//        String status = (String) session.getAttribute("user_type_id");
-//        if (!status.equals("3")) {
-//            throw new IllegalStateException("You're not a student.");
-//        }
-        Integer userId = (Integer) session.getAttribute("user_id");
-        return classRepo.findAllUsersClasses(userId);
+    @GetMapping("{userId}")
+    public ResponseEntity<List<ClassDTO>> getUserClasses(@PathVariable("userId") Integer userId, HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Integer lookUpType = userRepo.findUsersTypeId(userId);
+        Integer thisUserId = (Integer) session.getAttribute("user_id");
+
+        if (userId.equals(thisUserId) || userTypeId.equals(0)) {
+            return ResponseEntity.ok(classRepo.findAllUsersClasses(userId));
+        }
+        if (lookUpType.equals(1) || lookUpType.equals(2)) {
+            return ResponseEntity.ok(classRepo.findAllLecturersClasses(userId));
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @PostMapping
@@ -44,6 +54,9 @@ public class ClassResource {
         // 20-26: mon-sun every 2 weeks (odd weeks)
 
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         Integer userId = (Integer) session.getAttribute("user_id");
         if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, myClass.getCourse_code(), myClass.getSemester(), myClass.getGroup_number())==0)
                 && userRepo.checkIfIsCoordinator(userId, myClass.getCourse_code(), myClass.getSemester())==0)
@@ -61,6 +74,9 @@ public class ClassResource {
     public ResponseEntity<String> removeClass(@RequestBody MyClass myClass,
                                                  HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         Integer userId = (Integer) session.getAttribute("user_id");
         if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, myClass.getCourse_code(), myClass.getSemester(), myClass.getGroup_number())==0)
                 && userRepo.checkIfIsCoordinator(userId, myClass.getCourse_code(), myClass.getSemester())==0)

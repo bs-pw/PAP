@@ -181,4 +181,13 @@ public class GroupRepo {
                 .param(group_number)
                 .query(Integer.class)
                 .single();
-    }}
+    }
+    public Integer isLecturerOfCourse(Integer userId, String semester, String course_code) {
+        return jdbcClient.sql("SELECT count(*) from LECTURERS where USER_ID=? and SEMESTER=? and COURSE_CODE=?")
+                .param(userId)
+                .param(semester)
+                .param(course_code)
+                .query(Integer.class)
+                .single();
+    }
+}

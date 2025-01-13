@@ -23,10 +23,15 @@ public class CourseInSemesterResource {
     @PostMapping
     public ResponseEntity<String> insertCourseInSemester(@RequestBody CourseInSemester course, HttpSession session)
     {
-    Integer userTypeId = (Integer)session.getAttribute("user_type_id");
-    if (userTypeId != 0) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (userTypeId != 0) {
         return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert courses\"}\"");
-    }
+        }
+
         try {
             courseRepo.insertCourseInSemester(course);
         } catch (Exception e) {
@@ -35,13 +40,20 @@ public class CourseInSemesterResource {
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 
+    @DeleteMapping
+    public ResponseEntity<String> deleteCourseInSemester(@RequestBody CourseInSemester course, HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (userTypeId != 0) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"only admin can delete courses.\"}\"");
+        }
 
-//@DeleteMapping
-//    public ResponseEntity<String> deleteCourseInSemester(@RequestBody Group group) {
-//        if (courseRepo.removeGroup(group) == 0) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                    .body("{\"message\":\"Group not found\"}");
-//        }
-//        return ResponseEntity.ok("{\"message\":\"ok\"}");
-//    }
+        if (courseRepo.removeCourseInSemester(course) == 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("{\"message\":\"Course not found\"}");
+        }
+        return ResponseEntity.ok("{\"message\":\"ok\"}");
+    }
 }

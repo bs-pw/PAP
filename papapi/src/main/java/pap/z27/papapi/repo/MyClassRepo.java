@@ -15,13 +15,14 @@ public class MyClassRepo {
     public MyClassRepo(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
-    public List<MyClass> findAllUsersClasses(Integer userID) {
-        return jdbcClient.sql("SELECT c.* FROM CLASSES c JOIN (SELECT * FROM STUDENTS_IN_GROUPS UNION SELECT * " +
-                        "FROM LECTURERS ) uic ON (c.GROUP_NUMBER = uic.GROUP_NUMBER and c.SEMESTER = uic.SEMESTER and c.COURSE_CODE = uic.COURSE_CODE ) WHERE uic.user_id = ?")
+    public List<ClassDTO> findAllUsersClasses(Integer userID) {
+        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,ct.type,c.day,c.hour,c.length,c.\"where\" FROM CLASSES c JOIN (SELECT * FROM STUDENTS_IN_GROUPS UNION SELECT * " +
+                        "FROM LECTURERS ) uic ON (c.GROUP_NUMBER = uic.GROUP_NUMBER and c.SEMESTER = uic.SEMESTER and c.COURSE_CODE = uic.COURSE_CODE ) join CLASS_TYPES ct using (class_type_id)  WHERE uic.user_id = ?")
                 .param(userID)
-                .query(MyClass.class)
+                .query(ClassDTO.class)
                 .list();
     }
+
     public List<ClassDTO> findAllLecturersClasses(Integer userID) {
         return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,ct.type,c.day,c.hour,c.length,c.\"where\" " +
                         "FROM CLASSES c JOIN (SELECT * FROM LECTURERS ) uic ON (c.GROUP_NUMBER = uic.GROUP_NUMBER and c.SEMESTER = uic.SEMESTER and c.COURSE_CODE = uic.COURSE_CODE ) join CLASS_TYPES ct using (class_type_id) " +
