@@ -23,10 +23,17 @@ public class CourseInSemesterResource {
     public CourseInSemesterResource(CourseInSemesterRepo courseRepo) {
         this.courseRepo = courseRepo;
     }
-
-    @GetMapping("/bysemester/{semesterId}")
-    public List<CourseInSemester> getCoursesInSemester(@PathVariable String semesterId) {
-        return courseRepo.findAllCoursesInSemesterBySemester(semesterId);
+    @GetMapping
+    public List<CourseInSemester> getCoursesInSemester() {
+        return courseRepo.findAllCoursesInSemester();
+    }
+    @GetMapping("/bysemester/{semester}")
+    public List<CourseInSemester> getCoursesInSemesterBySemester(@PathVariable String semester) {
+        return courseRepo.findAllCoursesInSemesterBySemester(semester);
+    }
+    @GetMapping("/bycourse/{semesterId}")
+    public List<CourseInSemester> getCoursesInSemesterByCourse(@PathVariable String courseCode) {
+        return courseRepo.findAllCoursesInSemesterByCode(courseCode);
     }
 
     @PostMapping

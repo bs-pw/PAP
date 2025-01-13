@@ -3,9 +3,7 @@ package pap.z27.papapi.repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
-import pap.z27.papapi.domain.Course;
 import pap.z27.papapi.domain.CourseInSemester;
-import pap.z27.papapi.domain.Group;
 
 import java.util.List;
 @Repository
@@ -46,7 +44,7 @@ public class CourseInSemesterRepo {
                 .param(courseInSemester.getSemester())
                 .update();
     }
-    public Integer addCoordinator(Integer userID, CourseInSemester courseInSemester) {
+    public Integer insertCoordinator(Integer userID, CourseInSemester courseInSemester) {
         return jdbcClient.sql("INSERT INTO COORDINATORS (user_id,course_code,semester) VALUES (?,?,?)")
                 .param(userID)
                 .param(courseInSemester.getCourse_code())

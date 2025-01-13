@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.MyClass;
 import pap.z27.papapi.domain.subclasses.ClassDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -14,6 +15,11 @@ public class MyClassRepo {
     private final JdbcClient jdbcClient;
     public MyClassRepo(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
+    }
+    public List<ClassDTO> findAllClasses() {
+        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,ct.type,c.day,c.hour,c.length,c.\"where\" FROM CLASSES c join CLASS_TYPES ct using (class_type_id)")
+                .query(ClassDTO.class)
+                .list();
     }
     public List<ClassDTO> findAllUsersClasses(Integer userID) {
         return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,ct.type,c.day,c.hour,c.length,c.\"where\" FROM CLASSES c JOIN (SELECT * FROM STUDENTS_IN_GROUPS UNION SELECT * " +
@@ -31,6 +37,18 @@ public class MyClassRepo {
                 .query(ClassDTO.class)
                 .list();
     }
+
+    public ClassDTO findClass(String courseCode, String semester, Integer groupNr, Integer classIdForGroup){
+        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,ct.type,c.day,c.hour,c.length,c.\"where\" FROM CLASSES c join CLASS_TYPES ct using (class_type_id)  " +
+                        "WHERE c.course_code = ? and c.semester=? and c.group_number=? and c.class_id_for_group=?")
+                .param(courseCode)
+                .param(semester)
+                .param(groupNr)
+                .param(classIdForGroup)
+                .query(ClassDTO.class)
+                .single();
+    }
+
     public Integer insertClass(MyClass myClass) {
         return jdbcClient.sql("INSERT INTO CLASSES (course_code,semester,group_number,class_type_id,day,hour,length,\"where\") VALUES (?,?,?,?,?,?,?,?)")
                 .param(myClass.getCourse_code())
@@ -42,6 +60,47 @@ public class MyClassRepo {
                 .param(myClass.getLength())
                 .param(myClass.getWhere())
                 .update();
+    }
+    public Integer updateClass(MyClass myClass) {
+        StringBuilder query = new StringBuilder("UPDATE CLASSES set ");
+        List<Object> params=new ArrayList<>(){};
+        if(myClass.getDay()!=null)
+        {
+            query.append("day=?, ");
+            params.add(myClass.getDay());
+        }
+        if(myClass.getHour()!=null)
+        {
+            query.append("hour=?, ");
+            params.add(myClass.getHour());
+        }
+        if(myClass.getLength()!=null)
+        {
+            query.append("length=?, ");
+            params.add(myClass.getLength());
+        }
+        if(myClass.getWhere()!=null)
+        {
+            query.append("\"where\"=?, ");
+            params.add(myClass.getWhere());
+        }
+        if(myClass.getClass_type_id()!=null)
+        {
+            query.append("CLASS_TYPE_ID=?, ");
+            params.add(myClass.getClass_type_id());
+        }
+        if(params.isEmpty()) return 0;
+        else {
+            query.setLength(query.length() - 2);
+            query.append(" WHERE COURSE_CODE=? and SEMESTER=? and group_number=? and class_id_for_group=?");
+            params.add(myClass.getCourse_code());
+            params.add(myClass.getSemester());
+            params.add(myClass.getGroup_number());
+            params.add(myClass.getClass_id_for_group());
+            return jdbcClient.sql(query.toString())
+                    .params(params)
+                    .update();
+        }
     }
     public Integer removeClass(MyClass myClass) {
         return jdbcClient.sql("DELETE FROM CLASSES where course_code=? and semester=? and group_number=? and CLASS_ID_FOR_GROUP=?")

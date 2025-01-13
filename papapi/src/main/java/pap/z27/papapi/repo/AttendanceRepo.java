@@ -16,9 +16,33 @@ public class AttendanceRepo {
     public AttendanceRepo(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
-    public List<AttendanceDTO> findAllUsersAttendances(Integer userID) {
-        return jdbcClient.sql("SELECT a.user_id,a.course_code,a.semester,a.group_number,a.class_id_for_group,ats.status from ATTENDANCES a join ATTENDANCE_STATUSES ats on a.attendance_status_id=ats.attendance_status_id WHERE user_id=?")
+    public List<AttendanceDTO> findAllAttendances() {
+        return jdbcClient.sql("SELECT a.user_id,a.course_code,a.semester,a.group_number,a.class_id_for_group,a.\"date\",ats.status, a.who_inserted_id from ATTENDANCES a inner join ATTENDANCE_STATUSES ats on a.attendance_status_id=ats.attendance_status_id")
+                .query(AttendanceDTO.class)
+                .list();
+    }
+
+    public List<AttendanceDTO> findAllStudentsAttendances(Integer userID) {
+        return jdbcClient.sql("SELECT a.user_id,a.course_code,a.semester,a.group_number,a.class_id_for_group,a.\"date\",ats.status, a.who_inserted_id from ATTENDANCES a inner join ATTENDANCE_STATUSES ats on a.attendance_status_id=ats.attendance_status_id WHERE a.user_id=?")
                 .param(userID)
+                .query(AttendanceDTO.class)
+                .list();
+    }
+
+    public List<AttendanceDTO> findAllStudentsAttendancesInCourse(Integer userID, String courseCode, String semester) {
+        return jdbcClient.sql("SELECT a.user_id,a.course_code,a.semester,a.group_number,a.class_id_for_group,a.\"date\",ats.status, a.who_inserted_id from ATTENDANCES a inner join ATTENDANCE_STATUSES ats on a.attendance_status_id=ats.attendance_status_id WHERE a.user_id=? and a.course_code=? and a.semester=?")
+                .param(userID)
+                .param(courseCode)
+                .param(semester)
+                .query(AttendanceDTO.class)
+                .list();
+    }
+
+    public List<AttendanceDTO> findAllAttendancesInGroup(String courseCode, String semester, Integer gorupNr) {
+        return jdbcClient.sql("SELECT a.user_id,a.course_code,a.semester,a.group_number,a.class_id_for_group,a.\"date\",ats.status, a.who_inserted_id from ATTENDANCES a inner join ATTENDANCE_STATUSES ats on a.attendance_status_id=ats.attendance_status_id WHERE a.course_code=? and a.semester=? and a.group_number=?")
+                .param(courseCode)
+                .param(semester)
+                .param(gorupNr)
                 .query(AttendanceDTO.class)
                 .list();
     }

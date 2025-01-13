@@ -3,6 +3,7 @@ package pap.z27.papapi.repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.FinalGrade;
 
 import java.util.List;
@@ -18,6 +19,13 @@ public class FinalGradeRepo {
     public List<FinalGrade> findAllUsersFinalGrades(Integer userId) {
         return jdbcClient.sql("SELECT * FROM FINAL_GRADES where user_id=?")
                 .param(userId)
+                .query(FinalGrade.class)
+                .list();
+    }
+    public List<FinalGrade> findAllFinalGradesInCourse(String courseCode, String semester) {
+        return jdbcClient.sql("SELECT * FROM FINAL_GRADES where course_code=? and semester=?")
+                .param(courseCode)
+                .params(semester)
                 .query(FinalGrade.class)
                 .list();
     }

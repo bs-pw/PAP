@@ -26,6 +26,20 @@ public class ClassResource {
         this.userRepo = userRepo;
     }
 
+    @GetMapping
+    public ResponseEntity<List<ClassDTO>> getAllClasses(HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (userTypeId.equals(0)) {
+            return ResponseEntity.ok(classRepo.findAllClasses());
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+    }
+
     @GetMapping("{userId}")
     public ResponseEntity<List<ClassDTO>> getUserClasses(@PathVariable("userId") Integer userId, HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
@@ -69,6 +83,39 @@ public class ClassResource {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot insert class\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
+    }
+    @PutMapping("{courseCode}/{semester}/{groupNr}/{classIdForGroup}")
+    public ResponseEntity<String> updateClass(
+            @PathVariable("courseCode") String courseCode,
+            @PathVariable("semester") String semester,
+            @PathVariable("groupNr") Integer groupNr,
+            @PathVariable("classIdForGroup") Integer classIdForGroup,
+            @RequestBody MyClass myClass,
+            HttpSession session
+            ){
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, myClass.getCourse_code(), myClass.getSemester(), myClass.getGroup_number())==0)
+                && userRepo.checkIfIsCoordinator(userId, myClass.getCourse_code(), myClass.getSemester())==0)
+        {
+            ResponseEntity.badRequest().body("{\"message\":\"only admins, lecturers or coordinators of courses can update classes\"}");
+        }
+
+        if(courseCode==null || semester==null || groupNr==null || classIdForGroup==null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"There is no such class\"}");
+        myClass.setCourse_code(courseCode);
+        myClass.setSemester(semester);
+        myClass.setGroup_number(groupNr);
+        myClass.setClass_id_for_group(classIdForGroup);
+        if(classRepo.updateClass(myClass)==0)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot update class\"}");
+        }
+        return ResponseEntity.ok("{\"message\":\"ok\"}");
+
     }
     @DeleteMapping
     public ResponseEntity<String> removeClass(@RequestBody MyClass myClass,

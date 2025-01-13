@@ -138,7 +138,7 @@ public class GroupRepo {
                 .list();
     }
 
-    public List<UserPublicInfo> getAllLecturers() {
+    public List<UserPublicInfo> getAllLecturersUsers() {
         return jdbcClient.sql("SELECT DISTINCT u.USER_ID, NAME, SURNAME, ut.TYPE, MAIL FROM USERS u INNER JOIN LECTURERS l ON u.USER_ID = l.USER_ID INNER JOIN USER_TYPES ut USING (USER_TYPE_ID)")
                 .query(UserPublicInfo.class)
                 .list();
@@ -189,5 +189,15 @@ public class GroupRepo {
                 .param(course_code)
                 .query(Integer.class)
                 .single();
+    }
+    public List<UserInGroup> findAllLecturers(){
+        return jdbcClient.sql("SELECT * FROM LECTURERS")
+                .query(UserInGroup.class)
+                .list();
+    }
+    public List<UserInGroup> findAllStudentsInGroup(){
+        return jdbcClient.sql("SELECT * FROM STUDENTS_IN_GROUPS")
+                .query(UserInGroup.class)
+                .list();
     }
 }

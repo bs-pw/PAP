@@ -69,7 +69,7 @@ public class LecturerResource {
 
     @GetMapping
     public List<UserPublicInfo> getAllLecturers() {
-        return groupRepo.getAllLecturers();
+        return groupRepo.getAllLecturersUsers();
     }
 
     @DeleteMapping

@@ -2,6 +2,7 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,8 @@ import pap.z27.papapi.domain.Group;
 import pap.z27.papapi.repo.FinalGradeRepo;
 import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/finalgrade")
@@ -21,6 +24,37 @@ public class FinalGradeResource {
     public FinalGradeResource(FinalGradeRepo finalGradeRepo, UserRepo userRepo) {
         this.finalGradeRepo = finalGradeRepo;
         this.userRepo = userRepo;
+    }
+
+    @GetMapping("{userId}")
+    public ResponseEntity<List<FinalGrade>> getUsersFinalGrades(@PathVariable("userId") Integer userId,
+                                                                   HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Integer thisUserId = (Integer) session.getAttribute("user_id");
+        if (userTypeId != 0 && !thisUserId.equals(userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(finalGradeRepo.findAllUsersFinalGrades(userId));
+    }
+    @GetMapping("{courseCode}/{semester}")
+    public ResponseEntity<List<FinalGrade>> getFinalGradesByCourse(@PathVariable("courseCode") String courseCode,
+                                                        @PathVariable("semester") String semester,
+                                                        HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Integer coordinatorId = (Integer) session.getAttribute("user_id");
+        if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
+                courseCode,
+                semester)==0)) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(finalGradeRepo.findAllFinalGradesInCourse(courseCode, semester));
     }
 
     @PostMapping
