@@ -2,7 +2,7 @@ import { Box } from '@mui/material'
 import React from 'react'
 import Sidebar from '../common/Sidebar'
 import Header from '../common/Header'
-import { Outlet } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 
 const MainLayout = () => {
     return (

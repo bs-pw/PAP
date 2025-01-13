@@ -2,6 +2,7 @@ import React from 'react'
 import { useClient } from '../ClientContext';
 import { useNavigate } from 'react-router-dom'
 import SidebarItem from './SidebarItem';
+import GoUpLink from './GoUpLink';
 
 const Sidebar = () => {
     const client = useClient();
@@ -32,6 +33,7 @@ const Sidebar = () => {
     return (
         <div className="bg-dark text-white p-3" style={{ width: 250 }}>
             <h2 className="mb-4">Menu</h2>
+            <GoUpLink />
             <ul className="nav flex-column">
                 {usersItems.map((item, index) => (
                     <SidebarItem key={index} link={item.link} label={item.label} />

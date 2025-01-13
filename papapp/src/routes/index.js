@@ -107,6 +107,10 @@ export const router = createBrowserRouter([
                         element: <MainLayout />,
                         children: [
                             {
+                                index: true,
+                                element: <UsersPage />,
+                            },
+                            {
                                 path: "users",
                                 children: [
                                     {
@@ -159,6 +163,10 @@ export const router = createBrowserRouter([
                                     {
                                         path: ":semesterId",
                                         children: [
+                                            {
+                                                index: true,
+                                                element: <CourseInSemesterPage />,
+                                            },
                                             {
                                                 path: "courses",
                                                 children: [
