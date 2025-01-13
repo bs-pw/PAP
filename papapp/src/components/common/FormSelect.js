@@ -1,13 +1,15 @@
 import React from 'react'
 
-const FormSelect = ({ name, label, user_type_id, userTypes, onChange }) => {
+const FormSelect = ({ name, label, defaultValue, options, onChange }) => {
+    console.log(options)
     return (
         <div className="mb-3">
             <label htmlFor="text" className="form-label">{label}</label>
-            <select className="form-select" name={name} value={user_type_id} onChange={onChange}>
-                {userTypes.map((userType) => (
-                    <option key={userType.user_type_id} value={userType.user_type_id}>
-                        {userType.type}
+            <select className="form-select" name={name} value={defaultValue} onChange={onChange}>
+                <option value="-1">Wybierz...</option>
+                {options.map((item) => (
+                    <option key={item.value} value={item.value}>
+                        {item.label}
                     </option>
                 ))}
             </select>

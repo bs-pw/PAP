@@ -42,22 +42,29 @@ const UserForm = () => {
             const data = await client.getUser(userId);
             console.log(data);
             setFormData(data)
-
-            // setFormData({ ...formData, [name]: data });
             console.log(formData)
         } catch (error) {
-            //navigate('/admin/users');
+            navigate('/admin/users');
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try {
-            await client.registerUser(formData);
-            setMessage('Użytkownik został zarejestrowany');
-        } catch (error) {
-            setMessage('Błąd podczas rejestracji');
+        if (id) {
+            try {
+                await client.updateUser(id, formData);
+                setMessage('Użytkownik został zaktualizowany!');
+            } catch (error) {
+                setMessage('Błąd podczas aktualizacji');
+            }
+        } else {
+            try {
+                await client.registerUser(formData);
+                setMessage('Użytkownik został zarejestrowany');
+            } catch (error) {
+                setMessage('Błąd podczas rejestracji');
+            }
         }
     };
 
@@ -82,7 +89,7 @@ const UserForm = () => {
     if (id) { inputData[3].label += "(zostaw puste, jeśli nie zmieniasz hasła)"; inputData[3].required = false }
 
     const selectData = [
-        { name: "user_type_id", label: "Typ użytkownika", userTypes: userTypes, user_type_id: formData.user_type_id, onChange: handleChange },
+        { name: "user_type_id", label: "Typ użytkownika", options: userTypes.map(userType => ({ value: userType.user_type_id, label: userType.type })), defaultValue: formData.user_type_id, onChange: handleChange },
     ];
 
     return (

@@ -363,12 +363,29 @@ class Client {
         });
     }
 
+    async addCourseInSemester(semester, course_code) {
+        return fetch(`${this.baseUrl}/courseinsemester`, {
+            method: 'POST',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: JSON.stringify({ semester, course_code }),
+        }).then(async response => {
+            let data = await response.json();
+            if (response.ok) {
+                return data;
+            }
+            throw new Error(`Error adding course in semester: ${data.message}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+
     async deleteCourseInSemester(semesterId, courseId) {
         return fetch(`${this.baseUrl}/courseinsemester`, {
             method: 'DELETE',
             headers: this.headers,
             credentials: this.credentials,
-            body: JSON.stringify({ semester_code: semesterId, course_code: courseId }),
+            body: JSON.stringify({ semester: semesterId, course_code: courseId }),
         }).then(response => {
             if (response.ok) {
                 return response.json();
