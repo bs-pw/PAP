@@ -51,6 +51,12 @@ public class CourseResource {
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
+
+    @DeleteMapping("/{courseCode}")
+    public ResponseEntity<String> deleteCourse(@PathVariable String courseCode) {
+        return ResponseEntity.ok("{\"message\":\"ok\"}");
+    }
+
 }
 
 

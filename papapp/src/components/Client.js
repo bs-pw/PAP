@@ -204,6 +204,54 @@ class Client {
         });
     }
 
+    async getCourse(id) {
+        return fetch(`${this.baseUrl}/course/${id}`, {
+            method: 'GET',
+            headers: this.headers,
+            credentials: this.credentials,
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error(`Error fetching course: ${response.statusText}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+
+    async createCourse(data) {
+        return fetch(`${this.baseUrl}/course`, {
+            method: 'POST',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: JSON.stringify(data),
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error(`Error registering course: ${response.statusText}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+
+    async deleteCourse(id) {
+        return fetch(`${this.baseUrl}/course/${id}`, {
+            method: 'DELETE',
+            headers: this.headers,
+            credentials: this.credentials,
+        }).then(response => {
+            if (response.ok) {
+                return true;
+            }
+            throw new Error(`Error deleting course: ${response.statusText}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+
+    }
+
+
     async getSemesters() {
         return fetch(`${this.baseUrl}/semester`, {
             method: 'GET',

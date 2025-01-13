@@ -20,7 +20,7 @@ const SemesterPage = () => {
 
     const handleDeleteSemester = async (e) => {
         e.preventDefault();
-        console.log("ti")
+        // console.log("ti")
         try {
             if (await client.deleteSemester(e.target.value)) {
                 await getSemesters();
