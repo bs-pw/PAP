@@ -6,7 +6,7 @@ const MyDetails = () => {
 
     const [mail, setMail] = useState();
     const [password, setPassword] = useState();
-    const [message, setMessage] = useState();
+    const [message, setMessage] = useState(" ");
     const client = useClient();
 
     const handleChangeMail = (e) => {
@@ -22,8 +22,9 @@ const MyDetails = () => {
         // console.log(e)
         try {
             client.updateUser(client.userId, { "mail": mail })
+            setMessage("Zmieniono mail!")
         } catch (error) {
-
+            setMessage(error.message || "Błąd podczas zmiany maila!")
         }
     }
 
@@ -31,8 +32,9 @@ const MyDetails = () => {
         e.preventDefault()
         try {
             client.updateUserPassword(client.userId, password)
+            setMessage("Zmieniono hasło!")
         } catch (error) {
-            setMessage(error.message || "Zmieniono hasło!")
+            setMessage(error.message || "Błąd podczas zmiany hasła!")
         }
     }
 

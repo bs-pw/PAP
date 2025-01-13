@@ -1,6 +1,6 @@
 import React from 'react'
 
-const List = ({ listName, adminButtons, columnNames, data, error, handleDelete, handleEdit, id }) => {
+const List = ({ listName, adminButtons, userButtons = false, columnNames, data, error, handleDelete, handleEdit, handleViev, id }) => {
     return (
         <div>
             <h1>{listName}</h1>
@@ -14,6 +14,7 @@ const List = ({ listName, adminButtons, columnNames, data, error, handleDelete, 
                             <th key={columnName}>{columnName}</th>
                         ))}
                         {adminButtons && <th>Akcje</th>}
+                        {userButtons && <th></th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -28,6 +29,9 @@ const List = ({ listName, adminButtons, columnNames, data, error, handleDelete, 
                                 <button className='btn btn-sm btn-danger' value={item[id]} onClick={handleDelete}>Usuń</button>
                                 {' '}
                                 <button className='btn btn-sm btn-warning' value={item[id]} onClick={handleEdit}>Edytuj</button>
+                            </td>}
+                            {userButtons && <td>
+                                <button className='btn btn-sm btn-primary' value={item[id]} onClick={handleViev}>Podgląd</button>
                             </td>}
                         </tr>
                     ))}

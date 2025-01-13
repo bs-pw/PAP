@@ -12,10 +12,20 @@ const StudentCourses = () => {
   const getCourses = async () => {
     try {
       const data = await client.getStudentCourses();
-      setCourses(data);
+      const result = data.map(({ course_code, semester, group_number }) => ({
+        course_code,
+        semester,
+        group_number
+      }));
+      setCourses(result);
     } catch (error) {
       setError('Błąd podczas ładowania danych: ' + error.message);
     }
+  }
+
+  const handleViev = (e) => {
+    e.preventDefault();
+    navigate('/student/courses/' + e.target.dataset.courseId);
   }
 
   useEffect(() => {
@@ -23,7 +33,7 @@ const StudentCourses = () => {
   }, []);
 
   return (
-    <List listName='Lista kursów' columnNames={['ID', 'Nazwa', 'ECTS', 'Semestr', 'Typ kursu']} data={courses} error={error} id="course_id" />
+    <List listName='Lista kursów' columnNames={['Nazwa', 'Semestr', 'Nr grupy']} data={courses} error={error} userButtons={true} handleViev={handleViev} id="course_code" />
   )
 }
 
