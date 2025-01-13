@@ -125,13 +125,12 @@ class Client {
         });
     }
 
-    async updateUserPassword(userId, password) {
-        return fetch(`${this.baseUrl}/user/${userId}?password=${password}`, {
+    async updateUser(userId, data) {
+        return fetch(`${this.baseUrl}/user/${userId}`, {
             method: 'PUT',
             headers: this.headers,
             credentials: this.credentials,
-            // body: JSON.stringify({ password: password })
-
+            body: JSON.stringify(data)
         }).then(response => {
             if (response.ok) {
                 return true;
@@ -253,8 +252,41 @@ class Client {
         });
     }
 
-    async getStudentCourses() {
-        return fetch(`${this.baseUrl}/class`, {
+    async deleteSemester(id) {
+        return fetch(`${this.baseUrl}/semester?semesterCode=${id}`, {
+            method: 'DELETE',
+            headers: this.headers,
+            credentials: this.credentials,
+        }).then(response => {
+            if (response.ok) {
+                return true;
+            }
+            throw new Error(`Error deleting semester: ${response.statusText}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+
+    async updateSemester(id, data) {
+        return fetch(`${this.baseUrl}/semester`, {
+            method: 'PUT',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: JSON.stringify(data),
+        }).then(async response => {
+            let data = await response.json();
+            if (response.ok) {
+                return data;
+            } else {
+                throw new Error(`Error updating semester`);
+            }
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+
+    async getStudentCourses(userId) {
+        return fetch(`${this.baseUrl}/class/${userId}`, {
             method: 'GET',
             headers: this.headers,
             credentials: this.credentials,

@@ -20,9 +20,10 @@ const SemesterPage = () => {
 
     const handleDeleteSemester = async (e) => {
         e.preventDefault();
+        console.log("ti")
         try {
             if (await client.deleteSemester(e.target.value)) {
-                getSemesters();
+                await getSemesters();
             }
         } catch (error) {
             setError('Błąd podczas usuwania semestru!');

@@ -11,7 +11,7 @@ const StudentCourses = () => {
 
   const getCourses = async () => {
     try {
-      const data = await client.getStudentCourses();
+      const data = await client.getStudentCourses(client.userId);
       const result = data.map(({ course_code, semester, group_number }) => ({
         course_code,
         semester,

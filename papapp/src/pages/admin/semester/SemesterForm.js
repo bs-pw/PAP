@@ -25,12 +25,21 @@ const SemesterForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        try {
-            await client.createSemester(formData);
-            setMessage('Semestr został utworzony');
-        } catch (error) {
-            setMessage('Błąd podczas tworzenia semestru');
+        if (id) {
+            try {
+                await client.updateSemester(id, formData);
+                setMessage('Semestr został zaktualizowany');
+            } catch (error) {
+                setMessage(error.message || "Błąd podczas aktualizacji semestru");
+            }
+        } else {
+            try {
+                await client.createSemester(formData);
+                // setMessage('Semestr został utworzony');
+                navigate('/admin/semesters');
+            } catch (error) {
+                setMessage('Błąd podczas tworzenia semestru');
+            }
         }
     };
 
@@ -40,7 +49,7 @@ const SemesterForm = () => {
             console.log(data);
             setFormData(data);
         } catch (error) {
-            //navigate('/admin/semesters');
+            navigate('/admin/semesters');
         }
     };
 

@@ -59,7 +59,7 @@ public class SemesterResource {
        }
        if (semesterRepo.removeSemester(semesterCode) == 0)
            return ResponseEntity.badRequest().body("{\"message\":\"semester couldn't be removed\"}\"");
-       return ResponseEntity.ok("{\"message\":\"semester removed\"}\"");
+       return ResponseEntity.ok("{\"message\":\"semester removed\"}");
     }
 
     @PutMapping
@@ -70,6 +70,6 @@ public class SemesterResource {
         }
         if (semesterRepo.updateSemester(semester) == 0)
             return ResponseEntity.badRequest().body("{\"message\":\"semester couldn't be updated\"}\"");
-        return ResponseEntity.ok("{\"message\":\"semester updated\"}\"");
+        return ResponseEntity.ok("{\"message\":\"semester updated\"}");
     }
 }

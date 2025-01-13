@@ -21,7 +21,7 @@ const MyDetails = () => {
         e.preventDefault()
         // console.log(e)
         try {
-            client.updateUser(client.userId, { "mail": mail })
+            await client.updateUser(client.userId, { mail: mail })
             setMessage("Zmieniono mail!")
         } catch (error) {
             setMessage(error.message || "Błąd podczas zmiany maila!")
@@ -31,7 +31,7 @@ const MyDetails = () => {
     const changePassword = async (e) => {
         e.preventDefault()
         try {
-            client.updateUserPassword(client.userId, password)
+            await client.updateUser(client.userId, { password: password })
             setMessage("Zmieniono hasło!")
         } catch (error) {
             setMessage(error.message || "Błąd podczas zmiany hasła!")
