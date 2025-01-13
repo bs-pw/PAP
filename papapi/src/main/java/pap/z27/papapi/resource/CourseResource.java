@@ -10,7 +10,10 @@ import pap.z27.papapi.domain.Course;
 import pap.z27.papapi.domain.MyClass;
 import pap.z27.papapi.repo.CourseRepo;
 
+import java.util.List;
+
 @RestController
+@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping(path = "api/course")
 public class CourseResource {
 
@@ -19,6 +22,11 @@ public class CourseResource {
     @Autowired
     public CourseResource(CourseRepo courseRepo) {
         this.courseRepo = courseRepo;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Course>> getAllCourses() {
+        return ResponseEntity.ok(courseRepo.findAllCourses());
     }
 
     @GetMapping("/{courseCode}")
@@ -34,7 +42,7 @@ public class CourseResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         if (userTypeId != 0) {
-            return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert courses\"}\"");
+            return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert courses\"}");
         }
         try {
             courseRepo.insertCourse(course);
