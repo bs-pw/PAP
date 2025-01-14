@@ -51,6 +51,20 @@ public class GradeResource {
        return "ok";
     }
 
+    @GetMapping
+    public ResponseEntity<List<Grade>> getUserGrades(HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("user_id");
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!(userTypeId.equals(2) || userTypeId.equals(3))) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        return ResponseEntity.ok(gradeRepo.getAllUserGrades(userId));
+    }
 
     @GetMapping(path = "{userId}")
     public ResponseEntity<List<Grade>> getAllGrades(@PathVariable Integer userId, HttpSession session){
