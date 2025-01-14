@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.MyClass;
 import pap.z27.papapi.domain.subclasses.ClassDTO;
+import pap.z27.papapi.domain.subclasses.ClassInfo;
 import pap.z27.papapi.repo.MyClassRepo;
 import pap.z27.papapi.repo.UserRepo;
 
@@ -60,7 +61,7 @@ public class ClassResource {
     }
 
     @GetMapping("{semester}/{courseCode}/{groupNr}")
-    public ResponseEntity<List<ClassDTO>> getClassesForGroup(
+    public ResponseEntity<List<ClassInfo>> getClassesForGroup(
             @PathVariable("semester") String semester,
             @PathVariable("courseCode") String courseCode,
             @PathVariable("groupNr") Integer groupNr
