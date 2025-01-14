@@ -69,6 +69,20 @@ public class GroupRepo {
                 .query(UserPublicInfo.class)
                 .list();
     }
+//    public List<UserPublicInfo> findEligibleStudentsToGroup(String semester, String courseCode, Integer groupNr) {
+//        return  jdbcClient.sql("Select users.user_id, users.name, users.surname, user_types.type, users.mail from users " +
+//                        "join final_grades on final_grades.user_id=users.user_id join user_types on users.user_type_id = user_types.user_type_id " +
+//                        "where FINAL_GRADES.SEMESTER=? and FINAL_GRADES.COURSE_CODE=? MINUS Select users.user_id, users.name, users.surname, user_types.type, users.mail " +
+//                        "from users join STUDENTS_IN_GROUPS on users.USER_ID = STUDENTS_IN_GROUPS.USER_ID join user_types on users.user_type_id = user_types.user_type_id " +
+//                        "where STUDENTS_IN_GROUPS.SEMESTER=? and STUDENTS_IN_GROUPS.COURSE_CODE=? and STUDENTS_IN_GROUPS.GROUP_NUMBER=?")
+//                .param(semester)
+//                .param(courseCode)
+//                .param(semester)
+//                .param(courseCode)
+//                .param(groupNr)
+//                .query(UserPublicInfo.class)
+//                .list();
+//    }
     public Integer insertGroup(Group group) {
         return jdbcClient.sql("INSERT INTO GROUPS (course_code,semester,group_number) VALUES (?,?,?)")
                 .param(group.getCourse_code())

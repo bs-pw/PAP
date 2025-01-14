@@ -65,6 +65,25 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
         }
         return ResponseEntity.ok(groupRepo.findEligibleStudentsToGroup(semester,courseCode,groupNr));
     }
+
+    @GetMapping("/{semester}/{courseCode}/{groupNr}/available/lecturers")
+    public ResponseEntity<List<UserPublicInfo>> assignAllEligibleLecturersToGroup(@PathVariable("semester") String semester,
+                                                                              @PathVariable("courseCode") String courseCode,
+                                                                              @PathVariable("groupNr") Integer groupNr,
+                                                                              HttpSession session) {
+        Integer thisUserTypeId = (Integer)session.getAttribute("user_type_id");
+        if (thisUserTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Integer coordinatorId = (Integer) session.getAttribute("user_id");
+        if (thisUserTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
+                courseCode,
+                semester)==0)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(groupRepo.findEligibleStudentsToGroup(semester,courseCode,groupNr));
+    }
+
     @PostMapping("/{asWho}")
     public ResponseEntity<String> addUserToGroup(@PathVariable String asWho, @RequestBody UserInGroup userInGroup, HttpSession session) {
         Integer thisUserTypeId = (Integer)session.getAttribute("user_type_id");
@@ -89,6 +108,10 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
                 if (groupRepo.isLecturerOfGroup(userId,userInGroup.getSemester(),userInGroup.getCourse_code(),userInGroup.getGroup_number())!=0)
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .body("{\"message\":\"User is already a lecturer of this group.\"}");
+
+                if (userRepo.checkIfIsCoordinator(userId,userInGroup.getCourse_code(),userInGroup.getSemester())!=0)
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body("{\"message\":\"User is already a coordinator of this group.\"}");
 
                 if (userRepo.countUsersFinalGrades(userInGroup)==0)
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)

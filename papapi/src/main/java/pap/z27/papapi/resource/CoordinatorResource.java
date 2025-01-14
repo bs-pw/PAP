@@ -2,6 +2,7 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.CourseInSemester;
@@ -42,6 +43,11 @@ public class CoordinatorResource {
         if (userRepo.findUsersTypeId(coordinatorId)==1 && userRepo.findUsersTypeId(coordinatorId)==2) {
             return ResponseEntity.badRequest().body("{\"message\":\"Only teachers can be coordinators\"}");
         }
+
+        if (userRepo.checkIfStudentIsInCourse(coordinatorId,courseInSemester.getCourse_code(),courseInSemester.getSemester())!=0)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("{\"message\":\"User is already a student in this course.\"}");
+
 
         if (courseInSemesterRepo.insertCoordinator(coordinatorId, courseInSemester) == 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"Couldn't add coordinator\"}");
