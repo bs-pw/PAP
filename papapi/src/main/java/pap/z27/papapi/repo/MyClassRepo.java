@@ -29,12 +29,12 @@ public class MyClassRepo {
                 .query(ClassDTO.class)
                 .list();
     }
-    public List<ClassInfo> findAllClassesInGroup(String semester, String courseCode, Integer groupNr) {
-        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,c.class_type_id,ct.type,c.day,c.hour,c.length,c.\"where\" FROM CLASSES c  join CLASS_TYPES ct using (class_type_id)  WHERE c.SEMESTER = ? and c.COURSE_CODE=? and c.GROUP_NUMBER=?")
+    public List<ClassDTO> findAllClassesInGroup(String semester, String courseCode, Integer groupNr) {
+        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,ct.type,c.day,c.hour,c.length,c.\"where\" FROM CLASSES c  join CLASS_TYPES ct using (class_type_id)  WHERE c.SEMESTER = ? and c.COURSE_CODE=? and c.GROUP_NUMBER=?")
                 .param(semester)
                 .param(courseCode)
                 .param(groupNr)
-                .query(ClassInfo.class)
+                .query(ClassDTO.class)
                 .list();
     }
 
@@ -47,14 +47,14 @@ public class MyClassRepo {
                 .list();
     }
 
-    public ClassDTO findClass(String courseCode, String semester, Integer groupNr, Integer classIdForGroup){
-        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,ct.type,c.day,c.hour,c.length,c.\"where\" FROM CLASSES c join CLASS_TYPES ct using (class_type_id)  " +
+    public ClassInfo findClass(String courseCode, String semester, Integer groupNr, Integer classIdForGroup){
+        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,c.CLASS_TYPE_ID,ct.type,c.day,c.hour,c.length,c.\"where\" FROM CLASSES c join CLASS_TYPES ct using (class_type_id)  " +
                         "WHERE c.course_code = ? and c.semester=? and c.group_number=? and c.class_id_for_group=?")
                 .param(courseCode)
                 .param(semester)
                 .param(groupNr)
                 .param(classIdForGroup)
-                .query(ClassDTO.class)
+                .query(ClassInfo.class)
                 .single();
     }
 

@@ -27,6 +27,16 @@ public class ClassResource {
         this.userRepo = userRepo;
     }
 
+
+    @GetMapping("{semester}/{courseCode}/{groupNr}/{classIdForGroup}")
+    public ResponseEntity<ClassInfo> getClass(
+            @PathVariable("semester") String semester,
+            @PathVariable("courseCode") String courseCode,
+            @PathVariable("groupNr") Integer groupNr,
+            @PathVariable("classIdForGroup") Integer classIdForGroup
+    ) {
+        return ResponseEntity.ok(classRepo.findClass(semester,courseCode,groupNr,classIdForGroup));
+    }
     @GetMapping
     public ResponseEntity<List<ClassDTO>> getAllClasses(HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
@@ -61,7 +71,7 @@ public class ClassResource {
     }
 
     @GetMapping("{semester}/{courseCode}/{groupNr}")
-    public ResponseEntity<List<ClassInfo>> getClassesForGroup(
+    public ResponseEntity<List<ClassDTO>> getClassesForGroup(
             @PathVariable("semester") String semester,
             @PathVariable("courseCode") String courseCode,
             @PathVariable("groupNr") Integer groupNr
@@ -74,8 +84,8 @@ public class ClassResource {
                                                  HttpSession session) {
         // DAY
         // 0-6: mon-sun
-        // 10-16: mon-sun every 2 weeks (even weeks)
-        // 20-26: mon-sun every 2 weeks (odd weeks)
+        // 7-13: mon-sun every 2 weeks (even weeks)
+        // 14-20: mon-sun every 2 weeks (odd weeks)
 
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         if (userTypeId == null) {
@@ -128,7 +138,7 @@ public class ClassResource {
 
     }
 
-    @GetMapping("/plan/{semesterId}/{courseCode}")
+    @GetMapping("/{semesterId}/{courseCode}")
     public ResponseEntity<List<MyClass>> getClassPlanBySemester(@PathVariable String semesterId,
                                                                 @PathVariable String courseCode)
     {

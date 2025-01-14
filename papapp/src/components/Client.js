@@ -723,6 +723,47 @@ class Client {
                 throw new Error(error.message);
             });
     }
+
+
+    async getClassesForCourse(semester, course_code) {
+        return fetch(`${this.baseUrl}/classes/${semester}/${course_code}`,
+            {
+                method: 'GET',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error getting classes: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
+    async getClass(semester, course_code, group_number, class_id_for_group) {
+        return fetch(`${this.baseUrl}/classes/${semester}/${course_code}/${group_number}/${class_id_for_group}`,
+            {
+                method: 'GET',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error getting class: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
+
     async insertClassInGroup(data) {
         return fetch(`${this.baseUrl}/classes`, {
             method: 'POST',
