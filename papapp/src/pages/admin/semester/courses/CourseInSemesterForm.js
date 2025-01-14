@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useClient } from '../../../components/ClientContext'
-import Form from '../../../components/common/Form';
+import { useClient } from '../../../../components/ClientContext'
+import Form from '../../../../components/common/Form';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const CourseInSemesterForm = () => {

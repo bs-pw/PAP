@@ -49,7 +49,7 @@ const UsersPage = () => {
 
     return (
         <>
-            <Link to="/admin/users/register" className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i class="bi bi-plus-lg"></i> Nowy</Link >
+            <Link to="/admin/users/register" className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >
             <List listName='Lista użytkowników' adminButtons={true} columnNames={columnNames} data={users} error={error} handleDelete={handleDeleteUser} handleEdit={handleEditUser} id="user_id" />
         </>
     )

@@ -37,7 +37,7 @@ const CoursePage = () => {
 
     return (
         <>
-            <Link to="/admin/courses/create" className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i class="bi bi-plus-lg"></i> Nowy</Link >
+            <Link to="/admin/courses/create" className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >
             <CoursesList listName='Lista kursów' adminButtons={true} columnNames={['Skrót', 'Nazwa']} data={users} handleDelete={handleDelete} error={error} id="course_code" />
         </>
     )

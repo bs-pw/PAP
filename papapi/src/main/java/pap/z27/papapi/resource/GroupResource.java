@@ -5,13 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pap.z27.papapi.domain.Course;
+import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.Group;
-import pap.z27.papapi.repo.CourseRepo;
 import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 
+import java.util.List;
+
 @RestController
+@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping(path = "api/group")
 public class GroupResource {
     private final GroupRepo groupRepo;
@@ -21,6 +23,12 @@ public class GroupResource {
     public GroupResource(GroupRepo groupRepo, UserRepo userRepo) {
         this.groupRepo = groupRepo;
         this.userRepo = userRepo;
+    }
+
+    @GetMapping("/{semesterId}/{courseId}")
+    public List<Group> getAllGroupsInSemesterInCourse(@PathVariable String semesterId, @PathVariable String courseId) {
+        CourseInSemester courseInSemester = new CourseInSemester(courseId, semesterId);
+        return groupRepo.findAllGroupsByCourseInSemester(courseInSemester);
     }
 
     @PostMapping

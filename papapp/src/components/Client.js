@@ -396,6 +396,64 @@ class Client {
             throw new Error(error.message);
         });
     }
+
+    async getGroupsInSemesterInCourse(semesterId, courseId) {
+        return fetch(`${this.baseUrl}/group/${semesterId}/${courseId}`,
+            {
+                method: 'GET',
+                headers: this.headers,
+                credentials: this.credentials,
+            }
+        ).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error(`Error getting groups in semester in course: ${response.json().message}`);
+            }
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+
+    async addGroup(semester, course_code, group_number) {
+        return fetch(`${this.baseUrl}/group`, {
+            method: 'POST',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: JSON.stringify({
+                semester, course_code, group_number
+            }),
+        }).then(response => {
+            if (response.ok) {
+                return true;
+            } else {
+                throw new Error(`Error adding group: ${response.json().message}`);
+            }
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+
+    }
+
+    async deleteGroup(semester, course_code, group_number) {
+        return fetch(`${this.baseUrl}/group`, {
+            method: 'DELETE',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: JSON.stringify({
+                semester, course_code, group_number
+            }),
+        }).then(response => {
+            if (response.ok) {
+                return true;
+            } else {
+                throw new Error(`Error deleting group: ${response.json().message}`);
+            }
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+
+    }
 }
 
 

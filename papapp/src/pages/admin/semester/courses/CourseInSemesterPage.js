@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useClient } from '../../../components/ClientContext';
+import { useClient } from '../../../../components/ClientContext';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import List from '../../../components/common/List';
+import List from '../../../../components/common/List';
 
 const CourseInSemesterPage = () => {
     const [courseInSemester, setCourseInSemester] = useState([]);
@@ -31,6 +31,11 @@ const CourseInSemesterPage = () => {
         }
     }
 
+    const handleVievGroups = (e) => {
+        e.preventDefault();
+        navigate(`${e.target.value}/groups`);
+    }
+
     useEffect(() => {
         getCoursesInSemester();
     }, []);
@@ -39,8 +44,8 @@ const CourseInSemesterPage = () => {
 
     return (
         <>
-            <Link to={`/admin/semesters/${semesterId}/courses/add`} className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i class="bi bi-plus-lg"></i> Nowy</Link >
-            <List listName={`Przedmioty w semestrze ${semesterId}`} columnNames={['Kod przedmotu']} data={courseInSemester} error={error} adminButtons={[true, false]} handleDelete={handleDeleteSemester} id="course_code" />
+            <Link to={`/admin/semesters/${semesterId}/courses/add`} className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >
+            <List listName={`Przedmioty w semestrze ${semesterId}`} columnNames={['Kod przedmotu']} data={courseInSemester} error={error} adminButtons={[true, false]} userButtons={true} handleViev={handleVievGroups} handleDelete={handleDeleteSemester} id="course_code" />
         </>
     )
 }
