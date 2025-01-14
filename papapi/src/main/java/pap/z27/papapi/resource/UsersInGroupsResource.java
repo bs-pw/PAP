@@ -107,4 +107,33 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
+    @DeleteMapping("/{semester}/{courseCode}/{groupNr}/{userId}")
+    public ResponseEntity<String> updateUserGroup(
+            @PathVariable("semester") String semester,
+            @PathVariable("courseCode") String courseCode,
+            @PathVariable("groupNr") Integer groupNr,
+            @PathVariable("userId") Integer userId,
+            HttpSession session) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        Integer thisUserId = (Integer)session.getAttribute("user_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        UserInGroup uig = new UserInGroup(thisUserId,courseCode,semester,groupNr);
+        if (userTypeId != 0 && userRepo.checkIfIsCoordinator(uig)==0) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("{\"message\":\"only coordinators can remove students/lectureres from groups.\"}");
+        }
+        uig.setUser_id(userId);
+        int result = groupRepo.removeStudentFromGroup(uig)+groupRepo.removeLecturerFromGroup(uig);
+        if(result==0)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("{\"message\":\"Couldn't remove user from group.\"}");
+        if(result>1)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("{\"message\":\"rm -rf\"}");
+
+        return ResponseEntity.ok("{\"message\":\"ok\"}");
+    }
+
 }
