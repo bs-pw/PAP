@@ -21,7 +21,15 @@ const CoordinatorsPage = () => {
         }
     }
 
-    const handleDelete = async (id) => { }
+    const handleDelete = async (e) => {
+        e.preventDefault();
+        try {
+            await client.deleteCoordinatorFromCourse(semesterId, courseId, e.target.value);
+            getCourseStudents();
+        } catch (error) {
+            setError(error.message);
+        }
+    }
 
     useEffect(() => {
         getCourseStudents();
