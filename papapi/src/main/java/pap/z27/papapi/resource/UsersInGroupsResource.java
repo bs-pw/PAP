@@ -48,7 +48,7 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
     return ResponseEntity.ok(groupRepo.findLecturersOfGroup(courseCode,semester,groupNr));
 }
 
-    @GetMapping("/{semester}/{courseCode}/{groupNr}/available/student")
+    @GetMapping("/{semester}/{courseCode}/{groupNr}/available/students")
     public ResponseEntity<List<UserPublicInfo>> getAllEligibleStudentsToGroup(@PathVariable("semester") String semester,
                                                                               @PathVariable("courseCode") String courseCode,
                                                                               @PathVariable("groupNr") Integer groupNr,
