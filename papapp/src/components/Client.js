@@ -157,7 +157,7 @@ class Client {
     }
 
     async getUserTypes() {
-        return fetch(`${this.baseUrl}/usertype`, {
+        return fetch(`${this.baseUrl}/usertypes`, {
             method: 'GET',
             headers: this.headers,
             credentials: this.credentials,
@@ -816,7 +816,7 @@ class Client {
         });
     }
     async getClassTypes() {
-        return fetch(`${this.baseUrl}/classtype`,
+        return fetch(`${this.baseUrl}/classtypes`,
             {
                 method: 'GET',
                 headers: this.headers,
