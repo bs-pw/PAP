@@ -454,8 +454,8 @@ class Client {
         });
     }
 
-    async getStudentsInGroup(semesterId, courseCode, groupNumber) {
-        return fetch(`${this.baseUrl}/usersingroups/${semesterId}/${courseCode}/${groupNumber}/students`,
+    async getUsersInGroup(semesterId, courseCode, groupNumber, type) {
+        return fetch(`${this.baseUrl}/usersingroups/${semesterId}/${courseCode}/${groupNumber}/${type}`,
             {
                 method: 'GET',
                 headers: this.headers,
@@ -474,7 +474,23 @@ class Client {
             });
     }
 
-    async addStudentInGroup(semester, course_code, group_number, student_id) { }
+    async addUserInGroup(semester, course_code, group_number, student_id, type) {
+        return fetch(`${this.baseUrl}/usersingroups/${type}`, {
+            method: 'POST',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: JSON.stringify({
+                semester, course_code, group_number, student_id
+            }),
+        }).then(response => {
+            if (response.ok) {
+                return true;
+            } else {
+                throw new Error(`Error adding user to group: ${response.json().message}`);
+
+            }
+        })
+    }
 
     async deleteUserInGroup(semester, course_code, group_number, user_id) {
         return fetch(`${this.baseUrl}/usersingroups/${semester}/${course_code}/${group_number}/${user_id}`,
