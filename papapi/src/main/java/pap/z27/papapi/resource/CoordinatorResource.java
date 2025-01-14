@@ -13,6 +13,7 @@ import pap.z27.papapi.repo.UserRepo;
 import java.util.List;
 
 @RestController
+@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping("/api/coordinators")
 public class CoordinatorResource {
     public final CourseInSemesterRepo courseInSemesterRepo;

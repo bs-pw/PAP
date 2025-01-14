@@ -531,6 +531,26 @@ class Client {
                 throw new Error(error.message);
             });
     }
+
+    async getCourseCoordinators(semester, course_code) {
+        return fetch(`${this.baseUrl}/coordinators/${semester}/${course_code}`,
+            {
+                method: 'GET',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error getting course coordinators: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
 }
 
 

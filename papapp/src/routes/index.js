@@ -22,6 +22,8 @@ import GroupsInCourseForm from "../pages/admin/semester/courses/groups/GroupsInC
 import UsersInGroupPage from "../pages/admin/semester/courses/groups/users/UsersInGroupPage";
 import UsersInGroupForm from "../pages/admin/semester/courses/groups/users/UsersInGroupForm";
 import List from "../components/common/List";
+import CoordinatorsPage from "../pages/admin/semester/courses/coordinators/CoordinatorsPage";
+import CoordinatorsForm from "../pages/admin/semester/courses/coordinators/CoordinatorsForm";
 //import useAuthStatus from './useAuthStatus';
 
 const ProtectedRoute = ({ isAuthRequired = true }) => {
@@ -189,6 +191,19 @@ export const router = createBrowserRouter([
                                                             {
                                                                 index: true,
                                                                 element: <><Link to={`coordinators`} className="nav-link">Koordynatorzy</Link><Link to={`groups`} className="nav-link">Grupy</Link><Link to={`students`} className="nav-link">Studenci</Link></>
+                                                            },
+                                                            {
+                                                                path: "coordinators",
+                                                                children: [
+                                                                    {
+                                                                        index: true,
+                                                                        element: <CoordinatorsPage />
+                                                                    },
+                                                                    {
+                                                                        path: "add",
+                                                                        element: <CoordinatorsForm />
+                                                                    }
+                                                                ]
                                                             },
                                                             {
                                                                 path: "groups",
