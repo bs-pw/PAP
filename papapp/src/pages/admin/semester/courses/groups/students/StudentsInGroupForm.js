@@ -11,10 +11,21 @@ const StudentsInGroupForm = () => {
     const { semesterId, courseId, groupId } = useParams();
     const navigate = useNavigate();
 
-    const getStudents = async (e) => { }
+    const getStudents = async (e) => {
+        try {
+            const data = await client.getAvailableStudentsToAddToGroup(semesterId, courseId, groupId, "student");
+            setStudents(data);
+            console.log(students)
+        } catch (error) {
+            console.log(error);
+            setMessage(error.message);
+        }
+    }
+
     const handleChange = (e) => {
         setSelectedStudent(e.target.value);
     }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -24,8 +35,16 @@ const StudentsInGroupForm = () => {
         }
     }
 
+    useEffect(() => {
+        getStudents();
+    })
+
+    const selectData = [{
+        name: "user_id", label: "Wybierz studenta", options: students.map(student => ({ value: student.user_id, label: `${student.name} ${student.surname}` })), defaultValue: selectedStudent, onChange: handleChange
+    }]
+
     return (
-        <div>StudentsInGroupForm</div>
+        <Form selectData={selectData} buttonName="Dodaj" formName={`Dodaj studenta do grupy ${groupId}, przedmiot ${courseId} w semestrze ${semesterId}`} onSubmit={handleSubmit} message={message} />
     )
 }
 
