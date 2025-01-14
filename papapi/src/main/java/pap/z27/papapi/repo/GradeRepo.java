@@ -15,13 +15,27 @@ public class GradeRepo {
     public GradeRepo(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
-    public List<Grade> findAllGradesOfCourse(CourseInSemester courseInSemester) {
+    public List<Grade> findAllGradesOfCourse(String courseCode, String semester) {
         return jdbcClient.sql("SELECT * FROM GRADES WHERE course_code=? and semester=?")
-                .param(courseInSemester.getCourse_code())
-                .param(courseInSemester.getSemester())
+                .param(courseCode)
+                .param(semester)
                 .query(Grade.class)
                 .list();
     }
+
+    public List<Grade> getGroupGradesInSemester(String courseCode, String semester, Integer groupNumber)
+    {
+        return jdbcClient.sql("SELECT g.category_id, g.course_code, g.semester, g.user_id, g.who_inserted_id, " +
+                "g.grade, g.\"date\", g.description " +
+                "FROM GRADES g JOIN STUDENTS_IN_GROUPS sig ON g.user_id = sig.user_id AND g.course_code = sig.course_code AND g.semester = sig.semester " +
+                "WHERE g.course_code = ? AND g.semester = ? AND sig.group_number = ?")
+                .param(courseCode)
+                .param(semester)
+                .param(groupNumber)
+                .query(Grade.class)
+                .list();
+    }
+
     public List<Grade> findAllGradesOfCourseForUser(CourseInSemester courseInSemester, Integer userID) {
         return jdbcClient.sql("SELECT * FROM GRADES WHERE course_code=? and semester=? and user_id=?" )
                 .param(courseInSemester.getCourse_code())
