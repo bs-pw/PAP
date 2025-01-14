@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.Group;
+import pap.z27.papapi.domain.MyClass;
 import pap.z27.papapi.domain.Semester;
 import pap.z27.papapi.repo.CourseInSemesterRepo;
 
@@ -31,10 +32,12 @@ public class CourseInSemesterResource {
     public List<CourseInSemester> getCoursesInSemesterBySemester(@PathVariable String semester) {
         return courseRepo.findAllCoursesInSemesterBySemester(semester);
     }
+
     @GetMapping("/bycourse/{semesterId}")
     public List<CourseInSemester> getCoursesInSemesterByCourse(@PathVariable String courseCode) {
         return courseRepo.findAllCoursesInSemesterByCode(courseCode);
     }
+
 
     @PostMapping
     public ResponseEntity<String> insertCourseInSemester(@RequestBody CourseInSemester course, HttpSession session)

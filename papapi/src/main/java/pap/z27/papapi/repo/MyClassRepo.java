@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.MyClass;
 import pap.z27.papapi.domain.subclasses.ClassDTO;
+import pap.z27.papapi.domain.subclasses.ClassInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +29,12 @@ public class MyClassRepo {
                 .query(ClassDTO.class)
                 .list();
     }
-    public List<ClassDTO> findAllClassesInGroup(String semester, String courseCode, Integer groupNr) {
-        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,ct.type,c.day,c.hour,c.length,c.\"where\" FROM CLASSES c  join CLASS_TYPES ct using (class_type_id)  WHERE c.SEMESTER = ? and c.COURSE_CODE=? and c.GROUP_NUMBER=?")
+    public List<ClassInfo> findAllClassesInGroup(String semester, String courseCode, Integer groupNr) {
+        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,c.class_type_id,ct.type,c.day,c.hour,c.length,c.\"where\" FROM CLASSES c  join CLASS_TYPES ct using (class_type_id)  WHERE c.SEMESTER = ? and c.COURSE_CODE=? and c.GROUP_NUMBER=?")
                 .param(semester)
                 .param(courseCode)
                 .param(groupNr)
-                .query(ClassDTO.class)
+                .query(ClassInfo.class)
                 .list();
     }
 
@@ -55,6 +56,17 @@ public class MyClassRepo {
                 .param(classIdForGroup)
                 .query(ClassDTO.class)
                 .single();
+    }
+
+    public List<MyClass> findClassPlanBySemester(String courseCode, String semester) {
+        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,c.class_type_id," +
+                "c.day,c.hour,c.length,c.\"where\" " +
+                "FROM classes c " +
+                "WHERE c.course_code = ? AND c.semester = ?")
+                .param(courseCode)
+                .param(semester)
+                .query(MyClass.class)
+                .list();
     }
 
     public Integer insertClass(MyClass myClass) {
