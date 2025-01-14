@@ -33,7 +33,7 @@ const GroupsInCoursePage = () => {
 
     const handleViewStudents = (e) => {
         e.preventDefault();
-        navigate(`${e.target.value}/students`);
+        navigate(`${e.target.value}`);
     }
 
     useEffect(() => {
