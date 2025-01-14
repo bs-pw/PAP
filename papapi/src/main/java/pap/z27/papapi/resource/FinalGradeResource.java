@@ -91,7 +91,7 @@ public class FinalGradeResource {
     }
 
     @PostMapping
-    public ResponseEntity<String> insertFinalGrade(@RequestBody FinalGrade finalGrade,
+    public ResponseEntity<String> addUserToCourse(@RequestBody FinalGrade finalGrade,
                                                       HttpSession session) {
 
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");

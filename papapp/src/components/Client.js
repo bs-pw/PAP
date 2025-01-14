@@ -644,6 +644,28 @@ class Client {
                 throw new Error(error.message);
             });
     }
+    async deleteStudentFromCourse(semester, course_code, user_id) {
+        return fetch(`${this.baseUrl}/finalgrades`,
+            {
+                method: 'DELETE',
+                headers: this.headers,
+                credentials: this.credentials,
+                body: JSON.stringify({
+                    semester, course_code, user_id
+                }),
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return true;
+                } else {
+                    throw new Error(`Error deleting student from course: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
 }
 
 
