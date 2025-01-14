@@ -36,13 +36,14 @@ public class GradeCategoryRepo {
                 .update();
     }
 
-    public Integer removeGradeCategory(GradeCategory gradeCategory) {
+    public Integer removeGradeCategory(String course_code, String semester, Integer category_id) {
         return jdbcClient.sql("DELETE FROM GRADE_CATEGORIES WHERE category_id=? and course_code=? and semester=?")
-                .param(gradeCategory.getCategory_id())
-                .param(gradeCategory.getCourse_code())
-                .param(gradeCategory.getSemester())
+                .param(category_id)
+                .param(course_code)
+                .param(semester)
                 .update();
     }
+
 
     public Integer updateGradeCategory(Integer categoryId, String course_code, String semester,
                                        GradeCategory gradeCategory) {

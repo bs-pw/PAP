@@ -90,4 +90,28 @@ public class GradeCategoryResource {
         }
         return ResponseEntity.badRequest().body("{\"message\":\"Couldn't update grade category.\"}");
     }
+
+    @DeleteMapping("{semester}/{course_code}/{categoryId}")
+    public ResponseEntity<String> removeGradeCategory(@PathVariable String semester,
+                                                      @PathVariable String course_code,
+                                                      @PathVariable Integer categoryId,
+                                                      HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Integer userId = (Integer) session.getAttribute("user_id");
+
+        if (!userTypeId.equals(0)
+                && (userRepo.checkIfIsCoordinator(
+                userId, course_code, semester)==0))
+        {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only course coordinator or admin can update grade category\"}");
+        }
+
+        if (gradeCategoryRepo.removeGradeCategory(course_code, semester, categoryId) != 0) {
+            return ResponseEntity.ok("{\"message\":\"grade category deleted\"}");
+        }
+        return ResponseEntity.badRequest().body("{\"message\":\"Couldn't delete grade category.\"}");
+    }
 }
