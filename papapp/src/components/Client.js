@@ -815,6 +815,25 @@ class Client {
             throw new Error(error.message);
         });
     }
+    async getClassTypes() {
+        return fetch(`${this.baseUrl}/classtype`,
+            {
+                method: 'GET',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error getting classtypes: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
 }
 
 
