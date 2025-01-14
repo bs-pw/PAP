@@ -608,7 +608,7 @@ class Client {
                 throw new Error(error.message);
             });
     }
-    async addCoordinatorToCourse(semester, course_code, user_id, type) {
+    async addCoordinatorToCourse(semester, course_code, user_id) {
         return fetch(`${this.baseUrl}/coordinators/${user_id}`, {
             method: 'POST',
             headers: this.headers,
