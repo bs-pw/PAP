@@ -59,30 +59,30 @@ public class FinalGradeResource {
         return ResponseEntity.ok(userRepo.findAllEligibleUsersToCourse(new CourseInSemester(courseCode,semester)));
     }
 
-//    @GetMapping("{semester}/user/{userId}")
-//    public ResponseEntity<List<FinalGrade>> getUsersFinalGradesThisSemester(@PathVariable("userId") Integer userId,
-//                                                                            @PathVariable("semester") String semester,
-//                                                                    HttpSession session) {
-//        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
-//        if (userTypeId == null) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//        }
-//        Integer thisUserId = (Integer) session.getAttribute("user_id");
-//
-//        if (thisUserId.equals(userId)) {
-//            if (userTypeId.equals(1)) {
-//                return ResponseEntity.badRequest().build();
-//            }
-//            return ResponseEntity.ok(finalGradeRepo.findAllUsersFinalGrades(userId));
-//        }
-//
-//        if (!userTypeId.equals(0)) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//        }
-//
-//
-//    }
-//
+    @GetMapping("{semester}/user/{userId}")
+    public ResponseEntity<List<FinalGrade>> getUsersFinalGradesInSemester(@PathVariable("userId") Integer userId,
+                                                                            @PathVariable("semester") String semester,
+                                                                    HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Integer thisUserId = (Integer) session.getAttribute("user_id");
+
+        if (thisUserId.equals(userId)) {
+            if (userTypeId.equals(1)) {
+                return ResponseEntity.badRequest().build();
+            }
+            return ResponseEntity.ok(finalGradeRepo.findUsersFinalGradesInSemester(userId, semester));
+        }
+
+        if (!userTypeId.equals(0)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        return ResponseEntity.ok(finalGradeRepo.findUsersFinalGradesInSemester(userId, semester));
+    }
+
 
     //    @GetMapping("{semester}/user/{userId}")
 //    public ResponseEntity<List<FinalGrade>> getUsersFinalGradesThisSemester(@PathVariable("userId") Integer userId,

@@ -56,4 +56,12 @@ public class FinalGradeRepo {
                 .update();
     }
 
+    public List<FinalGrade> findUsersFinalGradesInSemester(Integer userId, String semester) {
+        return jdbcClient.sql("SELECT * FROM FINAL_GRADES where user_id=? and semester=?")
+                .param(userId)
+                .param(semester)
+                .query(FinalGrade.class)
+                .list();
+    }
+
 }
