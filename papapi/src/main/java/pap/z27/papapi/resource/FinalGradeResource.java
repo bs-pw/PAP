@@ -6,8 +6,10 @@ import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.FinalGrade;
 import pap.z27.papapi.domain.Group;
+import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 import pap.z27.papapi.repo.FinalGradeRepo;
 import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
@@ -39,7 +41,22 @@ public class FinalGradeResource {
         }
         return ResponseEntity.ok(finalGradeRepo.findAllUsersFinalGrades(userId));
     }
-//    @GetMapping("{semester}/user/{userId}")
+
+    @GetMapping("{semester}/{courseCode}/available")
+    public ResponseEntity<List<UserPublicInfo>> getEligibleCourseStudents(@PathVariable("courseCode") String courseCode, @PathVariable("semester") String semester, HttpSession session) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        Integer userId = (Integer)session.getAttribute("user_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (userTypeId != 0 && userRepo.checkIfIsCoordinator(userId,courseCode,semester)==0) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(userRepo.findAllEligibleUsersToCourse(new CourseInSemester(courseCode,semester)));
+    }
+
+
+    //    @GetMapping("{semester}/user/{userId}")
 //    public ResponseEntity<List<FinalGrade>> getUsersFinalGradesThisSemester(@PathVariable("userId") Integer userId,
 //                                                                            @PathVariable("semester") String semester,
 //                                                                HttpSession session) {
