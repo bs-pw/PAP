@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useClient } from '../../../../../../components/ClientContext'
 import Form from '../../../../../../components/common/Form';
 import { useNavigate, useParams } from 'react-router-dom';
-import { DayConverter } from '../../../../../../components/common/TimeConverter';
+import { convertMinutesToTime, DayConverter, TimeConverter } from '../../../../../../components/common/TimeConverter';
 
 const ClassesInGroupForm = () => {
     const [formData, setFormData] = useState({
@@ -86,8 +86,8 @@ const ClassesInGroupForm = () => {
     }, []);
 
     const inputData = [
-        { name: "hour", type: "number", label: "Godzina rozpoczęcia(w minutach)", value: formData.hour, onChange: handleChange, required: true },
-        { name: "length", type: "number", label: "Czas trwania(w minutach)", value: formData.length, onChange: handleChange, required: true },
+        { name: "hour", type: "number", label: `Godzina rozpoczęcia(w minutach) [${convertMinutesToTime(formData.hour)}]`, value: formData.hour, onChange: handleChange, required: true },
+        { name: "length", type: "number", label: `Czas trwania(w minutach) [${convertMinutesToTime(Number(formData.hour) + Number(formData.length))}]`, value: formData.length, onChange: handleChange, required: true },
         { name: "where", type: "text", label: "Sala", value: formData.where, onChange: handleChange, required: true },
     ];
 

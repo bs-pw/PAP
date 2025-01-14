@@ -265,6 +265,10 @@ export const router = createBrowserRouter([
                                                                                         element: <ClassesInGroupForm />
                                                                                     },
                                                                                     {
+                                                                                        path: ":classId",
+                                                                                        element: <Navigate to=".." />
+                                                                                    },
+                                                                                    {
                                                                                         path: ":classId/edit",
                                                                                         element: <ClassesInGroupForm />
                                                                                     }
