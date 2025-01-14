@@ -17,7 +17,7 @@ import pap.z27.papapi.repo.UserRepo;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/finalgrade")
+@RequestMapping(path = "api/finalgrades")
 public class FinalGradeResource {
     private final FinalGradeRepo finalGradeRepo;
     private final UserRepo userRepo;

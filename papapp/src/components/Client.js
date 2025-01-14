@@ -551,6 +551,63 @@ class Client {
                 throw new Error(error.message);
             });
     }
+    async getAvailableCourseCoordinators(semester, course_code) {
+        return fetch(`${this.baseUrl}/coordinators/${semester}/${course_code}/available`,
+            {
+                method: 'GET',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error getting course available coordinators: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
+    async getCourseStudents(semester, course_code) {
+        return fetch(`${this.baseUrl}/finalgrades/${semester}/course/${course_code}`,
+            {
+                method: 'GET',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error getting course students: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
+    async getAvailableCourseStudents(semester, course_code) {
+        return fetch(`${this.baseUrl}/finalgrades/${semester}/${course_code}/available`,
+            {
+                method: 'GET',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error getting course available students: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
 }
 
 
