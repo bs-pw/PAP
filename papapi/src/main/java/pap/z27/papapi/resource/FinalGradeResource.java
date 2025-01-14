@@ -17,6 +17,7 @@ import pap.z27.papapi.repo.UserRepo;
 import java.util.List;
 
 @RestController
+@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping(path = "api/finalgrades")
 public class FinalGradeResource {
     private final FinalGradeRepo finalGradeRepo;
