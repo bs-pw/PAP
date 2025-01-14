@@ -39,7 +39,7 @@ public class FinalGradeResource {
         }
         return ResponseEntity.ok(finalGradeRepo.findAllUsersFinalGrades(userId));
     }
-    @GetMapping("{courseCode}/{semester}")
+    @GetMapping("{semester}/{courseCode}")
     public ResponseEntity<List<FinalGrade>> getFinalGradesByCourse(@PathVariable("courseCode") String courseCode,
                                                         @PathVariable("semester") String semester,
                                                         HttpSession session) {

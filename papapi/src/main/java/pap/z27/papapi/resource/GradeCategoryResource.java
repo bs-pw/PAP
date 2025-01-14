@@ -58,7 +58,7 @@ public class GradeCategoryResource {
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if(groupRepo.isLecturerOfCourse(userId,semester,courseCode)==0 && !userTypeId.equals(0))
+        if(groupRepo.isLecturerOfCourse(userId,semester,courseCode)==0 && !userTypeId.equals(0) && userRepo.checkIfIsCoordinator(userId,courseCode,semester)==0)
         {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
