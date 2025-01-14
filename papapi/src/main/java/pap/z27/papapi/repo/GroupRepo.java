@@ -11,6 +11,23 @@ import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 
 import java.util.List;
 @Repository
+/*Select users.user_id, users.name, users.surname, user_types.type, users.mail
+from users
+         join user_types on users.user_type_id = user_types.user_type_id
+where USER_TYPES.USER_TYPE_ID in (1,2)
+MINUS
+Select users.user_id, users.name, users.surname, user_types.type, users.mail
+from users
+         join final_grades on final_grades.user_id=users.user_id
+         join user_types on users.user_type_id = user_types.user_type_id
+where FINAL_GRADES.SEMESTER='24Z' and FINAL_GRADES.COURSE_CODE='SOI'
+MINUS
+Select users.user_id, users.name, users.surname, user_types.type, users.mail
+from users
+         join LECTURERS on LECTURERS.user_id=users.user_id
+         join user_types on users.user_type_id = user_types.user_type_id
+where LECTURERS.SEMESTER = '24Z' and LECTURERS.COURSE_CODE='SOI' and LECTURERS.GROUP_NUMBER=105;
+*/
 public class GroupRepo {
     @Autowired
     private final JdbcClient jdbcClient;

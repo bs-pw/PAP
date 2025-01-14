@@ -216,7 +216,7 @@ export const router = createBrowserRouter([
                                                                                     },
                                                                                     {
                                                                                         path: "add",
-                                                                                        element: <UsersInGroupForm />
+                                                                                        element: <UsersInGroupForm type="students" />
                                                                                     }
                                                                                 ]
                                                                             },
@@ -229,7 +229,7 @@ export const router = createBrowserRouter([
                                                                                     },
                                                                                     {
                                                                                         path: "add",
-                                                                                        element: <UsersInGroupForm />
+                                                                                        element: <UsersInGroupForm type="lecturers" />
                                                                                     }
                                                                                 ]
                                                                             }

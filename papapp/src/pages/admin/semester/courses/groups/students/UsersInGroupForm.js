@@ -14,7 +14,7 @@ const UsersInGroupForm = ({ type }) => {
 
     const getAvailableUsers = async (e) => {
         try {
-            const data = await client.getAvailableStudentsToAddToGroup(semesterId, courseId, groupId, type);
+            const data = await client.getAvailableUsersToAddToGroup(semesterId, courseId, groupId, type);
             setUsers(data);
             console.log(users)
         } catch (error) {
@@ -44,7 +44,7 @@ const UsersInGroupForm = ({ type }) => {
         } else {
             setTitle("prowadzącego");
         }
-    })
+    }, [])
 
     const selectData = [{
         name: "user_id", label: `Wybierz ${title}`, options: users.map(student => ({ value: student.user_id, label: `${student.name} ${student.surname}` })), defaultValue: selectedUser, onChange: handleChange
