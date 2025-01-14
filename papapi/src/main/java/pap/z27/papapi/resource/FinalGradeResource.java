@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.FinalGrade;
 import pap.z27.papapi.domain.Group;
+import pap.z27.papapi.domain.subclasses.UserAndFinalGrade;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 import pap.z27.papapi.repo.FinalGradeRepo;
 import pap.z27.papapi.repo.GroupRepo;
@@ -72,9 +73,9 @@ public class FinalGradeResource {
 //        return ResponseEntity.ok(finalGradeRepo.findAllUsersFinalGrades(userId));
 //    }
     @GetMapping("{semester}/course/{courseCode}")
-    public ResponseEntity<List<FinalGrade>> getFinalGradesByCourse(@PathVariable("courseCode") String courseCode,
-                                                        @PathVariable("semester") String semester,
-                                                        HttpSession session) {
+    public ResponseEntity<List<UserAndFinalGrade>> getFinalGradesByCourse(@PathVariable("courseCode") String courseCode,
+                                                                          @PathVariable("semester") String semester,
+                                                                          HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

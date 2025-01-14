@@ -114,7 +114,7 @@ CREATE TABLE final_grades (
     user_id                            NUMBER(6) NOT NULL, 
     course_code VARCHAR2(5 CHAR) NOT NULL, 
     semester        VARCHAR2(4 CHAR) NOT NULL,
-    grade                                    NUMBER(2, 1) NOT NULL
+    grade                                    NUMBER(2, 1)
 );
 
 ALTER TABLE final_grades

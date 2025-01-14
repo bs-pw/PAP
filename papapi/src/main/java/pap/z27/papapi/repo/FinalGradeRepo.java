@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.FinalGrade;
+import pap.z27.papapi.domain.subclasses.UserAndFinalGrade;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 
 import java.util.List;
@@ -24,11 +25,11 @@ public class FinalGradeRepo {
                 .list();
     }
 
-    public List<FinalGrade> findAllFinalGradesInCourse(String courseCode, String semester) {
-        return jdbcClient.sql("SELECT * FROM FINAL_GRADES where course_code=? and semester=?")
+    public List<UserAndFinalGrade> findAllFinalGradesInCourse(String courseCode, String semester) {
+        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,fg.grade FROM USER u join FINAL_GRADES fg on u.user_id=fg.user_id where fg.course_code=? and fg.semester=?")
                 .param(courseCode)
                 .params(semester)
-                .query(FinalGrade.class)
+                .query(UserAndFinalGrade.class)
                 .list();
     }
     public Integer insertFinalGrade(FinalGrade finalGrade) {
