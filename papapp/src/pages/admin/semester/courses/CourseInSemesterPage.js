@@ -12,11 +12,15 @@ const CourseInSemesterPage = () => {
 
     const getCoursesInSemester = async () => {
         try {
-            const data = await client.getCoursesInSemesterBySemester(semesterId);
+            let data;
+            if (client.userTypeId == 0)
+                data = await client.getCoursesInSemesterBySemester(semesterId);
+            else
+                data = await client.getCoursesInSemesterByCoordinator(semesterId, client.userId);
             const result = data.map(({ course_code }) => ({ course_code }));
             setCourseInSemester(result);
         } catch (error) {
-            setError('Błąd podczas ładowania danych: ' + error.message);
+            await setError('Błąd podczas ładowania danych: ' + error.message);
         }
     };
 
@@ -44,8 +48,8 @@ const CourseInSemesterPage = () => {
 
     return (
         <>
-            <Link to={`/admin/semesters/${semesterId}/courses/add`} className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >
-            <List listName={`Przedmioty w semestrze ${semesterId}`} columnNames={['Kod przedmotu']} data={courseInSemester} error={error} adminButtons={[true, false]} userButtons={true} handleViev={handleVievGroups} handleDelete={handleDeleteSemester} id="course_code" />
+            {client.userTypeId == 0 && <Link to={`/admin/semesters/${semesterId}/courses/add`} className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >}
+            <List listName={`Przedmioty w semestrze ${semesterId}`} columnNames={['Kod przedmotu']} data={courseInSemester} error={error} adminButtons={client.userTypeId == 0 && [true, false]} userButtons={true} handleViev={handleVievGroups} handleDelete={handleDeleteSemester} id="course_code" />
         </>
     )
 }
