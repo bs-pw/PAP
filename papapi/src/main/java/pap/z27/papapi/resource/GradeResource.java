@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pap.z27.papapi.domain.FinalGrade;
 import pap.z27.papapi.domain.Grade;
 import pap.z27.papapi.repo.GradeRepo;
 import pap.z27.papapi.repo.GroupRepo;
@@ -126,5 +127,41 @@ public class GradeResource {
             return ResponseEntity.badRequest().body("{\"message\":\"Grade could not be deleted\"}");
         }
         return ResponseEntity.ok("{\"message\":\"Grade deleted\"}");
+    }
+
+    @GetMapping("{semester}/{courseCode}")
+    public ResponseEntity<List<Grade>> getAllCourseGradesInSemester(@PathVariable String courseCode, @PathVariable String semester, HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Integer userId = (Integer) session.getAttribute("user_id");
+
+        if (!userTypeId.equals(0) &&
+            userRepo.checkIfIsCoordinator(userId, courseCode, semester) == 0 &&
+            groupRepo.isLecturerOfCourse(userId, semester, courseCode) == 0) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(gradeRepo.findAllGradesOfCourse(courseCode, semester));
+    }
+
+    @GetMapping("{semester}/{courseCode}/{groupNumber}")
+    public ResponseEntity<List<Grade>> getGroupGradesInSemester(@PathVariable String courseCode,
+                                                                @PathVariable String semester,
+                                                                @PathVariable Integer groupNumber,
+                                                                HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Integer userId = (Integer) session.getAttribute("user_id");
+
+        if (!userTypeId.equals(0) &&
+            userRepo.checkIfIsCoordinator(userId, courseCode, semester) == 0 &&
+            groupRepo.isLecturerOfCourse(userId, semester, courseCode) == 0) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        return ResponseEntity.ok(gradeRepo.getGroupGradesInSemester(courseCode, semester, groupNumber));
     }
 }
