@@ -17,7 +17,17 @@ public class GroupRepo {
     public GroupRepo(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
-
+    /*Select users.user_id, users.name, users.surname, users.mail, user_types.type
+from users
+         join final_grades on final_grades.user_id=users.user_id
+         join user_types on users.user_type_id = user_types.user_type_id
+where FINAL_GRADES.COURSE_CODE='SOI' and FINAL_GRADES.SEMESTER='24Z'
+MINUS
+Select users.user_id, users.name, users.surname, users.mail, user_types.type
+           from users
+                    join STUDENTS_IN_GROUPS on users.USER_ID = STUDENTS_IN_GROUPS.USER_ID
+                    join user_types on users.user_type_id = user_types.user_type_id
+           where STUDENTS_IN_GROUPS.SEMESTER='24Z' and STUDENTS_IN_GROUPS.COURSE_CODE='SOI' and STUDENTS_IN_GROUPS.GROUP_NUMBER=104*/
     public List<Group> findAllGroups() {
         return jdbcClient.sql("SELECT * from GROUPS")
                 .query(Group.class)
