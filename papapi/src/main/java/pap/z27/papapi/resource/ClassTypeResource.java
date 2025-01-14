@@ -12,6 +12,7 @@ import pap.z27.papapi.repo.ClassTypeRepo;
 import java.util.List;
 
 @RestController
+@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping("/api/classtypes")
 public class ClassTypeResource {
     private final ClassTypeRepo classTypeRepo;
