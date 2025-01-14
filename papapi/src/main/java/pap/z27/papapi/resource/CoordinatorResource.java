@@ -26,6 +26,7 @@ public class CoordinatorResource {
         this.userRepo = userRepo;
     }
 
+
     @GetMapping("{semester}/{courseCode}")
     public List<UserPublicInfo> getCourseCoordinators(@PathVariable("courseCode") String courseCode, @PathVariable("semester") String semester) {
        return userRepo.findAllCourseCoordinators(new CourseInSemester(courseCode,semester));

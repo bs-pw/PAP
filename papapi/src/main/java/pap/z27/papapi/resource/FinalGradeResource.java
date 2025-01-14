@@ -164,7 +164,9 @@ public class FinalGradeResource {
     }
 
     @PutMapping
-    public ResponseEntity<String> updateFinalGrade(@RequestBody FinalGrade finalGrade, HttpSession session) {
+    public ResponseEntity<String> updateFinalGrade(
+            @RequestBody FinalGrade finalGrade,
+            HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         Integer userId = (Integer) session.getAttribute("user_id");
         if (userTypeId == null) {
@@ -173,7 +175,7 @@ public class FinalGradeResource {
         if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(userId,
                 finalGrade.getCourse_code(),
                 finalGrade.getSemester())==0)) {
-            return ResponseEntity.badRequest().body("{\"message\":\"Only admins/coordinators can change final grades \"}");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admins/coordinators can change final grades \"}");
         }
         if (finalGradeRepo.updateFinalGrade(finalGrade) == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

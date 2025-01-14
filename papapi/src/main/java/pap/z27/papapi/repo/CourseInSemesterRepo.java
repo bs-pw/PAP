@@ -25,6 +25,12 @@ public class CourseInSemesterRepo {
                 .query(CourseInSemester.class)
                 .list();
     }
+    public List<CourseInSemester> findAllCoursesInSemesterByCoordinator(Integer userId) {
+        return jdbcClient.sql("SELECT cis.* from COURSES_IN_SEMESTER cis join COORDINATORS c on cis.semester =c.semester and cis.course_code=c.course_code where c.user_id=?")
+                .param(userId)
+                .query(CourseInSemester.class)
+                .list();
+    }
     public List<CourseInSemester> findAllCoursesInSemesterBySemester(String semester) {
         return jdbcClient.sql("SELECT * from COURSES_IN_SEMESTER where semester = ?")
                 .param(semester)
