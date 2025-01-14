@@ -41,9 +41,9 @@ public class CourseInSemesterResource {
         return courseRepo.findAllCoursesInSemesterByCode(courseCode);
     }
 
-    @GetMapping("/bycoordinator/{userId}")
-    public List<CourseInSemester> getCoursesInSemesterByCoordinator(@PathVariable Integer userId) {
-        return courseRepo.findAllCoursesInSemesterByCoordinator(userId);
+    @GetMapping("/bycoordinator/{semester}/{userId}")
+    public List<CourseInSemester> getCoursesInSemesterByCoordinator(@PathVariable String semester, @PathVariable Integer userId) {
+        return courseRepo.findAllCoursesInSemesterByCoordinator(semester, userId);
     }
 
 
