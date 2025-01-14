@@ -48,7 +48,7 @@ public class MyClassRepo {
     }
 
     public ClassInfo findClass(String courseCode, String semester, Integer groupNr, Integer classIdForGroup){
-        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,c.CLASS_TYPE_ID,ct.type,c.day,c.hour,c.length,c.\"where\" FROM CLASSES c join CLASS_TYPES ct using (class_type_id)  " +
+        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,c.CLASS_TYPE_ID,ct.type,c.day,c.hour,c.length,c.\"where\" FROM CLASSES c join CLASS_TYPES ct on c.class_type_id= ct.class_type_id  " +
                         "WHERE c.course_code = ? and c.semester=? and c.group_number=? and c.class_id_for_group=?")
                 .param(courseCode)
                 .param(semester)

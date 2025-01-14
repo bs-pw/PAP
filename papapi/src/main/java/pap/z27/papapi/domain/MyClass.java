@@ -22,5 +22,4 @@ public class MyClass implements Serializable {
     private Integer hour;
     private Integer length;
     private String where;
-//    public MyClass(String)
 }
