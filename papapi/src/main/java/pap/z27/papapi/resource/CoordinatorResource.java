@@ -24,18 +24,31 @@ public class CoordinatorResource {
         this.userRepo = userRepo;
     }
 
-    @GetMapping("{courseCode}/{semester}")
+    @GetMapping("{semester}/{courseCode}")
     public List<UserPublicInfo> getCourseCoordinators(@PathVariable("courseCode") String courseCode, @PathVariable("semester") String semester) {
-
        return userRepo.findAllCourseCoordinators(new CourseInSemester(courseCode,semester));
     }
 
+    @GetMapping("{semester}/{courseCode}/available")
+    public ResponseEntity<List<UserPublicInfo>> getEligibleCourseCoordinators(@PathVariable("courseCode") String courseCode, @PathVariable("semester") String semester, HttpSession session) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (userTypeId != 0) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(userRepo.findAllEligibleCourseCoordinators(new CourseInSemester(courseCode,semester)));
+    }
 
     @PostMapping(path = "{coordinatorId}")
     public ResponseEntity<String> insertCoordinator(@PathVariable Integer coordinatorId,
                                                     @RequestBody CourseInSemester courseInSemester,
                                                     HttpSession session) {
         Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert coordinator\"}\"");
         }
