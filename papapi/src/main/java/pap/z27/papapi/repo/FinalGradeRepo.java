@@ -26,7 +26,7 @@ public class FinalGradeRepo {
     }
 
     public List<UserAndFinalGrade> findAllFinalGradesInCourse(String courseCode, String semester) {
-        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,fg.grade FROM USER u join FINAL_GRADES fg on u.user_id=fg.user_id where fg.course_code=? and fg.semester=?")
+        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,fg.grade FROM USERS u join FINAL_GRADES fg on u.user_id=fg.user_id where fg.course_code=? and fg.semester=?")
                 .param(courseCode)
                 .params(semester)
                 .query(UserAndFinalGrade.class)
