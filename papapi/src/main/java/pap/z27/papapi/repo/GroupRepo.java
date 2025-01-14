@@ -98,12 +98,12 @@ public class GroupRepo {
                 .update();
     }
 
-    public Integer removeLecturerFromGroup(Integer userID, Group group) {
+    public Integer removeLecturerFromGroup(UserInGroup userInGroup) {
         return jdbcClient.sql("DELETE FROM LECTURERS WHERE user_id=? and course_code=? and semester=? and group_number=?")
-                .param(userID)
-                .param(group.getCourse_code())
-                .param(group.getSemester())
-                .param(group.getGroup_number())
+                .param(userInGroup.getUser_id())
+                .param(userInGroup.getCourse_code())
+                .param(userInGroup.getSemester())
+                .param(userInGroup.getGroup_number())
                 .update();
     }
 //    public Integer countGroups(Group group){
