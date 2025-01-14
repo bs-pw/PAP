@@ -608,6 +608,23 @@ class Client {
                 throw new Error(error.message);
             });
     }
+    async addCoordinatorToCourse(semester, course_code, user_id, type) {
+        return fetch(`${this.baseUrl}/coordinators/${user_id}`, {
+            method: 'POST',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: JSON.stringify({
+                semester, course_code
+            }),
+        }).then(response => {
+            if (response.ok) {
+                return true;
+            } else {
+                throw new Error(`Error adding coordinator to course: ${response.json().message}`);
+
+            }
+        })
+    }
 }
 
 
