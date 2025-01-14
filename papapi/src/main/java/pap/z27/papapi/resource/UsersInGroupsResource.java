@@ -63,7 +63,7 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
                 semester)==0)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.ok(groupRepo.findEligibleStudentsToGroup(courseCode,semester,groupNr));
+        return ResponseEntity.ok(groupRepo.findEligibleStudentsToGroup(semester,courseCode,groupNr));
     }
     @PostMapping("/{asWho}")
     public ResponseEntity<String> addStudentToGroup(@PathVariable String asWho, @RequestBody UserInGroup userInGroup, HttpSession session) {

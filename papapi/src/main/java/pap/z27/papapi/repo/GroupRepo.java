@@ -17,17 +17,6 @@ public class GroupRepo {
     public GroupRepo(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
-    /*Select users.user_id, users.name, users.surname, users.mail, user_types.type
-from users
-         join final_grades on final_grades.user_id=users.user_id
-         join user_types on users.user_type_id = user_types.user_type_id
-where FINAL_GRADES.COURSE_CODE='SOI' and FINAL_GRADES.SEMESTER='24Z'
-MINUS
-Select users.user_id, users.name, users.surname, users.mail, user_types.type
-           from users
-                    join STUDENTS_IN_GROUPS on users.USER_ID = STUDENTS_IN_GROUPS.USER_ID
-                    join user_types on users.user_type_id = user_types.user_type_id
-           where STUDENTS_IN_GROUPS.SEMESTER='24Z' and STUDENTS_IN_GROUPS.COURSE_CODE='SOI' and STUDENTS_IN_GROUPS.GROUP_NUMBER=104*/
     public List<Group> findAllGroups() {
         return jdbcClient.sql("SELECT * from GROUPS")
                 .query(Group.class)
@@ -67,9 +56,15 @@ Select users.user_id, users.name, users.surname, users.mail, user_types.type
                 .list();
     }
     public List<UserPublicInfo> findEligibleStudentsToGroup(String semester, String courseCode, Integer groupNr) {
-        return  jdbcClient.sql("SELECT u.user_id, u.name, u.surname, ut.type, u.mail FROM USERS u JOIN FINAL_GRADES fg ON u.user_id = fg.user_id LEFT OUTER JOIN (SELECT * FROM LECTURERS UNION SELECT * FROM STUDENTS_IN_GROUPS WHERE course_code = ? AND semester = ? AND group_number = ?) uig ON u.user_id = uig.user_id JOIN USER_TYPES ut ON u.user_type_id = ut.user_type_id")
+        return  jdbcClient.sql("Select users.user_id, users.name, users.surname, user_types.type, users.mail from users " +
+                        "join final_grades on final_grades.user_id=users.user_id join user_types on users.user_type_id = user_types.user_type_id " +
+                        "where FINAL_GRADES.SEMESTER=? and FINAL_GRADES.COURSE_CODE=? MINUS Select users.user_id, users.name, users.surname, user_types.type, users.mail " +
+                        "from users join STUDENTS_IN_GROUPS on users.USER_ID = STUDENTS_IN_GROUPS.USER_ID join user_types on users.user_type_id = user_types.user_type_id " +
+                        "where STUDENTS_IN_GROUPS.SEMESTER=? and STUDENTS_IN_GROUPS.COURSE_CODE=? and STUDENTS_IN_GROUPS.GROUP_NUMBER=?")
+                .param(semester)
                 .param(courseCode)
                 .param(semester)
+                .param(courseCode)
                 .param(groupNr)
                 .query(UserPublicInfo.class)
                 .list();
