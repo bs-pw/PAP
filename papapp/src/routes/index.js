@@ -25,6 +25,8 @@ import CoordinatorsPage from "../pages/admin/semester/courses/coordinators/Coord
 import CoordinatorsForm from "../pages/admin/semester/courses/coordinators/CoordinatorsForm";
 import StudentsInCoursePage from "../pages/admin/semester/courses/students/StudentsInCoursePage";
 import StudentsInCourseForm from "../pages/admin/semester/courses/students/StudentsInCourseForm";
+import ClassesInGroupForm from "../pages/admin/semester/courses/groups/classes/ClassesInGroupForm";
+import ClassesInGroupPage from "../pages/admin/semester/courses/groups/classes/ClassesInGroupPage";
 
 //import useAuthStatus from './useAuthStatus';
 
@@ -223,7 +225,7 @@ export const router = createBrowserRouter([
                                                                         children: [
                                                                             {
                                                                                 index: true,
-                                                                                element: <><Link to={`lecturers`} className="nav-link">Prowadzący</Link><Link to={`students`} className="nav-link">Studenci</Link></>
+                                                                                element: <><Link to={`lecturers`} className="nav-link">Prowadzący</Link><Link to={`students`} className="nav-link">Studenci</Link><Link to={`classes`} className="nav-link">Zajęcia</Link></>
                                                                             },
                                                                             {
                                                                                 path: "students",
@@ -248,6 +250,23 @@ export const router = createBrowserRouter([
                                                                                     {
                                                                                         path: "add",
                                                                                         element: <UsersInGroupForm type="lecturers" />
+                                                                                    }
+                                                                                ]
+                                                                            },
+                                                                            {
+                                                                                path: "classes",
+                                                                                children: [
+                                                                                    {
+                                                                                        index: true,
+                                                                                        element: <ClassesInGroupPage />
+                                                                                    },
+                                                                                    {
+                                                                                        path: "add",
+                                                                                        element: <ClassesInGroupForm />
+                                                                                    },
+                                                                                    {
+                                                                                        path: "edit/:classId",
+                                                                                        element: <ClassesInGroupForm />
                                                                                     }
                                                                                 ]
                                                                             }
