@@ -13,8 +13,9 @@ const StudentsInGroupPage = () => {
     const getStudentsInGroup = async () => {
         try {
             const data = await client.getStudentsInGroup(semesterId, courseId, groupId);
-            setStudents(data);
-            console.log(data)
+            const result = data.map(({ name, surname }) => ({ name, surname }))
+            setStudents(result);
+            console.log(result)
         } catch (error) {
             setError(error.message || 'Błąd połączenia');
         }

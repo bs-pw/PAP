@@ -13,6 +13,7 @@ import pap.z27.papapi.repo.UserRepo;
 import java.util.List;
 
 @RestController
+@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping("/api/usersingroups")
 public class UsersInGroupsResource {
     private final GroupRepo groupRepo;
@@ -47,8 +48,8 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
     return ResponseEntity.ok(groupRepo.findLecturersOfGroup(courseCode,semester,groupNr));
 }
 
-    @PostMapping
-    public ResponseEntity<String> addStudentToGroup(@RequestBody UserInGroup userInGroup, HttpSession session) {
+    @PostMapping("/{asWho}")
+    public ResponseEntity<String> addStudentToGroup(@PathVariable String asWho, @RequestBody UserInGroup userInGroup, HttpSession session) {
         Integer userTypeId = (Integer)session.getAttribute("user_type_id");
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -61,15 +62,28 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
         }
 
         Integer userId = userInGroup.getUser_id();
-        if (userRepo.findUsersTypeId(userId) != 3 && userRepo.findUsersTypeId(userId)!= 2) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("{\"message\":\"User is not a student.\"}");
+
+        switch (asWho){
+            case "student":
+                if (userRepo.findUsersTypeId(userId) != 3 && userRepo.findUsersTypeId(userId)!= 2) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body("{\"message\":\"User is not a student.\"}");
+                }
+                if (userRepo.countUsersFinalGrades(userInGroup)==0)
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body("{\"message\":\"User is not signed up for this course.\"}");
+                groupRepo.addStudentToGroup(userInGroup);
+                return ResponseEntity.ok("{\"message\":\"ok\"}");
+            case "lecturer":
+                if (userRepo.findUsersTypeId(userId) != 2 && userRepo.findUsersTypeId(userId)!= 1) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body("{\"message\":\"User is not a lecturer.\"}");
+                }
+                //TODO: jak jest studentem to nie moze byc prowadzacym
+                groupRepo.addLecturerToGroup(userInGroup);
+                return ResponseEntity.ok("{\"message\":\"ok\"}");
         }
-        if (userRepo.countUsersFinalGrades(userInGroup)==0)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("{\"message\":\"User is not signed up for this course.\"}");
-        groupRepo.addStudentToGroup(userInGroup);
-        return ResponseEntity.ok("{\"message\":\"ok\"}");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @PutMapping(path = "{newGroupNr}")

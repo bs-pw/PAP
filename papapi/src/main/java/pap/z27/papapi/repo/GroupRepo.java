@@ -89,6 +89,15 @@ public class GroupRepo {
                 .update();
     }
 
+    public Integer addLecturerToGroup(UserInGroup userInGroup) {
+        return jdbcClient.sql("INSERT INTO LECTURERS (user_id,course_code,semester,group_number) VALUES (?,?,?,?)")
+                .param(userInGroup.getUser_id())
+                .param(userInGroup.getCourse_code())
+                .param(userInGroup.getSemester())
+                .param(userInGroup.getGroup_number())
+                .update();
+    }
+
     public Integer removeLecturerFromGroup(Integer userID, Group group) {
         return jdbcClient.sql("DELETE FROM LECTURERS WHERE user_id=? and course_code=? and semester=? and group_number=?")
                 .param(userID)
