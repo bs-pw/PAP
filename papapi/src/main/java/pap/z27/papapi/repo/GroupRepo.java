@@ -190,14 +190,22 @@ public class GroupRepo {
                 .query(Integer.class)
                 .single();
     }
-    public List<UserInGroup> findAllLecturers(){
-        return jdbcClient.sql("SELECT * FROM LECTURERS")
-                .query(UserInGroup.class)
+    public List<UserPublicInfo> findLecturersOfGroup(String courseCode, String semester, Integer groupNr){
+        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.mail FROM USERS u join LECTURERS sig ON u.user_id=sig.user_id join " +
+                        "USER_TYPES ut ON u.user_type_id=ut.user_type_id WHERE sig.course_code=? and sig.semester=? and sig.group_number=?")
+                .param(courseCode)
+                .param(semester)
+                .param(groupNr)
+                .query(UserPublicInfo.class)
                 .list();
     }
-    public List<UserInGroup> findAllStudentsInGroup(){
-        return jdbcClient.sql("SELECT * FROM STUDENTS_IN_GROUPS")
-                .query(UserInGroup.class)
+    public List<UserPublicInfo>findStudentsInGroup(String courseCode, String semester, Integer groupNr){
+        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.mail FROM USERS u join STUDENTS_IN_GROUPS sig ON u.user_id=sig.user_id join " +
+                        "USER_TYPES ut ON u.user_type_id=ut.user_type_id WHERE sig.course_code=? and sig.semester=? and sig.group_number=?")
+                .param(courseCode)
+                .param(semester)
+                .param(groupNr)
+                .query(UserPublicInfo.class)
                 .list();
     }
 }

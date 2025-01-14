@@ -26,7 +26,8 @@ public class GroupResource {
     }
 
     @GetMapping("/{semesterId}/{courseId}")
-    public List<Group> getAllGroupsInSemesterInCourse(@PathVariable String semesterId, @PathVariable String courseId) {
+    public List<Group> getAllGroupsInSemesterInCourse(@PathVariable String semesterId,
+                                                      @PathVariable String courseId) {
         CourseInSemester courseInSemester = new CourseInSemester(courseId, semesterId);
         return groupRepo.findAllGroupsByCourseInSemester(courseInSemester);
     }
