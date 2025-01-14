@@ -19,6 +19,8 @@ import CourseInSemesterPage from "../pages/admin/semester/courses/CourseInSemest
 import CourseInSemesterForm from "../pages/admin/semester/courses/CourseInSemesterForm";
 import GroupsInCoursePage from "../pages/admin/semester/courses/groups/GroupsInCoursePage";
 import GroupsInCourseForm from "../pages/admin/semester/courses/groups/GroupsInCourseForm";
+import StudentsInGroupPage from "../pages/admin/semester/courses/groups/students/StudentsInGroupPage";
+import StudentsInGroupForm from "../pages/admin/semester/courses/groups/students/StudentsInGroupForm";
 //import useAuthStatus from './useAuthStatus';
 
 const ProtectedRoute = ({ isAuthRequired = true }) => {
@@ -197,6 +199,28 @@ export const router = createBrowserRouter([
                                                                     {
                                                                         path: "add",
                                                                         element: <GroupsInCourseForm />,
+                                                                    },
+                                                                    {
+                                                                        path: ":groupId",
+                                                                        children: [
+                                                                            {
+                                                                                index: true,
+                                                                                element: <StudentsInGroupPage />
+                                                                            },
+                                                                            {
+                                                                                path: "students",
+                                                                                children: [
+                                                                                    {
+                                                                                        index: true,
+                                                                                        element: <StudentsInGroupPage />
+                                                                                    },
+                                                                                    {
+                                                                                        path: "add",
+                                                                                        element: <StudentsInGroupForm />
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
                                                                     }
                                                                 ]
                                                             }

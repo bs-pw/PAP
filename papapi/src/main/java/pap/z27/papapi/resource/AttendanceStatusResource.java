@@ -10,6 +10,7 @@ import pap.z27.papapi.repo.AttendanceStatusRepo;
 import java.util.List;
 
 @RestController
+@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping("/api/attendancestatus")
 public class AttendanceStatusResource {
     private final AttendanceStatusRepo attendanceStatusRepo;

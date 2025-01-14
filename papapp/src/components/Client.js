@@ -452,7 +452,42 @@ class Client {
         }).catch(error => {
             throw new Error(error.message);
         });
+    }
 
+    async getStudentsInGroup(semesterId, courseCode, groupNumber) {
+        return fetch(`${this.baseUrl}/usersingroups/${semesterId}/${courseCode}/${groupNumber}/students`,
+            {
+                method: 'GET',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error getting students in group: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
+
+    async addStudentInGroup(semester, course_code, group_number, student_id) { }
+
+    async deleteUserInGroup(semester, course_code, group_number, user_id) {
+        return fetch(`${this.baseUrl}/usersingroups/${semester}/${course_code}/${group_number}/${user_id}`)
+            .then(response => {
+                if (response.ok) {
+                    return true;
+                } else {
+                    throw new Error(`Error deleting user from group: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
     }
 }
 
