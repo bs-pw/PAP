@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.CourseInSemester;
+import pap.z27.papapi.domain.FinalGrade;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 import pap.z27.papapi.repo.CourseInSemesterRepo;
 import pap.z27.papapi.repo.UserRepo;
@@ -42,28 +43,27 @@ public class CoordinatorResource {
         return ResponseEntity.ok(userRepo.findAllEligibleCourseCoordinators(new CourseInSemester(courseCode,semester)));
     }
 
-    @PostMapping(path = "{coordinatorId}")
-    public ResponseEntity<String> insertCoordinator(@PathVariable Integer coordinatorId,
-                                                    @RequestBody CourseInSemester courseInSemester,
+    @PostMapping
+    public ResponseEntity<String> insertCoordinator(@RequestBody FinalGrade coordinator,
                                                     HttpSession session) {
-        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
-        if (userTypeId == null) {
+        Integer thisUserTypeId = (Integer)session.getAttribute("user_type_id");
+        if (thisUserTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if (userTypeId != 0) {
+        if (thisUserTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert coordinator\"}\"");
         }
-
-        if (userRepo.findUsersTypeId(coordinatorId)==1 && userRepo.findUsersTypeId(coordinatorId)==2) {
-            return ResponseEntity.badRequest().body("{\"message\":\"Only teachers can be coordinators\"}");
+        Integer userTypeId =userRepo.findUsersTypeId(coordinator.getUser_id());
+        if (userTypeId!=1 && userTypeId!=2) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only teachers can be coordinators\"}");
         }
 
-        if (userRepo.checkIfStudentIsInCourse(coordinatorId,courseInSemester.getCourse_code(),courseInSemester.getSemester())!=0)
+        if (userRepo.checkIfStudentIsInCourse(coordinator.getUser_id(),coordinator.getCourse_code(),coordinator.getSemester())!=0)
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("{\"message\":\"User is already a student in this course.\"}");
 
-
-        if (courseInSemesterRepo.insertCoordinator(coordinatorId, courseInSemester) == 0) {
+        CourseInSemester courseInSemester = new CourseInSemester(coordinator.getCourse_code(),coordinator.getSemester());
+        if (courseInSemesterRepo.insertCoordinator(coordinator.getUser_id(), courseInSemester) == 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"Couldn't add coordinator\"}");
         }
 
