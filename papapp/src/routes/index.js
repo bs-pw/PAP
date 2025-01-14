@@ -19,8 +19,8 @@ import CourseInSemesterPage from "../pages/admin/semester/courses/CourseInSemest
 import CourseInSemesterForm from "../pages/admin/semester/courses/CourseInSemesterForm";
 import GroupsInCoursePage from "../pages/admin/semester/courses/groups/GroupsInCoursePage";
 import GroupsInCourseForm from "../pages/admin/semester/courses/groups/GroupsInCourseForm";
-import StudentsInGroupPage from "../pages/admin/semester/courses/groups/students/StudentsInGroupPage";
-import StudentsInGroupForm from "../pages/admin/semester/courses/groups/students/StudentsInGroupForm";
+import UsersInGroupPage from "../pages/admin/semester/courses/groups/students/UsersInGroupPage";
+import UsersInGroupForm from "../pages/admin/semester/courses/groups/students/UsersInGroupForm";
 //import useAuthStatus from './useAuthStatus';
 
 const ProtectedRoute = ({ isAuthRequired = true }) => {
@@ -205,18 +205,31 @@ export const router = createBrowserRouter([
                                                                         children: [
                                                                             {
                                                                                 index: true,
-                                                                                element: <StudentsInGroupPage />
+                                                                                element: <UsersInGroupPage />
                                                                             },
                                                                             {
                                                                                 path: "students",
                                                                                 children: [
                                                                                     {
                                                                                         index: true,
-                                                                                        element: <StudentsInGroupPage />
+                                                                                        element: <UsersInGroupPage type="students" />
                                                                                     },
                                                                                     {
                                                                                         path: "add",
-                                                                                        element: <StudentsInGroupForm />
+                                                                                        element: <UsersInGroupForm />
+                                                                                    }
+                                                                                ]
+                                                                            },
+                                                                            {
+                                                                                path: "lecturers",
+                                                                                children: [
+                                                                                    {
+                                                                                        index: true,
+                                                                                        element: <UsersInGroupPage type="lecturers" />
+                                                                                    },
+                                                                                    {
+                                                                                        path: "add",
+                                                                                        element: <UsersInGroupForm />
                                                                                     }
                                                                                 ]
                                                                             }
