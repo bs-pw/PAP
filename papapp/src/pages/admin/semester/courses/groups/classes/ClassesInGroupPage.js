@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useClient } from '../../../../../../components/ClientContext';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import List from '../../../../../../components/common/List';
-import TimeConverter from '../../../../../../components/common/TimeConverter';
+import { TimeConverter, DayConverter } from '../../../../../../components/common/TimeConverter';
 
 const ClassesInGroupPage = () => {
     const [classes, setClasses] = useState([]);
@@ -14,7 +14,7 @@ const ClassesInGroupPage = () => {
     const getGroupClasses = async () => {
         try {
             const response = await client.getClassesForGroup(semesterId, courseId, groupId);
-            const data = response.map(({ class_id_for_group, type, day, hour, length, where }) => ({ class_id_for_group, type, day, hour: <TimeConverter minutes={(hour)} />, length: <TimeConverter minutes={(hour + length)} />, where }))
+            const data = response.map(({ class_id_for_group, type, day, hour, length, where }) => ({ class_id_for_group, type, day: <DayConverter dayCode={day} />, hour: <TimeConverter minutes={(hour)} />, length: <TimeConverter minutes={(hour + length)} />, where }))
 
             setClasses(data);
         } catch (error) {
