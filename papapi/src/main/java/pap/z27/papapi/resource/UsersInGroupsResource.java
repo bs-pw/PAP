@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.subclasses.UserInGroup;
+import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 
@@ -22,32 +23,29 @@ public class UsersInGroupsResource {
         this.groupRepo = groupRepo;
         this.userRepo = userRepo;
     }
-//
-    @GetMapping("/s")
-    public ResponseEntity<List<UserInGroup>> getAllStudentsInGroups(HttpSession session) {
+    @GetMapping("/{semester}/{courseCode}/{groupNr}/students")
+    public ResponseEntity<List<UserPublicInfo>> getAllStudentsInGroup(
+        @PathVariable("semester") String semester,
+        @PathVariable("courseCode") String courseCode,
+        @PathVariable("groupNr") Integer groupNr,
+            HttpSession session) {
         Integer userTypeId = (Integer)session.getAttribute("user_type_id");
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        Integer coordinatorId = (Integer) session.getAttribute("user_id");
-        if (userTypeId != 0){
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userTypeId.equals(4) || (userTypeId.equals(3) && groupRepo.isStudentInGroup(userId,semester,courseCode,groupNr)==0)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.ok(groupRepo.findAllStudentsInGroup());
+        return ResponseEntity.ok(groupRepo.findStudentsInGroup(courseCode,semester,groupNr));
     }
-//    asdasdadadadad
-    @GetMapping("/l")
-    public ResponseEntity<List<UserInGroup>> getAllLecturers(HttpSession session) {
-        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
-        if (userTypeId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        Integer coordinatorId = (Integer) session.getAttribute("user_id");
-        if (userTypeId != 0){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-        return ResponseEntity.ok(groupRepo.findAllLecturers());
-    }
+@GetMapping("/{semester}/{courseCode}/{groupNr}/lecturers")
+public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable("semester") String semester,
+                                                                @PathVariable("courseCode") String courseCode,
+                                                                @PathVariable("groupNr") Integer groupNr) {
+
+    return ResponseEntity.ok(groupRepo.findLecturersOfGroup(courseCode,semester,groupNr));
+}
 
     @PostMapping
     public ResponseEntity<String> addStudentToGroup(@RequestBody UserInGroup userInGroup, HttpSession session) {
