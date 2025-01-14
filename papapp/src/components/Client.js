@@ -495,6 +495,26 @@ class Client {
                 throw new Error(error.message);
             });
     }
+
+    async getAvailableStudentsToAddToGroup(semester, course_code, group_number, type) {
+        return fetch(`${this.baseUrl}/usersingroups/${semester}/${course_code}/${group_number}/available/${type}`,
+            {
+                method: 'GET',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error getting available students to add to group: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
 }
 
 
