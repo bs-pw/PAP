@@ -70,15 +70,13 @@ public class FinalGradeResource {
         if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
                 finalGrade.getCourse_code(),
                 finalGrade.getSemester())==0)) {
-            return ResponseEntity.badRequest().body("{\"message\":\"Only admins/coordinators can add students to courses\"}");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admins/coordinators can add students to courses\"}");
         }
-
-        try {
-            finalGradeRepo.insertFinalGrade(finalGrade);
-        } catch (Exception e) {
+        if(userRepo.checkIfIsLecturerOfCourse(finalGrade.getUser_id(),finalGrade.getCourse_code(),finalGrade.getSemester())!=0)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"User is already lecturer of this course!\"}");
+        if(finalGradeRepo.insertFinalGrade(finalGrade)==0)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("{\"message\":\"Cannot insert final grade\"}");
-        }
+                .body("{\"message\":\"Cannot insert final grade\"}");
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 

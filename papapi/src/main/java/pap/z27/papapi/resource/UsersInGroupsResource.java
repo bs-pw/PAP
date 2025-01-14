@@ -66,7 +66,7 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
         return ResponseEntity.ok(groupRepo.findEligibleStudentsToGroup(semester,courseCode,groupNr));
     }
     @PostMapping("/{asWho}")
-    public ResponseEntity<String> addStudentToGroup(@PathVariable String asWho, @RequestBody UserInGroup userInGroup, HttpSession session) {
+    public ResponseEntity<String> addUserToGroup(@PathVariable String asWho, @RequestBody UserInGroup userInGroup, HttpSession session) {
         Integer thisUserTypeId = (Integer)session.getAttribute("user_type_id");
         if (thisUserTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -87,7 +87,7 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
                             .body("{\"message\":\"User is not a student.\"}");
                 }
                 if (groupRepo.isLecturerOfGroup(userId,userInGroup.getSemester(),userInGroup.getCourse_code(),userInGroup.getGroup_number())!=0)
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .body("{\"message\":\"User is already a lecturer of this group.\"}");
 
                 if (userRepo.countUsersFinalGrades(userInGroup)==0)
@@ -100,9 +100,9 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                             .body("{\"message\":\"User is not a lecturer.\"}");
                 }
-                if (groupRepo.isStudentInGroup(userId,userInGroup.getSemester(),userInGroup.getCourse_code(),userInGroup.getGroup_number())!=0)
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                            .body("{\"message\":\"User is already a student in this group.\"}");
+                if (userRepo.checkIfStudentIsInCourse(userId,userInGroup.getCourse_code(),userInGroup.getSemester())!=0)
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body("{\"message\":\"User is already a student in this course.\"}");
 
                 groupRepo.addLecturerToGroup(userInGroup);
                 return ResponseEntity.ok("{\"message\":\"ok\"}");
