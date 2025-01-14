@@ -644,6 +644,25 @@ class Client {
                 throw new Error(error.message);
             });
     }
+
+    async addStudentToCourse(semester, course_code, user_id) {
+        return fetch(`${this.baseUrl}/finalgrades`, {
+            method: 'POST',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: JSON.stringify({
+                semester, course_code, user_id
+            }),
+        }).then(response => {
+            if (response.ok) {
+                return true;
+            } else {
+                throw new Error(`Error adding student to course: ${response.json().message}`);
+
+            }
+        })
+    }
+
     async deleteStudentFromCourse(semester, course_code, user_id) {
         return fetch(`${this.baseUrl}/finalgrades`,
             {
