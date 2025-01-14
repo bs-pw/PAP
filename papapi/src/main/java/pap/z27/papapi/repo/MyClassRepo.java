@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.MyClass;
 import pap.z27.papapi.domain.subclasses.ClassDTO;
+import pap.z27.papapi.domain.subclasses.ClassInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,14 @@ public class MyClassRepo {
                         "FROM LECTURERS ) uic ON (c.GROUP_NUMBER = uic.GROUP_NUMBER and c.SEMESTER = uic.SEMESTER and c.COURSE_CODE = uic.COURSE_CODE ) join CLASS_TYPES ct using (class_type_id)  WHERE uic.user_id = ?")
                 .param(userID)
                 .query(ClassDTO.class)
+                .list();
+    }
+    public List<ClassInfo> findAllClassesInGroup(String semester, String courseCode, Integer groupNr) {
+        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,c.class_type_id,ct.type,c.day,c.hour,c.length,c.\"where\" FROM CLASSES c  join CLASS_TYPES ct using (class_type_id)  WHERE c.SEMESTER = ? and c.COURSE_CODE=? and c.GROUP_NUMBER=?")
+                .param(semester)
+                .param(courseCode)
+                .param(groupNr)
+                .query(ClassInfo.class)
                 .list();
     }
 
