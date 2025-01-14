@@ -28,6 +28,14 @@ public class MyClassRepo {
                 .query(ClassDTO.class)
                 .list();
     }
+    public List<ClassDTO> findAllClassesInGroup(String semester, String courseCode, Integer groupNr) {
+        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,ct.type,c.day,c.hour,c.length,c.\"where\" FROM CLASSES c  join CLASS_TYPES ct using (class_type_id)  WHERE c.SEMESTER = ? and c.COURSE_CODE=? and c.GROUP_NUMBER=?")
+                .param(semester)
+                .param(courseCode)
+                .param(groupNr)
+                .query(ClassDTO.class)
+                .list();
+    }
 
     public List<ClassDTO> findAllLecturersClasses(Integer userID) {
         return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,ct.type,c.day,c.hour,c.length,c.\"where\" " +

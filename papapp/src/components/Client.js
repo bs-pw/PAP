@@ -697,7 +697,62 @@ class Client {
                 if (response.ok) {
                     return response.json();
                 } else {
-                    throw new Error(`Error getting students classes: ${response.json().message}`);
+                    throw new Error(`Error getting users classes: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
+    async getClassesForGroup(semester, course_code, group_number) {
+        return fetch(`${this.baseUrl}/classes/${semester}/${course_code}/${group_number}`,
+            {
+                method: 'GET',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error getting groups classes: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
+    async insertClassInGroup(data) {
+        return fetch(`${this.baseUrl}/classes`, {
+            method: 'POST',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: data,
+        }).then(response => {
+            if (response.ok) {
+                return true;
+            } else {
+                throw new Error(`Error inserting classes: ${response.json().message}`);
+
+            }
+        })
+    }
+
+    async deleteClasses(semester, course_code, group_number, class_id_for_group) {
+        return fetch(`${this.baseUrl}/classes/${semester}/${course_code}/${group_number}/${class_id_for_group}`,
+            {
+                method: 'DELETE',
+                headers: this.headers,
+                credentials: this.credentials
+                
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return true;
+                } else {
+                    throw new Error(`Error deleting classes: ${response.json().message}`);
                 }
             })
             .catch(error => {

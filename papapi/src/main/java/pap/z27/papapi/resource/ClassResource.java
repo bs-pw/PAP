@@ -59,6 +59,15 @@ public class ClassResource {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
+    @GetMapping("{semester}/{courseCode}/{groupNr}")
+    public ResponseEntity<List<ClassDTO>> getClassesForGroup(
+            @PathVariable("semester") String semester,
+            @PathVariable("courseCode") String courseCode,
+            @PathVariable("groupNr") Integer groupNr
+        ) {
+           return ResponseEntity.ok(classRepo.findAllClassesInGroup(semester,courseCode,groupNr));
+    }
+
     @PostMapping
     public ResponseEntity<String> insertClass(@RequestBody MyClass myClass,
                                                  HttpSession session) {
