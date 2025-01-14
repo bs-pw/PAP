@@ -12,7 +12,7 @@ import pap.z27.papapi.repo.ClassTypeRepo;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/classtype")
+@RequestMapping("/api/classtypes")
 public class ClassTypeResource {
     private final ClassTypeRepo classTypeRepo;
 

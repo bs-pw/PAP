@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
-@RequestMapping("/api/usertype")
+@RequestMapping("/api/usertypes")
 public class UserTypeResource {
     private final UserTypeRepo userTypeRepo;
 
