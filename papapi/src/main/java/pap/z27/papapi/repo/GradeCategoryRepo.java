@@ -12,9 +12,11 @@ import java.util.List;
 public class GradeCategoryRepo {
     @Autowired
     private final JdbcClient jdbcClient;
+
     public GradeCategoryRepo(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
+
     public List<GradeCategory> findAllCourseGradeCategories(String courseCode, String semester) {
         return jdbcClient.sql("SELECT * FROM GRADE_CATEGORIES WHERE course_code=? and semester=?")
                 .param(courseCode)
@@ -22,9 +24,10 @@ public class GradeCategoryRepo {
                 .query(GradeCategory.class)
                 .list();
     }
+
     public Integer insertGradeCategory(GradeCategory gradeCategory) {
-        return jdbcClient.sql("INSERT INTO GRADE_CATEGORIES (category_id,course_code,semester,description,max_grade)"+
-                "VALUES (?,?,?,?,?)")
+        return jdbcClient.sql("INSERT INTO GRADE_CATEGORIES (category_id,course_code,semester,description,max_grade)" +
+                        "VALUES (?,?,?,?,?)")
                 .param(gradeCategory.getCategory_id())
                 .param(gradeCategory.getCourse_code())
                 .param(gradeCategory.getSemester())
@@ -32,12 +35,38 @@ public class GradeCategoryRepo {
                 .param(gradeCategory.getMax_grade())
                 .update();
     }
-    public Integer removeGradeCategory(GradeCategory gradeCategory) {
+
+    public Integer removeGradeCategory(String course_code, String semester, Integer category_id) {
         return jdbcClient.sql("DELETE FROM GRADE_CATEGORIES WHERE category_id=? and course_code=? and semester=?")
-                .param(gradeCategory.getCategory_id())
-                .param(gradeCategory.getCourse_code())
-                .param(gradeCategory.getSemester())
+                .param(category_id)
+                .param(course_code)
+                .param(semester)
                 .update();
     }
 
+
+    public Integer updateGradeCategory(Integer categoryId, String course_code, String semester,
+                                       GradeCategory gradeCategory) {
+        StringBuilder query = new StringBuilder("UPDATE GRADE_CATEGORIES SET ");
+        List<Object> params = new java.util.ArrayList<>();
+        if (gradeCategory.getDescription() != null) {
+            query.append("description=?, ");
+            params.add(gradeCategory.getDescription());
+        }
+        if (gradeCategory.getMax_grade() != null) {
+            query.append("max_grade=?, ");
+            params.add(gradeCategory.getMax_grade());
+        }
+        if (params.isEmpty()) return 0;
+        else {
+            query.setLength(query.length() - 2);
+            query.append(" WHERE category_id=? AND course_code=? AND semester=?");
+            params.add(categoryId);
+            params.add(course_code);
+            params.add(semester);
+            return jdbcClient.sql(query.toString())
+                    .params(params)
+                    .update();
+        }
+    }
 }
