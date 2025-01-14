@@ -118,6 +118,13 @@ public class ClassResource {
 
     }
 
+    @GetMapping("/plan/{semesterId}/{courseCode}")
+    public ResponseEntity<List<MyClass>> getClassPlanBySemester(@PathVariable String semesterId,
+                                                                @PathVariable String courseCode)
+    {
+        return ResponseEntity.ok(classRepo.findClassPlanBySemester(courseCode, semesterId));
+    }
+
     @DeleteMapping("{semester}/{courseCode}/{groupNr}/{classIdForGroup}")
     public ResponseEntity<String> removeClass(@PathVariable("courseCode") String courseCode,
                                               @PathVariable("semester") String semester,

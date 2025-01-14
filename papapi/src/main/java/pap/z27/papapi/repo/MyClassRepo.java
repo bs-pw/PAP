@@ -49,6 +49,17 @@ public class MyClassRepo {
                 .single();
     }
 
+    public List<MyClass> findClassPlanBySemester(String courseCode, String semester) {
+        return jdbcClient.sql("SELECT c.course_code,c.semester,c.group_number,c.class_id_for_group,c.class_type_id," +
+                "c.day,c.hour,c.length,c.\"where\" " +
+                "FROM classes c " +
+                "WHERE c.course_code = ? AND c.semester = ?")
+                .param(courseCode)
+                .param(semester)
+                .query(MyClass.class)
+                .list();
+    }
+
     public Integer insertClass(MyClass myClass) {
         return jdbcClient.sql("INSERT INTO CLASSES (course_code,semester,group_number,class_type_id,day,hour,length,\"where\") VALUES (?,?,?,?,?,?,?,?)")
                 .param(myClass.getCourse_code())
