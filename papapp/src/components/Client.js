@@ -5,7 +5,7 @@ class Client {
     userId = null;
     name = null;
     surname = null;
-    main = null;
+    mail = null;
     userTypeId = null;
 
     constructor(baseUrl) {
@@ -834,6 +834,22 @@ class Client {
                 throw new Error(error.message);
             });
     }
+
+    async getCoursesInSemesterByCoordinator(semesterId, userId) {
+        return fetch(`${this.baseUrl}/courseinsemester/bycoordinator/${semesterId}/${userId}`, {
+            method: 'GET',
+            headers: this.headers,
+            credentials: this.credentials,
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error(`Error fetching courses in semester: ${response.json().message}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+
 }
 
 

@@ -30,6 +30,13 @@ const Sidebar = () => {
         // { link: '/admin/coursesinsemester/24Z', label: 'Kursy w semestrach' },
     ];
 
+    const lecturerItem = [
+        // { link: '/admin/users', label: 'Użytkownicy' },
+        // { link: '/admin/courses', label: 'Kursy' },
+        { link: '/admin/semesters', label: 'Semestry' },
+        // { link: '/admin/coursesinsemester/24Z', label: 'Kursy w semestrach' },
+    ];
+
     return (
         <div className="bg-dark text-white p-3" style={{ width: 250 }}>
             <h2 className="mb-4">Menu</h2>
@@ -44,6 +51,17 @@ const Sidebar = () => {
                         <SidebarItem link="#" label='<i class="bi bi-gear"></i> Panel Administracyjny' />
                         <ul className="nav flex-column mx-3">
                             {adminItems.map((item, index) => (
+                                <SidebarItem key={index} link={item.link} label={item.label} />
+                            ))}
+                        </ul>
+                    </>
+                )}
+
+                {(client.userTypeId == 1 || client.userTypeId == 2) && (
+                    <>
+                        <SidebarItem link="#" label='<i class="bi bi-gear"></i> Panel Administracyjny' />
+                        <ul className="nav flex-column mx-3">
+                            {lecturerItem.map((item, index) => (
                                 <SidebarItem key={index} link={item.link} label={item.label} />
                             ))}
                         </ul>

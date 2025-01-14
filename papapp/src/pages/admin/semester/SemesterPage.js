@@ -48,8 +48,8 @@ const SemesterPage = () => {
 
     return (
         <>
-            <Link to="/admin/semesters/create" className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >
-            <List listName='Lista semestrów' columnNames={['Kod', 'Data początku', 'Data końca']} data={semesters} error={error} adminButtons={true} userButtons={true} handleDelete={handleDeleteSemester} handleEdit={handleEditSemester} handleViev={handleVievCoursesInSemester} id="semester_code" />
+            {client.userTypeId == 0 && <Link to="/admin/semesters/create" className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >}
+            <List listName='Lista semestrów' columnNames={['Kod', 'Data początku', 'Data końca']} data={semesters} error={error} adminButtons={client.userTypeId == 0 && true} userButtons={true} handleDelete={handleDeleteSemester} handleEdit={handleEditSemester} handleViev={handleVievCoursesInSemester} id="semester_code" />
         </>
     )
 }
