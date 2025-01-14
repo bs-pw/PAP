@@ -800,6 +800,21 @@ class Client {
                 throw new Error(error.message);
             });
     }
+    async updateClass(semester, course_code, group_number, class_id_for_group, data) {
+        return fetch(`${this.baseUrl}/classes/${semester}/${course_code}/${group_number}/${class_id_for_group}`, {
+            method: 'PUT',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: JSON.stringify(data)
+        }).then(response => {
+            if (response.ok) {
+                return true;
+            }
+            throw new Error(`Error updating class: ${response.statusText}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
 }
 
 
