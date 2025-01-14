@@ -18,7 +18,19 @@ function TimeConverter({ minutes }) {
 
 function DayConverter({ dayCode }) {
     const convertDayCodeToDay = (dayCode) => {
-        const days = ["Poniedziałek", "Wtorek"]
+        dayCode = Number(dayCode)
+        const days = ["Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela"];
+        const repetitionLabels = ["Co tydzień", "Co 2 tygodnie(nieparzyste)", "Co 2 tygodnie(parzyste)"]
+        const repetition = repetitionLabels[Math.floor(dayCode / 7)];
+        // console.log(Math.floor(dayCode / 7))
+        const day = days[dayCode % 7];
+        return `${day} [${repetition}]`
     }
 
-    export default TimeConverter;
+    return (
+        <>
+            {convertDayCodeToDay(dayCode)}
+        </>
+    )
+}
+export { TimeConverter, DayConverter };
