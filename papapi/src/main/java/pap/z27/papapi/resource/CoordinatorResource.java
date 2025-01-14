@@ -70,16 +70,16 @@ public class CoordinatorResource {
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 
-    @DeleteMapping(path = "{coordinatorId}")
-    public ResponseEntity<String> removeCoordinator(@PathVariable Integer coordinatorId,
-                                                    @RequestBody CourseInSemester courseInSemester,
+    @DeleteMapping(path = "{semester}/{courseCode}/{coordinatorId}")
+    public ResponseEntity<String> removeCoordinator(@PathVariable String semester,
+                                                    @PathVariable String courseCode,
+                                                    @PathVariable Integer coordinatorId,
                                                     HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"Only admins can delete coordinators\"}");
         }
-
-        if (courseInSemesterRepo.removeCoordinator(coordinatorId, courseInSemester) == 0) {
+        if (courseInSemesterRepo.removeCoordinator(coordinatorId, new CourseInSemester(courseCode,semester)) == 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"Couldn't delete coordinator\"}");
         }
 

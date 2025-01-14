@@ -625,6 +625,25 @@ class Client {
             }
         })
     }
+    async deleteCoordinatorFromCourse(semester, course_code, user_id) {
+        return fetch(`${this.baseUrl}/coordinators/${semester}/${course_code}/${user_id}`,
+            {
+                method: 'DELETE',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return true;
+                } else {
+                    throw new Error(`Error deleting coordinator from course: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
 }
 
 
