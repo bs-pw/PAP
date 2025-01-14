@@ -50,36 +50,43 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
 
     @PostMapping("/{asWho}")
     public ResponseEntity<String> addStudentToGroup(@PathVariable String asWho, @RequestBody UserInGroup userInGroup, HttpSession session) {
-        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
-        if (userTypeId == null) {
+        Integer thisUserTypeId = (Integer)session.getAttribute("user_type_id");
+        if (thisUserTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
-        if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
+        if (thisUserTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
                 userInGroup.getCourse_code(), 
                 userInGroup.getSemester())==0)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admins/coordinators can add students to groups\"}");
         }
 
         Integer userId = userInGroup.getUser_id();
-
+        Integer userTypeId = userRepo.findUsersTypeId(userId);
         switch (asWho){
             case "student":
-                if (userRepo.findUsersTypeId(userId) != 3 && userRepo.findUsersTypeId(userId)!= 2) {
+                if (userTypeId!= 3 && userTypeId!= 2) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                             .body("{\"message\":\"User is not a student.\"}");
                 }
+                if (groupRepo.isLecturerOfGroup(userId,userInGroup.getSemester(),userInGroup.getCourse_code(),userInGroup.getGroup_number())!=0)
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body("{\"message\":\"User is already a lecturer of this group.\"}");
+
                 if (userRepo.countUsersFinalGrades(userInGroup)==0)
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                             .body("{\"message\":\"User is not signed up for this course.\"}");
                 groupRepo.addStudentToGroup(userInGroup);
                 return ResponseEntity.ok("{\"message\":\"ok\"}");
             case "lecturer":
-                if (userRepo.findUsersTypeId(userId) != 2 && userRepo.findUsersTypeId(userId)!= 1) {
+                if (userTypeId != 2 && userTypeId!= 1) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                             .body("{\"message\":\"User is not a lecturer.\"}");
                 }
-                //TODO: jak jest studentem to nie moze byc prowadzacym
+                if (groupRepo.isStudentInGroup(userId,userInGroup.getSemester(),userInGroup.getCourse_code(),userInGroup.getGroup_number())!=0)
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body("{\"message\":\"User is already a student in this group.\"}");
+
                 groupRepo.addLecturerToGroup(userInGroup);
                 return ResponseEntity.ok("{\"message\":\"ok\"}");
         }
