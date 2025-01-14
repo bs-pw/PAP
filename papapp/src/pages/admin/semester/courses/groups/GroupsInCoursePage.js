@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import List from '../../../../../components/common/List';
 
 const GroupsInCoursePage = () => {
-    const [groups, setGroups] = useState('');
+    const [groups, setGroups] = useState([]);
     const [error, setError] = useState('');
     const client = useClient();
     const navigate = useNavigate();
@@ -15,7 +15,7 @@ const GroupsInCoursePage = () => {
             const data = await client.getGroupsInSemesterInCourse(semesterId, courseId);
             const result = data.map(({ group_number }) => ({ group_number }))
             setGroups(result);
-            // console.log(data)
+            console.log(data)
         } catch (error) {
             setError(error.message);
         }
@@ -30,6 +30,11 @@ const GroupsInCoursePage = () => {
         }
     }
 
+    const handleViewStudents = (e) => {
+        e.preventDefault();
+        navigate(`${e.target.value}/students`);
+    }
+
     useEffect(() => {
         getGroupsInSemesterInCourse();
     }, [])
@@ -37,7 +42,7 @@ const GroupsInCoursePage = () => {
     return (
         <>
             <Link to={`add`} className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >
-            <List listName={`Grupy przedmiotu ${courseId} w semestrze ${semesterId}`} data={groups} columnNames={[`Kurs`]} adminButtons={[true, false]} userButtons={true} handleDelete={handleDeleteGroup} />
+            <List listName={`Grupy przedmiotu ${courseId} w semestrze ${semesterId}`} data={groups} columnNames={[`Kurs`]} adminButtons={[true, false]} userButtons={true} handleDelete={handleDeleteGroup} handleViev={handleViewStudents} id="group_number" />
         </>
     )
 }

@@ -452,7 +452,26 @@ class Client {
         }).catch(error => {
             throw new Error(error.message);
         });
+    }
 
+    async getStudentsInGroup(semesterId, courseCode, groupNumber) {
+        return fetch(`${this.baseUrl}/group/${semesterId}/${courseCode}/${groupNumber}/students`,
+            {
+                method: 'GET',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error getting students in group: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
     }
 }
 
