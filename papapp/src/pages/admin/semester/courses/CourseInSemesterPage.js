@@ -33,7 +33,7 @@ const CourseInSemesterPage = () => {
 
     const handleVievGroups = (e) => {
         e.preventDefault();
-        navigate(`${e.target.value}/groups`);
+        navigate(`${e.target.value}`);
     }
 
     useEffect(() => {

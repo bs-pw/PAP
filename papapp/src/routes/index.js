@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Link } from "react-router-dom";
 import { useClient } from "../components/ClientContext";
 import AppLayout from "../components/layout/AppLayout";
 import LoginPage from "../pages/LoginPage"
@@ -19,8 +19,9 @@ import CourseInSemesterPage from "../pages/admin/semester/courses/CourseInSemest
 import CourseInSemesterForm from "../pages/admin/semester/courses/CourseInSemesterForm";
 import GroupsInCoursePage from "../pages/admin/semester/courses/groups/GroupsInCoursePage";
 import GroupsInCourseForm from "../pages/admin/semester/courses/groups/GroupsInCourseForm";
-import UsersInGroupPage from "../pages/admin/semester/courses/groups/students/UsersInGroupPage";
-import UsersInGroupForm from "../pages/admin/semester/courses/groups/students/UsersInGroupForm";
+import UsersInGroupPage from "../pages/admin/semester/courses/groups/users/UsersInGroupPage";
+import UsersInGroupForm from "../pages/admin/semester/courses/groups/users/UsersInGroupForm";
+import List from "../components/common/List";
 //import useAuthStatus from './useAuthStatus';
 
 const ProtectedRoute = ({ isAuthRequired = true }) => {
@@ -187,7 +188,7 @@ export const router = createBrowserRouter([
                                                         children: [
                                                             {
                                                                 index: true,
-                                                                element: <GroupsInCoursePage />
+                                                                element: <><Link to={`coordinators`} className="nav-link">Koordynatorzy</Link><Link to={`groups`} className="nav-link">Grupy</Link><Link to={`students`} className="nav-link">Studenci</Link></>
                                                             },
                                                             {
                                                                 path: "groups",
@@ -205,7 +206,7 @@ export const router = createBrowserRouter([
                                                                         children: [
                                                                             {
                                                                                 index: true,
-                                                                                element: <UsersInGroupPage />
+                                                                                element: <><Link to={`lecturers`} className="nav-link">Prowadzący</Link><Link to={`students`} className="nav-link">Studenci</Link></>
                                                                             },
                                                                             {
                                                                                 path: "students",
