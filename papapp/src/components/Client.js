@@ -685,6 +685,25 @@ class Client {
                 throw new Error(error.message);
             });
     }
+    async getUserClasses(userId) {
+        return fetch(`${this.baseUrl}/classes/${userId}`,
+            {
+                method: 'GET',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error getting students classes: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
 }
 
 

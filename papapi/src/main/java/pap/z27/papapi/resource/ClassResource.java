@@ -15,7 +15,7 @@ import java.util.Objects;
 
 @RestController
 @CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
-@RequestMapping(path = "api/class")
+@RequestMapping(path = "api/classes")
 public class ClassResource {
     private final MyClassRepo classRepo;
     private final UserRepo userRepo;
@@ -84,7 +84,7 @@ public class ClassResource {
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
-    @PutMapping("{courseCode}/{semester}/{groupNr}/{classIdForGroup}")
+    @PutMapping("{semester}/{courseCode}/{groupNr}/{classIdForGroup}")
     public ResponseEntity<String> updateClass(
             @PathVariable("courseCode") String courseCode,
             @PathVariable("semester") String semester,
@@ -101,7 +101,7 @@ public class ClassResource {
         if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, myClass.getCourse_code(), myClass.getSemester(), myClass.getGroup_number())==0)
                 && userRepo.checkIfIsCoordinator(userId, myClass.getCourse_code(), myClass.getSemester())==0)
         {
-            ResponseEntity.badRequest().body("{\"message\":\"only admins, lecturers or coordinators of courses can update classes\"}");
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"only admins, lecturers or coordinators of courses can update classes\"}");
         }
 
         if(courseCode==null || semester==null || groupNr==null || classIdForGroup==null)
@@ -117,20 +117,24 @@ public class ClassResource {
         return ResponseEntity.ok("{\"message\":\"ok\"}");
 
     }
-    @DeleteMapping
-    public ResponseEntity<String> removeClass(@RequestBody MyClass myClass,
+
+    @DeleteMapping("{semester}/{courseCode}/{groupNr}/{classIdForGroup}")
+    public ResponseEntity<String> removeClass(@PathVariable("courseCode") String courseCode,
+                                              @PathVariable("semester") String semester,
+                                              @PathVariable("groupNr") Integer groupNr,
+                                              @PathVariable("classIdForGroup") Integer classIdForGroup,
                                                  HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Integer userId = (Integer) session.getAttribute("user_id");
-        if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, myClass.getCourse_code(), myClass.getSemester(), myClass.getGroup_number())==0)
-                && userRepo.checkIfIsCoordinator(userId, myClass.getCourse_code(), myClass.getSemester())==0)
+        if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, courseCode, semester, groupNr)==0)
+                && userRepo.checkIfIsCoordinator(userId, courseCode, semester)==0)
         {
-            ResponseEntity.badRequest().body("{\"message\":\"only admins, lecturers or coordinators of courses can remove classes\"}");
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"only admins, lecturers or coordinators of courses can remove classes\"}");
         }
-        if(classRepo.removeClass(myClass)==0)
+        if(classRepo.removeClass(courseCode,semester,groupNr,classIdForGroup)==0)
         {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot remove class\"}");
         }

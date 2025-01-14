@@ -102,12 +102,12 @@ public class MyClassRepo {
                     .update();
         }
     }
-    public Integer removeClass(MyClass myClass) {
+    public Integer removeClass(String courseCode, String semester, Integer groupNr, Integer classIdForGroup) {
         return jdbcClient.sql("DELETE FROM CLASSES where course_code=? and semester=? and group_number=? and CLASS_ID_FOR_GROUP=?")
-                .param(myClass.getCourse_code())
-                .param(myClass.getSemester())
-                .param(myClass.getGroup_number())
-                .param(myClass.getClass_id_for_group())
+                .param(courseCode)
+                .param(semester)
+                .param(groupNr)
+                .param(classIdForGroup)
                 .update();
     }
 }
