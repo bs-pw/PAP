@@ -1,344 +1,380 @@
+drop table attendance_statuses cascade constraints;
+
+drop table attendances cascade constraints;
+
+drop table class_types cascade constraints;
+
+drop table classes cascade constraints;
+
+drop table coordinators cascade constraints;
+
+drop table courses cascade constraints;
+
+drop table courses_in_semester cascade constraints;
+
+drop table final_grades cascade constraints;
+
+drop table grade_categories cascade constraints;
+
+drop table grades cascade constraints;
+
+drop table groups cascade constraints;
+
+drop table lecturers cascade constraints;
+
+drop table semesters cascade constraints;
+
+drop table students_in_groups cascade constraints;
+
+drop table user_types cascade constraints;
+
+drop table users cascade constraints;
 
 
-DROP TABLE attendance_statuses CASCADE CONSTRAINTS;
-
-DROP TABLE attendances CASCADE CONSTRAINTS;
-
-DROP TABLE class_types CASCADE CONSTRAINTS;
-
-DROP TABLE classes CASCADE CONSTRAINTS;
-
-DROP TABLE coordinators CASCADE CONSTRAINTS;
-
-DROP TABLE courses CASCADE CONSTRAINTS;
-
-DROP TABLE courses_in_semester CASCADE CONSTRAINTS;
-
-DROP TABLE final_grades CASCADE CONSTRAINTS;
-
-DROP TABLE grade_categories CASCADE CONSTRAINTS;
-
-DROP TABLE grades CASCADE CONSTRAINTS;
-
-DROP TABLE groups CASCADE CONSTRAINTS;
-
-DROP TABLE lecturers CASCADE CONSTRAINTS;
-
-DROP TABLE semesters CASCADE CONSTRAINTS;
-
-DROP TABLE students_in_groups CASCADE CONSTRAINTS;
-
-DROP TABLE user_types CASCADE CONSTRAINTS;
-
-DROP TABLE users CASCADE CONSTRAINTS;
-
-
-CREATE TABLE attendance_statuses (
-    attendance_status_id NUMBER(6) NOT NULL,
-    status               VARCHAR2(32 CHAR) NOT NULL
+create table attendance_statuses (
+   attendance_status_id number(6) not null,
+   status               varchar2(32 char) not null
 );
 
-ALTER TABLE attendance_statuses ADD CONSTRAINT attendance_statuses_pk PRIMARY KEY ( attendance_status_id );
+alter table attendance_statuses add constraint attendance_statuses_pk primary key ( attendance_status_id );
 
-CREATE TABLE attendances (
-    user_id                           NUMBER(6) NOT NULL,
-    course_code                     VARCHAR2(5 CHAR) NOT NULL,
-    semester                    VARCHAR2(4 CHAR) NOT NULL,
-    group_number                     NUMBER(3) NOT NULL,
-    class_id_for_group               NUMBER(3) NOT NULL,
-    "date"                                   DATE NOT NULL,
-    who_inserted_id                            NUMBER(6), 
-    attendance_status_id NUMBER(6)
+create table attendances (
+   user_id              number(6) not null,
+   course_code          varchar2(5 char) not null,
+   semester             varchar2(4 char) not null,
+   group_number         number(3) not null,
+   class_id_for_group   number(3) not null,
+   "date"               date not null,
+   who_inserted_id      number(6),
+   attendance_status_id number(6)
 );
 
-ALTER TABLE attendances
-    ADD CONSTRAINT attendances_pk PRIMARY KEY ( user_id,
+alter table attendances
+   add constraint attendances_pk
+      primary key ( user_id,
+                    course_code,
+                    group_number,
+                    class_id_for_group,
+                    "date",
+                    semester );
+
+create table class_types (
+   class_type_id number(3) not null,
+   type          varchar2(32 char) not null
+);
+
+alter table class_types add constraint class_types_pk primary key ( class_type_id );
+
+create table classes (
+   course_code        varchar2(5 char) not null,
+   group_number       number(3) not null,
+   semester           varchar2(4 char) not null,
+   class_id_for_group number(3)
+      generated always as identity ( start with 1 increment by 1 ),
+   day                number(2) not null,
+   hour               number(4) not null,
+   length             number(4) not null,
+   "where"            varchar2(32 char) not null,
+   class_type_id      number(3) not null
+);
+
+alter table classes
+   add constraint classes_pk
+      primary key ( class_id_for_group,
+                    group_number,
+                    course_code,
+                    semester );
+
+create table coordinators (
+   user_id     number(6) not null,
+   course_code varchar2(5 char) not null,
+   semester    varchar2(4 char) not null
+);
+
+alter table coordinators
+   add constraint coordinators_pk primary key ( user_id,
                                                 course_code,
-                                                group_number,
-                                                class_id_for_group,
-                                                "date",
                                                 semester );
 
-CREATE TABLE class_types (
-    class_type_id NUMBER(3) NOT NULL,
-    type          VARCHAR2(32 CHAR) NOT NULL
+create table courses (
+   course_code varchar2(5 char) not null,
+   title       varchar2(64 char) not null
 );
 
-ALTER TABLE class_types ADD CONSTRAINT class_types_pk PRIMARY KEY ( class_type_id );
+alter table courses add constraint courses_pk primary key ( course_code );
 
-CREATE TABLE classes (
-    course_code       VARCHAR2(5 CHAR) NOT NULL,
-    group_number       NUMBER(3) NOT NULL,
-    semester      VARCHAR2(4 CHAR) NOT NULL,
-    class_id_for_group        NUMBER(3)  GENERATED ALWAYS as IDENTITY(START with 1 INCREMENT by 1),
-    day                       NUMBER(2) NOT NULL,
-    hour                      NUMBER(4) NOT NULL,
-    length                    NUMBER(4) NOT NULL,
-    "where"                   VARCHAR2(32 CHAR) NOT NULL,
-    class_type_id NUMBER(3) NOT NULL
+create table courses_in_semester (
+   course_code varchar2(5 char) not null,
+   semester    varchar2(4 char) not null
 );
 
-ALTER TABLE classes
-    ADD CONSTRAINT classes_pk PRIMARY KEY ( class_id_for_group,
-                                            group_number,
-                                            course_code,
-                                            semester );
-
-CREATE TABLE coordinators (
-    user_id                     NUMBER(6) NOT NULL, 
-    course_code  VARCHAR2(5 CHAR) NOT NULL, 
-    semester VARCHAR2(4 CHAR) NOT NULL
-);
-
-ALTER TABLE coordinators
-    ADD CONSTRAINT coordinators_pk PRIMARY KEY ( user_id,
-                                                 course_code,
-                                                 semester );
-
-CREATE TABLE courses (
-    course_code VARCHAR2(5 CHAR) NOT NULL,
-    title        VARCHAR2(64 CHAR) NOT NULL
-);
-
-ALTER TABLE courses ADD CONSTRAINT courses_pk PRIMARY KEY ( course_code );
-
-CREATE TABLE courses_in_semester (
-    course_code    VARCHAR2(5 CHAR) NOT NULL,
-    semester VARCHAR2(4 CHAR) NOT NULL
-);
-
-ALTER TABLE courses_in_semester ADD CONSTRAINT courses_in_semester_pk PRIMARY KEY ( course_code,
+alter table courses_in_semester add constraint courses_in_semester_pk primary key ( course_code,
                                                                                     semester );
 
-CREATE TABLE final_grades (
-    user_id                            NUMBER(6) NOT NULL, 
-    course_code VARCHAR2(5 CHAR) NOT NULL, 
-    semester        VARCHAR2(4 CHAR) NOT NULL,
-    grade                                    NUMBER(2, 1)
+create table final_grades (
+   user_id     number(6) not null,
+   course_code varchar2(5 char) not null,
+   semester    varchar2(4 char) not null,
+   grade       number(2,1)
 );
 
-ALTER TABLE final_grades
-    ADD CONSTRAINT final_grades_pk PRIMARY KEY ( user_id,
-                                                 course_code,
-                                                 semester );
+alter table final_grades
+   add constraint final_grades_pk primary key ( user_id,
+                                                course_code,
+                                                semester );
 
-CREATE TABLE grade_categories (
-    category_id                              NUMBER(6) NOT NULL, 
-    course_code VARCHAR2(5 CHAR) NOT NULL, 
-    semester        VARCHAR2(4 CHAR) NOT NULL,
-    description                              VARCHAR2(128 CHAR),
-    max_grade                                NUMBER(6, 2) NOT NULL
+create table grade_categories (
+   category_id number(6) not null,
+   course_code varchar2(5 char) not null,
+   semester    varchar2(4 char) not null,
+   description varchar2(128 char),
+   max_grade   number(6,2) not null
 );
 
-ALTER TABLE grade_categories
-    ADD CONSTRAINT grade_categories_pk PRIMARY KEY ( category_id,
-                                                     course_code,
-                                                     semester );
+alter table grade_categories
+   add constraint grade_categories_pk primary key ( category_id,
+                                                    course_code,
+                                                    semester );
 
-CREATE TABLE grades (
-    category_id                              NUMBER(6) NOT NULL, 
-    course_code VARCHAR2(5 CHAR) NOT NULL, 
-    semester        VARCHAR2(4 CHAR) NOT NULL,
-    user_id                                             NUMBER(6) NOT NULL,
-    who_inserted_id                                            NUMBER(6),
-    grade                                                     NUMBER(5, 2) NOT NULL,
-    "date"                                                    DATE NOT NULL,
-    description                                               VARCHAR2(128 CHAR)
+create table grades (
+   category_id     number(6) not null,
+   course_code     varchar2(5 char) not null,
+   semester        varchar2(4 char) not null,
+   user_id         number(6) not null,
+   who_inserted_id number(6),
+   grade           number(5,2) not null,
+   "date"          date not null,
+   description     varchar2(128 char)
 );
 
-ALTER TABLE grades
-    ADD CONSTRAINT grades_pk PRIMARY KEY ( course_code,
-                                           category_id,
-                                           user_id,
-                                           semester );
+alter table grades
+   add constraint grades_pk
+      primary key ( course_code,
+                    category_id,
+                    user_id,
+                    semester );
 
-CREATE TABLE groups ( 
-    course_code VARCHAR2(5 CHAR) NOT NULL,
-    group_number                             NUMBER(3) NOT NULL, 
-    semester        VARCHAR2(4 CHAR) NOT NULL
+create table groups (
+   course_code  varchar2(5 char) not null,
+   group_number number(3) not null,
+   semester     varchar2(4 char) not null
 );
 
-ALTER TABLE groups
-    ADD CONSTRAINT groups_pk PRIMARY KEY ( course_code,
-                                           group_number,
-                                           semester );
+alter table groups
+   add constraint groups_pk primary key ( course_code,
+                                          group_number,
+                                          semester );
 
-CREATE TABLE lecturers (
-    user_id                                   NUMBER(6) NOT NULL, 
-    course_code VARCHAR2(5 CHAR) NOT NULL, 
-    semester        VARCHAR2(4 CHAR) NOT NULL,
-    group_number                             NUMBER(3) NOT NULL
+create table lecturers (
+   user_id      number(6) not null,
+   course_code  varchar2(5 char) not null,
+   semester     varchar2(4 char) not null,
+   group_number number(3) not null
 );
 
-ALTER TABLE lecturers
-    ADD CONSTRAINT lecturers_pk PRIMARY KEY ( user_id,
-                                              course_code,
-                                              group_number,
-                                              semester );
+alter table lecturers
+   add constraint lecturers_pk
+      primary key ( user_id,
+                    course_code,
+                    group_number,
+                    semester );
 
-CREATE TABLE semesters (
-    semester_code VARCHAR2(4 CHAR) NOT NULL,
-    start_date    DATE NOT NULL,
-    end_date      DATE NOT NULL
+create table semesters (
+   semester_code varchar2(4 char) not null,
+   start_date    date not null,
+   end_date      date not null
 );
 
-ALTER TABLE semesters ADD CONSTRAINT semesters_pk PRIMARY KEY ( semester_code );
+alter table semesters add constraint semesters_pk primary key ( semester_code );
 
-CREATE TABLE students_in_groups (
-    user_id                                   NUMBER(6) NOT NULL, 
-    course_code VARCHAR2(5 CHAR) NOT NULL, 
-    semester        VARCHAR2(4 CHAR) NOT NULL,
-    group_number                             NUMBER(3) NOT NULL
+create table students_in_groups (
+   user_id      number(6) not null,
+   course_code  varchar2(5 char) not null,
+   semester     varchar2(4 char) not null,
+   group_number number(3) not null
 );
 
-ALTER TABLE students_in_groups
-    ADD CONSTRAINT students_in_groups_pk PRIMARY KEY ( user_id,
-                                                       course_code,
-                                                       group_number,
-                                                       semester );
+alter table students_in_groups
+   add constraint students_in_groups_pk
+      primary key ( user_id,
+                    course_code,
+                    group_number,
+                    semester );
 
-CREATE TABLE user_types (
-    user_type_id NUMBER(3) NOT NULL,
-    type         VARCHAR2(32 CHAR) NOT NULL
+create table user_types (
+   user_type_id number(3) not null,
+   type         varchar2(32 char) not null
 );
 
-ALTER TABLE user_types ADD CONSTRAINT user_types_pk PRIMARY KEY ( user_type_id );
+alter table user_types add constraint user_types_pk primary key ( user_type_id );
 
-CREATE TABLE users (
-    user_id                 NUMBER(6)  GENERATED ALWAYS as IDENTITY(START with 1 INCREMENT by 1),
-    name                    VARCHAR2(64 CHAR) NOT NULL,
-    surname                 VARCHAR2(64 CHAR) NOT NULL,
-    password                VARCHAR2(100 CHAR) NOT NULL,
-    mail                    VARCHAR2(64 CHAR) NOT NULL,
-    user_type_id NUMBER(3) NOT NULL
+create table users (
+   user_id      number(6)
+      generated always as identity ( start with 1 increment by 1 ),
+   name         varchar2(64 char) not null,
+   surname      varchar2(64 char) not null,
+   password     varchar2(100 char) not null,
+   mail         varchar2(64 char) not null,
+   user_type_id number(3) not null
 );
 
-ALTER TABLE users ADD CONSTRAINT users_pk PRIMARY KEY ( user_id );
+alter table users add constraint users_pk primary key ( user_id );
 
-ALTER TABLE attendances
-    ADD CONSTRAINT attendances_attendance_statuses_fk FOREIGN KEY ( attendance_status_id )
-        REFERENCES attendance_statuses ( attendance_status_id );
+alter table attendances
+   add constraint attendances_attendance_statuses_fk foreign key ( attendance_status_id )
+      references attendance_statuses ( attendance_status_id );
 
-ALTER TABLE attendances
-    ADD CONSTRAINT attendances_classes_fk FOREIGN KEY ( class_id_for_group,
-                                                        group_number,
-                                                        course_code,
-                                                        semester )
-        REFERENCES classes ( class_id_for_group,
+alter table attendances
+   add constraint attendances_classes_fk
+      foreign key ( class_id_for_group,
+                    group_number,
+                    course_code,
+                    semester )
+         references classes ( class_id_for_group,
+                              group_number,
+                              course_code,
+                              semester );
+
+alter table attendances
+   add constraint attendances_users_fk foreign key ( who_inserted_id )
+      references users ( user_id );
+
+alter table attendances
+   add constraint attendances_final_grades_fk
+      foreign key ( user_id,
+                    course_code,
+                    semester )
+         references final_grades ( user_id,
+                                   course_code,
+                                   semester );
+
+alter table classes
+   add constraint classes_class_types_fk foreign key ( class_type_id )
+      references class_types ( class_type_id );
+
+alter table classes
+   add constraint classes_groups_fk
+      foreign key ( course_code,
+                    group_number,
+                    semester )
+         references groups ( course_code,
                              group_number,
-                             course_code,
                              semester );
 
-ALTER TABLE attendances
-    ADD CONSTRAINT attendances_users_fk FOREIGN KEY ( who_inserted_id )
-        REFERENCES users ( user_id );
+alter table coordinators
+   add constraint coordinators_courses_in_semester_fk
+      foreign key ( course_code,
+                    semester )
+         references courses_in_semester ( course_code,
+                                          semester );
 
-ALTER TABLE attendances
-    ADD CONSTRAINT attendances_users_fkv2 FOREIGN KEY ( user_id )
-        REFERENCES users ( user_id );
+alter table coordinators
+   add constraint coordinators_users_fk foreign key ( user_id )
+      references users ( user_id );
 
-ALTER TABLE classes
-    ADD CONSTRAINT classes_class_types_fk FOREIGN KEY ( class_type_id )
-        REFERENCES class_types ( class_type_id );
+alter table courses_in_semester
+   add constraint courses_in_semester_courses_fk foreign key ( course_code )
+      references courses ( course_code );
 
-ALTER TABLE classes
-    ADD CONSTRAINT classes_groups_fk FOREIGN KEY ( course_code,
-                                                   group_number,
-                                                   semester )
-        REFERENCES groups ( course_code,
-                            group_number,
-                            semester );
+alter table courses_in_semester
+   add constraint courses_in_semester_semesters_fk foreign key ( semester )
+      references semesters ( semester_code );
 
-ALTER TABLE coordinators
-    ADD CONSTRAINT coordinators_courses_in_semester_fk FOREIGN KEY ( course_code,
-                                                                     semester )
-        REFERENCES courses_in_semester ( course_code,
-                                         semester );
+alter table final_grades
+   add constraint final_grades_courses_in_semester_fk
+      foreign key ( course_code,
+                    semester )
+         references courses_in_semester ( course_code,
+                                          semester );
 
-ALTER TABLE coordinators
-    ADD CONSTRAINT coordinators_users_fk FOREIGN KEY ( user_id )
-        REFERENCES users ( user_id );
+alter table final_grades
+   add constraint final_grades_users_fk foreign key ( user_id )
+      references users ( user_id );
 
-ALTER TABLE courses_in_semester
-    ADD CONSTRAINT courses_in_semester_courses_fk FOREIGN KEY ( course_code )
-        REFERENCES courses ( course_code );
+alter table grade_categories
+   add constraint grade_categories_courses_in_semester_fk
+      foreign key ( course_code,
+                    semester )
+         references courses_in_semester ( course_code,
+                                          semester );
 
-ALTER TABLE courses_in_semester
-    ADD CONSTRAINT courses_in_semester_semesters_fk FOREIGN KEY ( semester )
-        REFERENCES semesters ( semester_code );
+alter table grades
+   add constraint grades_grade_categories_fk
+      foreign key ( category_id,
+                    course_code,
+                    semester )
+         references grade_categories ( category_id,
+                                       course_code,
+                                       semester );
 
-ALTER TABLE final_grades
-    ADD CONSTRAINT final_grades_courses_in_semester_fk FOREIGN KEY ( course_code,
-                                                                     semester )
-        REFERENCES courses_in_semester ( course_code,
-                                         semester );
+alter table grades
+   add constraint grades_users_fk foreign key ( who_inserted_id )
+      references users ( user_id );
 
-ALTER TABLE final_grades
-    ADD CONSTRAINT final_grades_users_fk FOREIGN KEY ( user_id )
-        REFERENCES users ( user_id );
+alter table grades
+   add constraint grades_final_grades_fk
+      foreign key ( user_id,
+                    course_code,
+                    semester )
+         references final_grades ( user_id,
+                                   course_code,
+                                   semester );
 
-ALTER TABLE grade_categories
-    ADD CONSTRAINT grade_categories_courses_in_semester_fk FOREIGN KEY ( course_code,
-                                                                         semester )
-        REFERENCES courses_in_semester ( course_code,
-                                         semester );
+alter table groups
+   add constraint groups_courses_in_semester_fk
+      foreign key ( course_code,
+                    semester )
+         references courses_in_semester ( course_code,
+                                          semester );
 
-ALTER TABLE grades
-    ADD CONSTRAINT grades_grade_categories_fk FOREIGN KEY ( category_id,
-                                                            course_code,
-                                                            semester )
-        REFERENCES grade_categories ( category_id,
-                                      course_code,
-                                      semester );
+alter table students_in_groups
+   add constraint students_in_groups_final_grades_fk
+      foreign key ( user_id,
+                    course_code,
+                    semester )
+         references final_grades ( user_id,
+                                   course_code,
+                                   semester );
 
-ALTER TABLE grades
-    ADD CONSTRAINT grades_users_fk FOREIGN KEY ( user_id )
-        REFERENCES users ( user_id );
+alter table lecturers
+   add constraint lecturers_groups_fk
+      foreign key ( course_code,
+                    group_number,
+                    semester )
+         references groups ( course_code,
+                             group_number,
+                             semester );
 
-ALTER TABLE grades
-    ADD CONSTRAINT grades_users_fkv2 FOREIGN KEY ( who_inserted_id )
-        REFERENCES users ( user_id );
+alter table lecturers
+   add constraint lecturers_users_fk foreign key ( user_id )
+      references users ( user_id );
 
-ALTER TABLE groups
-    ADD CONSTRAINT groups_courses_in_semester_fk FOREIGN KEY ( course_code,
-                                                               semester )
-        REFERENCES courses_in_semester ( course_code,
-                                         semester );
+alter table students_in_groups
+   add constraint students_in_groups_groups_fk
+      foreign key ( course_code,
+                    group_number,
+                    semester )
+         references groups ( course_code,
+                             group_number,
+                             semester );
 
-ALTER TABLE lecturers
-    ADD CONSTRAINT lecturers_groups_fk FOREIGN KEY ( course_code,
-                                                     group_number,
-                                                     semester )
-        REFERENCES groups ( course_code,
-                            group_number,
-                            semester );
-
-ALTER TABLE lecturers
-    ADD CONSTRAINT lecturers_users_fk FOREIGN KEY ( user_id )
-        REFERENCES users ( user_id );
-
-ALTER TABLE students_in_groups
-    ADD CONSTRAINT students_in_groups_groups_fk FOREIGN KEY ( course_code,
-                                                              group_number,
-                                                              semester )
-        REFERENCES groups ( course_code,
-                            group_number,
-                            semester );
-
-ALTER TABLE students_in_groups
-    ADD CONSTRAINT students_in_groups_users_fk FOREIGN KEY ( user_id )
-        REFERENCES users ( user_id );
-
-ALTER TABLE users
-    ADD CONSTRAINT users_user_types_fk FOREIGN KEY ( user_type_id )
-        REFERENCES user_types ( user_type_id );
+alter table users
+   add constraint users_user_types_fk foreign key ( user_type_id )
+      references user_types ( user_type_id );
 
 
 -- CONSTRAINTS
 
-ALTER TABLE users ADD CONSTRAINT mail_const UNIQUE ( mail );
+alter table users add constraint mail_const unique ( mail );
 
-ALTER TABLE final_grades ADD CONSTRAINT grade_const CHECK ( grade >= 0 AND grade <= 5 AND MOD(grade, 0.5) = 0 );  
-ALTER TABLE attendance_statuses ADD CONSTRAINT unique_attendance_status UNIQUE ( status );
-ALTER TABLE class_types ADD CONSTRAINT unique_class_type UNIQUE ( type );
-ALTER TABLE user_types ADD CONSTRAINT unique_user_type UNIQUE ( type );
+alter table final_grades
+   add constraint grade_const
+      check ( grade >= 0
+         and grade <= 5
+         and mod(
+         grade,
+         0.5
+      ) = 0 );
+alter table attendance_statuses add constraint unique_attendance_status unique ( status );
+alter table class_types add constraint unique_class_type unique ( type );
+alter table user_types add constraint unique_user_type unique ( type );
