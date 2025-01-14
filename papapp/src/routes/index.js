@@ -24,6 +24,9 @@ import UsersInGroupForm from "../pages/admin/semester/courses/groups/users/Users
 import List from "../components/common/List";
 import CoordinatorsPage from "../pages/admin/semester/courses/coordinators/CoordinatorsPage";
 import CoordinatorsForm from "../pages/admin/semester/courses/coordinators/CoordinatorsForm";
+import StudentsInCoursePage from "../pages/admin/semester/courses/students/StudentsInCoursePage";
+import StudentsInCourseForm from "../pages/admin/semester/courses/students/StudentsInCourseForm";
+
 //import useAuthStatus from './useAuthStatus';
 
 const ProtectedRoute = ({ isAuthRequired = true }) => {
@@ -250,6 +253,19 @@ export const router = createBrowserRouter([
                                                                                 ]
                                                                             }
                                                                         ]
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                path: "students",
+                                                                children: [
+                                                                    {
+                                                                        index: true,
+                                                                        element: <StudentsInCoursePage />
+                                                                    },
+                                                                    {
+                                                                        path: "add",
+                                                                        element: <StudentsInCourseForm />
                                                                     }
                                                                 ]
                                                             }

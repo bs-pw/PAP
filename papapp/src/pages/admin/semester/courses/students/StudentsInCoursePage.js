@@ -4,17 +4,18 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import List from '../../../../../components/common/List';
 
 const CoordinatorsPage = () => {
-    const [coordinators, setCoordinators] = useState([]);
+    const [students, setStudents] = useState([]);
     const [error, setError] = useState('');
     const client = useClient();
     const navigate = useNavigate();
     const { semesterId, courseId } = useParams('');
 
-    const getCourseCoordinators = async () => {
+    const getCourseStudents = async () => {
         try {
-            const result = await client.getCourseCoordinators(semesterId, courseId)
+            const result = await client.getCourseStudents(semesterId, courseId)
             const data = result.map(({ user_id, name, surname }) => ({ user_id, name, surname }))
-            setCoordinators(data);
+            console.log(result)
+            setStudents(data);
         } catch (error) {
             setError(error.message);
         }
@@ -23,13 +24,13 @@ const CoordinatorsPage = () => {
     const handleDelete = async (id) => { }
 
     useEffect(() => {
-        getCourseCoordinators();
+        getCourseStudents();
     }, [])
 
     return (
         <>
             <Link to={`add`} className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >
-            <List listName={`Koordynatorzy przedmiotu ${courseId} w semestrze ${semesterId}`} columnNames={['Id', 'Imię', 'Nazwisko']} data={coordinators} error={error} adminButtons={[true, false]} handleDelete={handleDelete} id="user_id" />
+            <List listName={`Studenci przedmiotu ${courseId} w semestrze ${semesterId}`} columnNames={['Id', 'Imię', 'Nazwisko']} data={students} error={error} adminButtons={[true, false]} handleDelete={handleDelete} id="user_id" />
         </>
     )
 }
