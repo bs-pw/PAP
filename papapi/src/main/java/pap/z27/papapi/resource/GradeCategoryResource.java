@@ -65,4 +65,29 @@ public class GradeCategoryResource {
 
         return ResponseEntity.ok(gradeCategoryRepo.findAllCourseGradeCategories(courseCode, semester));
     }
+
+    @PutMapping("{semester}/{course_code}/{categoryId}")
+    public ResponseEntity<String> updateGradeCategory(@PathVariable String semester,
+                                                      @PathVariable String course_code,
+                                                      @PathVariable Integer categoryId,
+                                                      @RequestBody GradeCategory gradeCategory,
+                                                      HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Integer userId = (Integer) session.getAttribute("user_id");
+
+        if (!userTypeId.equals(0)
+                && (userRepo.checkIfIsCoordinator(
+                        userId, course_code, semester)==0))
+        {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only course coordinator or admin can update grade category\"}");
+        }
+
+        if (gradeCategoryRepo.updateGradeCategory(categoryId, course_code, semester, gradeCategory) != 0) {
+            return ResponseEntity.ok("{\"message\":\"grade category updated\"}");
+        }
+        return ResponseEntity.badRequest().body("{\"message\":\"Couldn't update grade category.\"}");
+    }
 }
