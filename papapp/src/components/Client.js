@@ -609,12 +609,12 @@ class Client {
             });
     }
     async addCoordinatorToCourse(semester, course_code, user_id) {
-        return fetch(`${this.baseUrl}/coordinators/${user_id}`, {
+        return fetch(`${this.baseUrl}/coordinators`, {
             method: 'POST',
             headers: this.headers,
             credentials: this.credentials,
             body: JSON.stringify({
-                semester, course_code
+                semester, course_code, user_id
             }),
         }).then(response => {
             if (response.ok) {

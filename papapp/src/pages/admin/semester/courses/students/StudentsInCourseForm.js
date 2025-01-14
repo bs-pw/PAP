@@ -24,7 +24,7 @@ const CoordinatorsForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await client.addCoordinatorToCourse(semesterId, courseId, selectedStudent);
+            await client.addStudentToCourse(semesterId, courseId, selectedStudent);
             navigate(`..`);
         } catch (error) {
             await setMessage(error.message || "Błąd podczas dodawania kursu");

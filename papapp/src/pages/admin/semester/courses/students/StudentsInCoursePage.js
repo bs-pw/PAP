@@ -24,7 +24,7 @@ const CoordinatorsPage = () => {
     const handleDelete = async (e) => {
         e.preventDefault();
         try {
-            await client.deleteCoordinatorFromCourse(semesterId, courseId, e.target.value);
+            await client.deleteStudentFromCourse(semesterId, courseId, e.target.value);
             getCourseStudents();
         } catch (error) {
             setError(error.message);
