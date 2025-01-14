@@ -48,6 +48,23 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
     return ResponseEntity.ok(groupRepo.findLecturersOfGroup(courseCode,semester,groupNr));
 }
 
+    @GetMapping("/{semester}/{courseCode}/{groupNr}/available/student")
+    public ResponseEntity<List<UserPublicInfo>> getAllEligibleStudentsToGroup(@PathVariable("semester") String semester,
+                                                                              @PathVariable("courseCode") String courseCode,
+                                                                              @PathVariable("groupNr") Integer groupNr,
+                                                                              HttpSession session) {
+        Integer thisUserTypeId = (Integer)session.getAttribute("user_type_id");
+        if (thisUserTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Integer coordinatorId = (Integer) session.getAttribute("user_id");
+        if (thisUserTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
+                courseCode,
+                semester)==0)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(groupRepo.findEligibleStudentsToGroup(courseCode,semester,groupNr));
+    }
     @PostMapping("/{asWho}")
     public ResponseEntity<String> addStudentToGroup(@PathVariable String asWho, @RequestBody UserInGroup userInGroup, HttpSession session) {
         Integer thisUserTypeId = (Integer)session.getAttribute("user_type_id");
