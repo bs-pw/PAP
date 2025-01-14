@@ -81,7 +81,7 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
         Integer userId = userInGroup.getUser_id();
         Integer userTypeId = userRepo.findUsersTypeId(userId);
         switch (asWho){
-            case "student":
+            case "students":
                 if (userTypeId!= 3 && userTypeId!= 2) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                             .body("{\"message\":\"User is not a student.\"}");
@@ -95,7 +95,7 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
                             .body("{\"message\":\"User is not signed up for this course.\"}");
                 groupRepo.addStudentToGroup(userInGroup);
                 return ResponseEntity.ok("{\"message\":\"ok\"}");
-            case "lecturer":
+            case "lecturers":
                 if (userTypeId != 2 && userTypeId!= 1) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                             .body("{\"message\":\"User is not a lecturer.\"}");

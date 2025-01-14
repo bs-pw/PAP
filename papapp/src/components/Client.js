@@ -474,13 +474,13 @@ class Client {
             });
     }
 
-    async addUserInGroup(semester, course_code, group_number, student_id, type) {
+    async addUserInGroup(semester, course_code, group_number, user_id, type) {
         return fetch(`${this.baseUrl}/usersingroups/${type}`, {
             method: 'POST',
             headers: this.headers,
             credentials: this.credentials,
             body: JSON.stringify({
-                semester, course_code, group_number, student_id
+                semester, course_code, group_number, user_id
             }),
         }).then(response => {
             if (response.ok) {
@@ -512,7 +512,7 @@ class Client {
             });
     }
 
-    async getAvailableStudentsToAddToGroup(semester, course_code, group_number, type) {
+    async getAvailableUsersToAddToGroup(semester, course_code, group_number, type) {
         return fetch(`${this.baseUrl}/usersingroups/${semester}/${course_code}/${group_number}/available/${type}`,
             {
                 method: 'GET',
