@@ -11,6 +11,7 @@ import pap.z27.papapi.domain.Group;
 import pap.z27.papapi.domain.MyClass;
 import pap.z27.papapi.domain.Semester;
 import pap.z27.papapi.repo.CourseInSemesterRepo;
+import pap.z27.papapi.repo.UserRepo;
 
 import java.util.List;
 
@@ -19,10 +20,12 @@ import java.util.List;
 @RequestMapping(path = "api/courseinsemester")
 public class CourseInSemesterResource {
     private final CourseInSemesterRepo courseRepo;
+    private final UserRepo userRepo;
 
     @Autowired
-    public CourseInSemesterResource(CourseInSemesterRepo courseRepo) {
+    public CourseInSemesterResource(CourseInSemesterRepo courseRepo, UserRepo userRepo) {
         this.courseRepo = courseRepo;
+        this.userRepo = userRepo;
     }
     @GetMapping
     public List<CourseInSemester> getCoursesInSemester() {
@@ -33,9 +36,14 @@ public class CourseInSemesterResource {
         return courseRepo.findAllCoursesInSemesterBySemester(semester);
     }
 
-    @GetMapping("/bycourse/{semesterId}")
+    @GetMapping("/bycourse/{courseCode}")
     public List<CourseInSemester> getCoursesInSemesterByCourse(@PathVariable String courseCode) {
         return courseRepo.findAllCoursesInSemesterByCode(courseCode);
+    }
+
+    @GetMapping("/bycoordinator/{userId}")
+    public List<CourseInSemester> getCoursesInSemesterByCoordinator(@PathVariable Integer userId) {
+        return courseRepo.findAllCoursesInSemesterByCoordinator(userId);
     }
 
 
