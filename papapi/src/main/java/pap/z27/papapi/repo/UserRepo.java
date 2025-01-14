@@ -223,6 +223,22 @@ public class UserRepo {
                 .query(Integer.class)
                 .single();
     }
+    public Integer checkIfIsLecturerOfCourse(Integer userId, String courseCode, String semester) {
+        return jdbcClient.sql("SELECT count(*) FROM LECTURERS where user_id=? and COURSE_CODE=? and SEMESTER=?")
+                .param(userId)
+                .param(courseCode)
+                .param(semester)
+                .query(Integer.class)
+                .single();
+    }
+    public Integer checkIfStudentIsInCourse(Integer userId, String courseCode, String semester) {
+        return jdbcClient.sql("SELECT count(*) FROM FINAL_GRADES where user_id=? and COURSE_CODE=? and SEMESTER=?")
+                .param(userId)
+                .param(courseCode)
+                .param(semester)
+                .query(Integer.class)
+                .single();
+    }
     public Integer removeUser(Integer userId) {
         return jdbcClient.sql("DELETE FROM USERS where user_id=?")
                 .param(userId)
