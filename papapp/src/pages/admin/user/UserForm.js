@@ -55,6 +55,7 @@ const UserForm = () => {
             try {
                 await client.updateUser(id, formData);
                 setMessage('Użytkownik został zaktualizowany!');
+                navigate("..")
             } catch (error) {
                 setMessage('Błąd podczas aktualizacji');
             }
@@ -62,6 +63,7 @@ const UserForm = () => {
             try {
                 await client.registerUser(formData);
                 setMessage('Użytkownik został zarejestrowany');
+                navigate("..")
             } catch (error) {
                 setMessage('Błąd podczas rejestracji');
             }

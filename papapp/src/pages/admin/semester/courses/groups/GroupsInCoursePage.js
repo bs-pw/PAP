@@ -21,9 +21,10 @@ const GroupsInCoursePage = () => {
         }
     }
 
-    const handleDeleteGroup = async (groupNumber) => {
+    const handleDeleteGroup = async (e) => {
+        // console.log(e.target.value)
         try {
-            await client.deleteGroup(semesterId, courseId, groupNumber);
+            await client.deleteGroup(semesterId, courseId, e.target.value);
             getGroupsInSemesterInCourse();
         } catch (error) {
             setError(error.message);

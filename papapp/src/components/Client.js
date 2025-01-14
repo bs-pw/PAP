@@ -477,7 +477,13 @@ class Client {
     async addStudentInGroup(semester, course_code, group_number, student_id) { }
 
     async deleteUserInGroup(semester, course_code, group_number, user_id) {
-        return fetch(`${this.baseUrl}/usersingroups/${semester}/${course_code}/${group_number}/${user_id}`)
+        return fetch(`${this.baseUrl}/usersingroups/${semester}/${course_code}/${group_number}/${user_id}`,
+            {
+                method: 'DELETE',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
             .then(response => {
                 if (response.ok) {
                     return true;
