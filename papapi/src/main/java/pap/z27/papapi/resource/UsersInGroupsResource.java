@@ -9,6 +9,8 @@ import pap.z27.papapi.domain.subclasses.UserInGroup;
 import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/usersingroups")
 public class UsersInGroupsResource {
@@ -19,6 +21,32 @@ public class UsersInGroupsResource {
     public UsersInGroupsResource(GroupRepo groupRepo, UserRepo userRepo) {
         this.groupRepo = groupRepo;
         this.userRepo = userRepo;
+    }
+//
+    @GetMapping("/s")
+    public ResponseEntity<List<UserInGroup>> getAllStudentsInGroups(HttpSession session) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Integer coordinatorId = (Integer) session.getAttribute("user_id");
+        if (userTypeId != 0){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(groupRepo.findAllStudentsInGroup());
+    }
+//    asdasdadadadad
+    @GetMapping("/l")
+    public ResponseEntity<List<UserInGroup>> getAllLecturers(HttpSession session) {
+        Integer userTypeId = (Integer)session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Integer coordinatorId = (Integer) session.getAttribute("user_id");
+        if (userTypeId != 0){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(groupRepo.findAllLecturers());
     }
 
     @PostMapping

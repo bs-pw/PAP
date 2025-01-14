@@ -51,6 +51,22 @@ public class CourseResource {
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
+    @PutMapping("{courseCode}")
+    public ResponseEntity<String> updateCourse(@PathVariable String courseCode,
+                                               @RequestBody Course course,
+                                               HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (userTypeId != 0) {
+            return ResponseEntity.badRequest().body("{\"message\":\"only admin can update courses\"}");
+        }
+        course.setCourse_code(courseCode);
+        if(courseRepo.updateCourse(course)==0)
+            return ResponseEntity.badRequest().body("{\"message\":\"cannot update course\"}");
+        return ResponseEntity.ok("{\"message\":\"ok\"}");
+    }
 
     @DeleteMapping("/{courseCode}")
     public ResponseEntity<String> deleteCourse(@PathVariable String courseCode) {

@@ -38,4 +38,10 @@ public class CourseRepo {
                 .update();
     }//delete if nothing is connected - change in ddl - cascade
 
+    public Integer updateCourse(Course course) {
+        return jdbcClient.sql("UPDATE COURSES SET title=? WHERE course_code=?")
+                .param(course.getTitle())
+                .param(course.getCourse_code())
+                .update();
+    }
 }

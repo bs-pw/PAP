@@ -23,10 +23,10 @@ public class CoordinatorResource {
         this.userRepo = userRepo;
     }
 
+    @GetMapping("{courseCode}/{semester}")
+    public List<UserPublicInfo> getCourseCoordinators(@PathVariable("courseCode") String courseCode, @PathVariable("semester") String semester) {
 
-    @GetMapping
-    public List<UserPublicInfo> getCourseCoordinators(@RequestBody CourseInSemester courseInSemester) {
-       return userRepo.findAllCourseCoordinators(courseInSemester);
+       return userRepo.findAllCourseCoordinators(new CourseInSemester(courseCode,semester));
     }
 
 
@@ -43,7 +43,7 @@ public class CoordinatorResource {
             return ResponseEntity.badRequest().body("{\"message\":\"Only teachers can be coordinators\"}");
         }
 
-        if (courseInSemesterRepo.addCoordinator(coordinatorId, courseInSemester) == 0) {
+        if (courseInSemesterRepo.insertCoordinator(coordinatorId, courseInSemester) == 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"Couldn't add coordinator\"}");
         }
 
