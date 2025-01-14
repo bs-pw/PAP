@@ -92,6 +92,38 @@ public class UserRepo {
                 .query(UserPublicInfo.class)
                 .list();
     }
+    public List<UserPublicInfo> findAllEligibleUsersToCourse(CourseInSemester courseInSemester) {
+        return jdbcClient.sql("Select users.user_id, users.name, users.surname, user_types.type, users.mail " +
+                        "from users " +
+                        "         join user_types on users.user_type_id = user_types.user_type_id " +
+                        "where USER_TYPES.USER_TYPE_ID in (2,3) " +
+                        "MINUS " +
+                        "Select users.user_id, users.name, users.surname, user_types.type, users.mail " +
+                        "from users " +
+                        "         join final_grades on final_grades.user_id=users.user_id " +
+                        "         join user_types on users.user_type_id = user_types.user_type_id " +
+                        "where FINAL_GRADES.SEMESTER=? and FINAL_GRADES.COURSE_CODE=? " +
+                        "MINUS " +
+                        "Select users.user_id, users.name, users.surname, user_types.type, users.mail " +
+                        "from users " +
+                        "         join COORDINATORS on COORDINATORS.user_id=users.user_id " +
+                        "         join user_types on users.user_type_id = user_types.user_type_id " +
+                        "where COORDINATORS.SEMESTER = ? and COORDINATORS.COURSE_CODE=?" +
+                        "MINUS " +
+                        "Select users.user_id, users.name, users.surname, user_types.type, users.mail " +
+                        "from users " +
+                        "         join LECTURERS on LECTURERS.user_id=users.user_id " +
+                        "         join user_types on users.user_type_id = user_types.user_type_id " +
+                        "where LECTURERS.SEMESTER = ? and LECTURERS.COURSE_CODE=?")
+                .param(courseInSemester.getSemester())
+                .param(courseInSemester.getCourse_code())
+                .param(courseInSemester.getSemester())
+                .param(courseInSemester.getCourse_code())
+                .param(courseInSemester.getSemester())
+                .param(courseInSemester.getCourse_code())
+                .query(UserPublicInfo.class)
+                .list();
+    }
     public List<UserPublicInfo> findAllUsersInGroup(Group group) {
         return jdbcClient.sql("SELECT user_id,u.name,u.surname,ut.type,u.mail" +
                         " FROM USERS u join STUDENTS_IN_GROUPS sin using(user_id) join USER_TYPES ut using(USER_TYPE_ID)" +

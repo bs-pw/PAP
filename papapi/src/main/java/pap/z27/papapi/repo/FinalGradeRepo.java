@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.FinalGrade;
+import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class FinalGradeRepo {
                 .query(FinalGrade.class)
                 .list();
     }
+
     public List<FinalGrade> findAllFinalGradesInCourse(String courseCode, String semester) {
         return jdbcClient.sql("SELECT * FROM FINAL_GRADES where course_code=? and semester=?")
                 .param(courseCode)
