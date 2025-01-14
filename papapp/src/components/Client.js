@@ -769,7 +769,7 @@ class Client {
             method: 'POST',
             headers: this.headers,
             credentials: this.credentials,
-            body: data,
+            body: JSON.stringify(data),
         }).then(response => {
             if (response.ok) {
                 return true;
@@ -786,7 +786,7 @@ class Client {
                 method: 'DELETE',
                 headers: this.headers,
                 credentials: this.credentials
-                
+
             }
         )
             .then(response => {

@@ -25,7 +25,7 @@ const ClassesInGroupPage = () => {
     const handleDelete = async (e) => {
         e.preventDefault();
         try {
-            await client.cos2(semesterId, courseId, groupId, e.target.value);
+            await client.deleteClasses(semesterId, courseId, groupId, e.target.value);
             getGroupClasses();
         } catch (error) {
             setError(error.message);
