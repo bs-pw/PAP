@@ -35,7 +35,7 @@ public class ClassResource {
             @PathVariable("groupNr") Integer groupNr,
             @PathVariable("classIdForGroup") Integer classIdForGroup
     ) {
-        return ResponseEntity.ok(classRepo.findClass(semester,courseCode,groupNr,classIdForGroup));
+        return ResponseEntity.ok(classRepo.findClass(courseCode,semester,groupNr,classIdForGroup));
     }
     @GetMapping
     public ResponseEntity<List<ClassDTO>> getAllClasses(HttpSession session) {
