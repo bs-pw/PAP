@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pap.z27.papapi.domain.Grade;
 import pap.z27.papapi.domain.GradeCategory;
 import pap.z27.papapi.repo.GradeCategoryRepo;
+import pap.z27.papapi.repo.GradeRepo;
 import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 
@@ -18,12 +20,14 @@ public class GradeCategoryResource {
     public final GradeCategoryRepo gradeCategoryRepo;
     public final UserRepo userRepo;
     public final GroupRepo groupRepo;
+    private final GradeRepo gradeRepo;
 
     @Autowired
-    public GradeCategoryResource(GradeCategoryRepo gradeCategoryRepo, UserRepo userRepo, GroupRepo groupRepo) {
+    public GradeCategoryResource(GradeCategoryRepo gradeCategoryRepo, UserRepo userRepo, GroupRepo groupRepo, GradeRepo gradeRepo) {
         this.gradeCategoryRepo = gradeCategoryRepo;
         this.userRepo = userRepo;
         this.groupRepo = groupRepo;
+        this.gradeRepo = gradeRepo;
     }
 
     @PostMapping
@@ -64,6 +68,28 @@ public class GradeCategoryResource {
         }
 
         return ResponseEntity.ok(gradeCategoryRepo.findAllCourseGradeCategories(courseCode, semester));
+    }
+
+    @GetMapping("{semester}/{courseCode}/{categoryId}")
+    public ResponseEntity<List<Grade>> getGradesByCategory(@PathVariable String semester,
+                                                           @PathVariable String courseCode,
+                                                           @PathVariable Integer categoryId,
+                                                           HttpSession session)
+    {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if(groupRepo.isLecturerOfCourse(userId,semester,courseCode)==0 &&
+                !userTypeId.equals(0) &&
+                userRepo.checkIfIsCoordinator(userId,courseCode,semester)==0)
+        {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        return ResponseEntity.ok(gradeRepo.getGradesByCategory(semester, courseCode, categoryId));
     }
 
     @PutMapping("{semester}/{course_code}/{categoryId}")

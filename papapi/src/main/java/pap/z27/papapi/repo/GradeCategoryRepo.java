@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.CourseInSemester;
+import pap.z27.papapi.domain.Grade;
 import pap.z27.papapi.domain.GradeCategory;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class GradeCategoryRepo {
                 .param(gradeCategory.getMax_grade())
                 .update();
     }
+
 
     public Integer removeGradeCategory(String course_code, String semester, Integer category_id) {
         return jdbcClient.sql("DELETE FROM GRADE_CATEGORIES WHERE category_id=? and course_code=? and semester=?")

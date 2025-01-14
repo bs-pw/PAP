@@ -164,4 +164,6 @@ public class GradeResource {
 
         return ResponseEntity.ok(gradeRepo.getGroupGradesInSemester(courseCode, semester, groupNumber));
     }
+
+    // Getting grades by grade categories is in GradeCategoryResource
 }

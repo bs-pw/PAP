@@ -36,6 +36,15 @@ public class GradeRepo {
                 .list();
     }
 
+    public List<Grade> getGradesByCategory(String semester, String courseCode, Integer categoryId) {
+        return jdbcClient.sql("SELECT * FROM GRADES WHERE SEMESTER = ? AND COURSE_CODE = ? AND CATEGORY_ID = ?")
+                .param(semester)
+                .param(courseCode)
+                .param(categoryId)
+                .query(Grade.class)
+                .list();
+    }
+
     public List<Grade> findAllGradesOfCourseForUser(CourseInSemester courseInSemester, Integer userID) {
         return jdbcClient.sql("SELECT * FROM GRADES WHERE course_code=? and semester=? and user_id=?" )
                 .param(courseInSemester.getCourse_code())
