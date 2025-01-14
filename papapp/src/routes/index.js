@@ -21,7 +21,6 @@ import GroupsInCoursePage from "../pages/admin/semester/courses/groups/GroupsInC
 import GroupsInCourseForm from "../pages/admin/semester/courses/groups/GroupsInCourseForm";
 import UsersInGroupPage from "../pages/admin/semester/courses/groups/users/UsersInGroupPage";
 import UsersInGroupForm from "../pages/admin/semester/courses/groups/users/UsersInGroupForm";
-import List from "../components/common/List";
 import CoordinatorsPage from "../pages/admin/semester/courses/coordinators/CoordinatorsPage";
 import CoordinatorsForm from "../pages/admin/semester/courses/coordinators/CoordinatorsForm";
 import StudentsInCoursePage from "../pages/admin/semester/courses/students/StudentsInCoursePage";
