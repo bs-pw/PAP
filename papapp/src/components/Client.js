@@ -995,6 +995,23 @@ class Client {
             });
     }
 
+    async getSemesterByLecturer(userId) {
+        return fetch(`${this.baseUrl}/semesters/bylecturer/${userId}`, {
+            method: 'GET',
+            headers: this.headers,
+            credentials: this.credentials
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error(`Error getting semesters: ${response.json().message}`);
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
+
 
 
 
