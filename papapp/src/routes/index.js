@@ -33,6 +33,7 @@ import LecurerSemesterPage from "../pages/lecturer/LecurerSemesterPage";
 import LecturerCoursePage from "../pages/lecturer/LecturerCoursePage";
 import LecturerGradeMenuPage from "../pages/lecturer/LecturerGradeMenuPage";
 import LecturerGradePage from "../pages/lecturer/grades/LecturerGradePage";
+import LecturerGradesListPage from "../pages/lecturer/grades/LecturerGradesListPage";
 
 //import useAuthStatus from './useAuthStatus';
 
@@ -123,11 +124,29 @@ export const router = createBrowserRouter([
                                             },
                                             {
                                                 path: "grade-by-student",
-                                                element: <LecturerGradePage type="student" />
+                                                children: [
+                                                    {
+                                                        index: true,
+                                                        element: <LecturerGradePage type="student" />
+                                                    },
+                                                    {
+                                                        path: ":searchId",
+                                                        element: <LecturerGradesListPage type="student" />
+                                                    }
+                                                ]
                                             },
                                             {
                                                 path: "grade-by-category",
-                                                element: <LecturerGradePage type="category" />
+                                                children: [
+                                                    {
+                                                        index: true,
+                                                        element: <LecturerGradePage type="category" />
+                                                    },
+                                                    {
+                                                        path: ":searchId",
+                                                        element: <LecturerGradesListPage type="category" />
+                                                    }
+                                                ]
                                             }
                                         ]
                                     },
