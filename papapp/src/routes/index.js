@@ -27,6 +27,8 @@ import StudentsInCoursePage from "../pages/admin/semester/courses/students/Stude
 import StudentsInCourseForm from "../pages/admin/semester/courses/students/StudentsInCourseForm";
 import ClassesInGroupForm from "../pages/admin/semester/courses/groups/classes/ClassesInGroupForm";
 import ClassesInGroupPage from "../pages/admin/semester/courses/groups/classes/ClassesInGroupPage";
+import GradeCategoriesPage from "../pages/admin/semester/courses/gradeCategories/GradeCategoriesPage";
+import GradeCategoriesForm from "../pages/admin/semester/courses/gradeCategories/GradeCategoriesForm";
 
 //import useAuthStatus from './useAuthStatus';
 
@@ -194,7 +196,7 @@ export const router = createBrowserRouter([
                                                         children: [
                                                             {
                                                                 index: true,
-                                                                element: <><Link to={`coordinators`} className="nav-link">Koordynatorzy</Link><Link to={`groups`} className="nav-link">Grupy</Link><Link to={`students`} className="nav-link">Studenci</Link></>
+                                                                element: <><Link to={`coordinators`} className="nav-link">Koordynatorzy</Link><Link to={`groups`} className="nav-link">Grupy</Link><Link to={`students`} className="nav-link">Studenci</Link><Link to={`grade-categories`} className="nav-link">Punktacja przedmiotu</Link></>
                                                             },
                                                             {
                                                                 path: "coordinators",
@@ -288,6 +290,27 @@ export const router = createBrowserRouter([
                                                                     {
                                                                         path: "add",
                                                                         element: <StudentsInCourseForm />
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                path: "grade-categories",
+                                                                children: [
+                                                                    {
+                                                                        index: true,
+                                                                        element: <GradeCategoriesPage />
+                                                                    },
+                                                                    {
+                                                                        path: "add",
+                                                                        element: <GradeCategoriesForm />
+                                                                    },
+                                                                    {
+                                                                        path: ":gradeCategoryId",
+                                                                        element: <Navigate to=".." />
+                                                                    },
+                                                                    {
+                                                                        path: ":gradeCategoryId/edit",
+                                                                        element: <GradeCategoriesForm />
                                                                     }
                                                                 ]
                                                             }

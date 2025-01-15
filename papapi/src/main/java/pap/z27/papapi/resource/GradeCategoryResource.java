@@ -15,6 +15,7 @@ import pap.z27.papapi.repo.UserRepo;
 import java.util.List;
 
 @RestController
+@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping("/api/gradecategories")
 public class GradeCategoryResource {
     public final GradeCategoryRepo gradeCategoryRepo;
@@ -69,6 +70,8 @@ public class GradeCategoryResource {
 
         return ResponseEntity.ok(gradeCategoryRepo.findAllCourseGradeCategories(courseCode, semester));
     }
+
+    //TODO: funkcja zwracająca sumę możliwych do uzyskania punktów z przedmiotu w danym semestrze. zapytanie typu /api/gradecategories/{semester}/{courseCode}/sum
 
     @GetMapping("{semester}/{courseCode}/{categoryId}")
     public ResponseEntity<List<Grade>> getGradesByCategory(@PathVariable String semester,
