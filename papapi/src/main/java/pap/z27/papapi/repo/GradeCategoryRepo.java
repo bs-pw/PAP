@@ -69,6 +69,8 @@ public class GradeCategoryRepo {
             query.setLength(query.length() - 2);
             query.append(" WHERE category_id=? AND course_code=? AND semester=?");
             params.add(categoryId);
+            params.add(course_code);
+            params.add(semester);
             return jdbcClient.sql(query.toString())
                     .params(params)
                     .update();
