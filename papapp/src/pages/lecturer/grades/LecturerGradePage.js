@@ -19,8 +19,10 @@ const LecturerGradePage = ({ type = "student" }) => {
             let data;
             if (type === "student") {
                 data = await client.getCourseStudents(semesterId, courseId);
+                data = data.map(({ user_id, name, surname }) => ({ user_id, name, surname }))
             } else {
                 data = await client.getGradeCategoriesInCourse(semesterId, courseId);
+                data = data.map(({ category_id, description, max_grade }) => ({ category_id, description, max_grade }))
             }
             setListData(data);
         } catch (error) {
@@ -33,13 +35,13 @@ const LecturerGradePage = ({ type = "student" }) => {
         navigate(`${e.target.value}`);
     }
 
-    if (type !== "student") {
-        setListName(`Kategorie ocen ${courseId} ${semesterId}`);
-        setColumnNames(["ID", "Imię", "Nazwisko"]);
-        setIdList("category_id")
-    }
 
     useEffect(() => {
+        if (type !== "student") {
+            setListName(`Kategorie ocen ${courseId} ${semesterId}`);
+            setColumnNames(["ID", "Nazwa", "Maks punktów"]);
+            setIdList("category_id")
+        }
         getDataToList();
     }, [])
 
