@@ -571,6 +571,25 @@ class Client {
             });
     }
     async getCourseStudents(semester, course_code) {
+        return fetch(`${this.baseUrl}/courseinsemester/${semester}/${course_code}`,
+            {
+                method: 'GET',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error getting course students: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
+    async getCourseFinalGrades(semester, course_code) {
         return fetch(`${this.baseUrl}/finalgrades/${semester}/course/${course_code}`,
             {
                 method: 'GET',
@@ -1075,41 +1094,41 @@ class Client {
             }
         })
     }
-    async updateGradeCategory(semester, course_code, categoryId, data) {
-        return fetch(`${this.baseUrl}/gradecategories/${semester}/${course_code}/${categoryId}`, {
-            method: 'PUT',
-            headers: this.headers,
-            credentials: this.credentials,
-            body: JSON.stringify(data)
-        }).then(response => {
-            if (response.ok) {
-                return true;
-            }
-            throw new Error(`Error updating grade category: ${response.statusText}`);
-        }).catch(error => {
-            throw new Error(error.message);
-        });
-    }
-    async deleteGradeCategory(semester, course_code, categoryId) {
-        return fetch(`${this.baseUrl}/gradecategories/${semester}/${course_code}/${categoryId}`,
-            {
-                method: 'DELETE',
-                headers: this.headers,
-                credentials: this.credentials
+    // async updateGrade(semester, course_code, categoryId, data) {
+    //     return fetch(`${this.baseUrl}/gradecategories/${semester}/${course_code}/${categoryId}`, {
+    //         method: 'PUT',
+    //         headers: this.headers,
+    //         credentials: this.credentials,
+    //         body: JSON.stringify(data)
+    //     }).then(response => {
+    //         if (response.ok) {
+    //             return true;
+    //         }
+    //         throw new Error(`Error updating grade category: ${response.statusText}`);
+    //     }).catch(error => {
+    //         throw new Error(error.message);
+    //     });
+    // }
+    // // async deleteGradeCategory(semester, course_code, categoryId) {
+    // //     return fetch(`${this.baseUrl}/gradecategories/${semester}/${course_code}/${categoryId}`,
+    // //         {
+    // //             method: 'DELETE',
+    // //             headers: this.headers,
+    // //             credentials: this.credentials
 
-            }
-        )
-            .then(response => {
-                if (response.ok) {
-                    return true;
-                } else {
-                    throw new Error(`Error deleting grade categories: ${response.json().message}`);
-                }
-            })
-            .catch(error => {
-                throw new Error(error.message);
-            });
-    }
+    // //         }
+    // //     )
+    // //         .then(response => {
+    // //             if (response.ok) {
+    // //                 return true;
+    // //             } else {
+    // //                 throw new Error(`Error deleting grade categories: ${response.json().message}`);
+    // //             }
+    // //         })
+    // //         .catch(error => {
+    // //             throw new Error(error.message);
+    // //         });
+    // // }
 
 
 
