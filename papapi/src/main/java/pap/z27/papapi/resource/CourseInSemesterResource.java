@@ -47,8 +47,8 @@ public class CourseInSemesterResource {
     }
 
     @GetMapping("/bylecturer/{semester}/{userId}")
-    public List<CourseInSemester> getCoursesInSemesterByLecturer(@PathVariable String semester, @PathVariable Integer userId) {
-        return courseRepo.findAllCoursesInSemesterByLecturer(semester, userId);
+    public List<CourseInSemester> getCoursesInSemesterByLecturerAndCoordinator(@PathVariable String semester, @PathVariable Integer userId) {
+        return courseRepo.findAllCoursesInSemesterByLecturerAndCoordinator(semester, userId);
     }
 
     @PostMapping
