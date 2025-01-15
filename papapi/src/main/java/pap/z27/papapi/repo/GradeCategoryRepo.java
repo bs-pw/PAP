@@ -3,8 +3,6 @@ package pap.z27.papapi.repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
-import pap.z27.papapi.domain.CourseInSemester;
-import pap.z27.papapi.domain.Grade;
 import pap.z27.papapi.domain.GradeCategory;
 
 import java.util.List;
@@ -26,10 +24,17 @@ public class GradeCategoryRepo {
                 .list();
     }
 
+    public GradeCategory getGradeCategory(String semester, String courseCode, String gradeCategory) {
+        return jdbcClient.sql("SELECT * FROM GRADE_CATEGORIES WHERE SEMESTER=? and COURSE_CODE=? and CATEGORY_ID=?")
+                .param(semester)
+                .param(courseCode)
+                .param(gradeCategory)
+                .query(GradeCategory.class).single();
+    }
+
     public Integer insertGradeCategory(GradeCategory gradeCategory) {
         return jdbcClient.sql("INSERT INTO GRADE_CATEGORIES (category_id,course_code,semester,description,max_grade)" +
-                        "VALUES (?,?,?,?,?)")
-                .param(gradeCategory.getCategory_id())
+                        "VALUES (DEFAULT,?,?,?,?)")
                 .param(gradeCategory.getCourse_code())
                 .param(gradeCategory.getSemester())
                 .param(gradeCategory.getDescription())
@@ -64,8 +69,6 @@ public class GradeCategoryRepo {
             query.setLength(query.length() - 2);
             query.append(" WHERE category_id=? AND course_code=? AND semester=?");
             params.add(categoryId);
-            params.add(course_code);
-            params.add(semester);
             return jdbcClient.sql(query.toString())
                     .params(params)
                     .update();

@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pap.z27.papapi.domain.Grade;
 import pap.z27.papapi.domain.GradeCategory;
 import pap.z27.papapi.repo.GradeCategoryRepo;
 import pap.z27.papapi.repo.GradeRepo;
@@ -74,9 +73,9 @@ public class GradeCategoryResource {
     //TODO: funkcja zwracająca sumę możliwych do uzyskania punktów z przedmiotu w danym semestrze. zapytanie typu /api/gradecategories/{semester}/{courseCode}/sum
 
     @GetMapping("{semester}/{courseCode}/{categoryId}")
-    public ResponseEntity<List<Grade>> getGradesByCategory(@PathVariable String semester,
+    public ResponseEntity<GradeCategory> getGradesByCategory(@PathVariable String semester,
                                                            @PathVariable String courseCode,
-                                                           @PathVariable Integer categoryId,
+                                                           @PathVariable String categoryId,
                                                            HttpSession session)
     {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
@@ -92,8 +91,9 @@ public class GradeCategoryResource {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        return ResponseEntity.ok(gradeRepo.getGradesByCategory(semester, courseCode, categoryId));
+        return ResponseEntity.ok(gradeCategoryRepo.getGradeCategory(semester, courseCode, categoryId));
     }
+
 
     @PutMapping("{semester}/{course_code}/{categoryId}")
     public ResponseEntity<String> updateGradeCategory(@PathVariable String semester,

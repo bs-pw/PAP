@@ -71,8 +71,8 @@ const ClassesInGroupForm = () => {
             setFormData(data)
             console.log(formData)
         } catch (error) {
-            // navigate('..');
-            setMessage('Błąd podczas pobierania danych');
+            navigate('..');
+            // setMessage('Błąd podczas pobierania danych');
         }
     };
 
