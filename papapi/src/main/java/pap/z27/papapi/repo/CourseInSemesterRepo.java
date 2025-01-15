@@ -37,6 +37,8 @@ public class CourseInSemesterRepo {
         return jdbcClient.sql("SELECT cis.* from COURSES_IN_SEMESTER cis join LECTURERS c on cis.semester =c.semester and cis.course_code=c.course_code where c.user_id=? and cis.semester=? UNION SELECT cis.* from COURSES_IN_SEMESTER cis join COORDINATORS c on cis.semester =c.semester and cis.course_code=c.course_code where c.user_id=? and cis.semester=?")
                 .param(userId)
                 .param(semester)
+                .param(userId)
+                .param(semester)
                 .query(CourseInSemester.class)
                 .list();
     }
