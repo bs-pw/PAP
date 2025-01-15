@@ -1094,43 +1094,41 @@ class Client {
             }
         })
     }
-    // async updateGrade(semester, course_code, categoryId, data) {
-    //     return fetch(`${this.baseUrl}/gradecategories/${semester}/${course_code}/${categoryId}`, {
-    //         method: 'PUT',
-    //         headers: this.headers,
-    //         credentials: this.credentials,
-    //         body: JSON.stringify(data)
-    //     }).then(response => {
-    //         if (response.ok) {
-    //             return true;
-    //         }
-    //         throw new Error(`Error updating grade category: ${response.statusText}`);
-    //     }).catch(error => {
-    //         throw new Error(error.message);
-    //     });
-    // }
-    // // async deleteGradeCategory(semester, course_code, categoryId) {
-    // //     return fetch(`${this.baseUrl}/gradecategories/${semester}/${course_code}/${categoryId}`,
-    // //         {
-    // //             method: 'DELETE',
-    // //             headers: this.headers,
-    // //             credentials: this.credentials
+    async updateGrade(semester, course_code, categoryId, userId, data) {
+        return fetch(`${this.baseUrl}/grades/${semester}/${course_code}/${categoryId}/${userId}`, {
+            method: 'PUT',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: JSON.stringify(data)
+        }).then(response => {
+            if (response.ok) {
+                return true;
+            }
+            throw new Error(`Error updating grade: ${response.statusText}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+    async deleteGrade(semester, course_code, categoryId, userId) {
+        return fetch(`${this.baseUrl}/grades/${semester}/${course_code}/${categoryId}/${userId}`,
+            {
+                method: 'DELETE',
+                headers: this.headers,
+                credentials: this.credentials
 
-    // //         }
-    // //     )
-    // //         .then(response => {
-    // //             if (response.ok) {
-    // //                 return true;
-    // //             } else {
-    // //                 throw new Error(`Error deleting grade categories: ${response.json().message}`);
-    // //             }
-    // //         })
-    // //         .catch(error => {
-    // //             throw new Error(error.message);
-    // //         });
-    // // }
-
-
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return true;
+                } else {
+                    throw new Error(`Error deleting grade: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
 
 
 }
