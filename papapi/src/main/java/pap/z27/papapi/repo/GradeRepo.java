@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.Grade;
+import pap.z27.papapi.domain.GradeCategory;
 
 import java.util.List;
 
@@ -82,6 +83,30 @@ public class GradeRepo {
                 .param(grade.getSemester())
                 .param(grade.getUser_id())
                 .update();
+//        (Integer categoryId, String course_code, String semester,
+//                GradeCategory gradeCategory) {
+//            StringBuilder query = new StringBuilder("UPDATE GRADE_CATEGORIES SET ");
+//            List<Object> params = new java.util.ArrayList<>();
+//            if (gradeCategory.getDescription() != null) {
+//                query.append("description=?, ");
+//                params.add(gradeCategory.getDescription());
+//            }
+//            if (gradeCategory.getMax_grade() != null) {
+//                query.append("max_grade=?, ");
+//                params.add(gradeCategory.getMax_grade());
+//            }
+//            if (params.isEmpty()) return 0;
+//            else {
+//                query.setLength(query.length() - 2);
+//                query.append(" WHERE category_id=? AND course_code=? AND semester=?");
+//                params.add(categoryId);
+//                params.add(course_code);
+//                params.add(semester);
+//                return jdbcClient.sql(query.toString())
+//                        .params(params)
+//                        .update();
+//            }
+//        }
     }
 
     public Integer removeGrade(Grade grade) {

@@ -129,11 +129,10 @@ public class GradeResource {
             return ResponseEntity.badRequest().body("{\"message\":\"Grade must be in [0, max grade].\"}");
         if(gradeRepo.insertGrade(grade)==0)
             return ResponseEntity.badRequest().body("{\"message\":\"Grade could not be inserted.\"}");
-
         return ResponseEntity.ok("{\"message\":\"Grade inserted\"}");
     }
 
-    @PutMapping
+    @PutMapping()
     public ResponseEntity<String> updateGrade(@RequestBody Grade grade, HttpSession session) {
         String status = canUserUpdateGrade(grade, session);
         if (!status.equals("ok")) {
