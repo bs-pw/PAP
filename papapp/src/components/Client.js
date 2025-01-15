@@ -849,7 +849,7 @@ class Client {
             throw new Error(error.message);
         });
     }
-    async getCoursesInSemesterByLecturers(semesterId, userId) {
+    async getCoursesInSemesterByLecturerAndCoordinator(semesterId, userId) {
         return fetch(`${this.baseUrl}/courseinsemester/bylecturer/${semesterId}/${userId}`, {
             method: 'GET',
             headers: this.headers,
