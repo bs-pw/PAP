@@ -1,12 +1,10 @@
 package pap.z27.papapi.repo;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
-import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.Grade;
-import pap.z27.papapi.domain.GradeCategory;
+import pap.z27.papapi.domain.subclasses.GradeDTO;
 
 import java.util.List;
 
@@ -17,48 +15,55 @@ public class GradeRepo {
     public GradeRepo(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
-    public List<Grade> findAllGradesOfCourse(String courseCode, String semester) {
-        return jdbcClient.sql("SELECT * FROM GRADES WHERE course_code=? and semester=?")
-                .param(courseCode)
-                .param(semester)
-                .query(Grade.class)
-                .list();
-    }
 
-    public List<Grade> getGroupGradesInSemester(String courseCode, String semester, Integer groupNumber)
+    public List<GradeDTO> findGroupsGradesInSemester(String semester, String courseCode, Integer groupNr)
     {
-        return jdbcClient.sql("SELECT g.category_id, g.course_code, g.semester, g.user_id, g.who_inserted_id, " +
-                "g.grade, g.\"date\", g.description " +
-                "FROM GRADES g JOIN STUDENTS_IN_GROUPS sig ON g.user_id = sig.user_id AND g.course_code = sig.course_code AND g.semester = sig.semester " +
+        return jdbcClient.sql("SELECT g.CATEGORY_ID, gd.DESCRIPTION category_description, g.COURSE_CODE, g.SEMESTER, " +
+                        "g.USER_ID, u.NAME user_name,u.SURNAME user_surname, g.WHO_INSERTED_ID, w.NAME who_inserted_name," +
+                                "w.SURNAME who_inserted_surname, g.GRADE, g.\"date\" FROM GRADES g join GRADE_CATEGORIES gd on g.CATEGORY_ID=gd.CATEGORY_ID" +
+                                " and g.SEMESTER=gd.SEMESTER and g.COURSE_CODE=gd.COURSE_CODE join USERS u on g.USER_ID=u.USER_ID join USERS w " +
+                                "on g.WHO_INSERTED_ID=w.USER_ID JOIN STUDENTS_IN_GROUPS sig ON g.user_id = sig.user_id AND g.course_code = sig.course_code AND g.semester = sig.semester " +
                 "WHERE g.course_code = ? AND g.semester = ? AND sig.group_number = ?")
-                .param(courseCode)
                 .param(semester)
-                .param(groupNumber)
-                .query(Grade.class)
+                .param(courseCode)
+                .param(groupNr)
+                .query(GradeDTO.class)
                 .list();
     }
 
-    public List<Grade> getGradesByCategory(String semester, String courseCode, Integer categoryId) {
-        return jdbcClient.sql("SELECT * FROM GRADES WHERE SEMESTER = ? AND COURSE_CODE = ? AND CATEGORY_ID = ?")
+    public List<GradeDTO> findGradesByCategory(String semester, String courseCode, Integer categoryId) {
+        return jdbcClient.sql("SELECT g.CATEGORY_ID, gd.DESCRIPTION category_description, g.COURSE_CODE, g.SEMESTER, " +
+                        "g.USER_ID, u.NAME user_name,u.SURNAME user_surname, g.WHO_INSERTED_ID, w.NAME who_inserted_name," +
+                                "w.SURNAME who_inserted_surname, g.GRADE, g.\"date\" FROM GRADES g join GRADE_CATEGORIES gd on g.CATEGORY_ID=gd.CATEGORY_ID" +
+                                " and g.SEMESTER=gd.SEMESTER and g.COURSE_CODE=gd.COURSE_CODE join USERS u on g.USER_ID=u.USER_ID join USERS w " +
+                                "on g.WHO_INSERTED_ID=w.USER_ID WHERE g.SEMESTER = ? AND g.COURSE_CODE = ? AND g.CATEGORY_ID = ?")
                 .param(semester)
                 .param(courseCode)
                 .param(categoryId)
-                .query(Grade.class)
+                .query(GradeDTO.class)
                 .list();
     }
 
-    public List<Grade> findAllGradesOfCourseForUser(String courseCode, String semester, Integer userID) {
-        return jdbcClient.sql("SELECT * FROM GRADES WHERE course_code=? and semester=? and user_id=?" )
-                .param(courseCode)
+    public List<GradeDTO> findGradesOfCourseForUser(String semester, String courseCode, Integer userID) {
+        return jdbcClient.sql("SELECT g.CATEGORY_ID, gd.DESCRIPTION category_description, g.COURSE_CODE, g.SEMESTER, " +
+                "g.USER_ID, u.NAME user_name,u.SURNAME user_surname, g.WHO_INSERTED_ID, w.NAME who_inserted_name," +
+                        "w.SURNAME who_inserted_surname, g.GRADE, g.\"date\" FROM GRADES g join GRADE_CATEGORIES gd on g.CATEGORY_ID=gd.CATEGORY_ID" +
+                        " and g.SEMESTER=gd.SEMESTER and g.COURSE_CODE=gd.COURSE_CODE join USERS u on g.USER_ID=u.USER_ID join USERS w " +
+                        "on g.WHO_INSERTED_ID=w.USER_ID WHERE g.SEMESTER=? and g.COURSE_CODE=? and g.USER_ID=?")
                 .param(semester)
+                .param(courseCode)
                 .param(userID)
-                .query(Grade.class)
+                .query(GradeDTO.class)
                 .list();
     }
-    public List<Grade> getAllUserGrades(Integer userID) {
-        return jdbcClient.sql("SELECT * FROM GRADES WHERE USER_ID=?")
+    public List<GradeDTO> getUserGrades(Integer userID) {
+        return jdbcClient.sql("SELECT g.CATEGORY_ID, gd.DESCRIPTION category_description, g.COURSE_CODE, g.SEMESTER, " +
+                        "g.USER_ID, u.NAME user_name,u.SURNAME user_surname, g.WHO_INSERTED_ID, w.NAME who_inserted_name," +
+                        "w.SURNAME who_inserted_surname, g.GRADE, g.\"date\" FROM GRADES g join GRADE_CATEGORIES gd on g.CATEGORY_ID=gd.CATEGORY_ID" +
+                        " and g.SEMESTER=gd.SEMESTER and g.COURSE_CODE=gd.COURSE_CODE join USERS u on g.USER_ID=u.USER_ID join USERS w " +
+                        "on g.WHO_INSERTED_ID=w.USER_ID WHERE g.USER_ID=?")
                 .param(userID)
-                .query(Grade.class)
+                .query(GradeDTO.class)
                 .list();
     }
     public Integer insertGrade(Grade grade) {
