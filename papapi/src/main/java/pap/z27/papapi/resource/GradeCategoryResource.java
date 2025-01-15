@@ -15,7 +15,7 @@ import pap.z27.papapi.repo.UserRepo;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/gradecategory")
+@RequestMapping("/api/gradecategories")
 public class GradeCategoryResource {
     public final GradeCategoryRepo gradeCategoryRepo;
     public final UserRepo userRepo;
@@ -51,10 +51,10 @@ public class GradeCategoryResource {
         return ResponseEntity.ok("{\"message\":\"grade category inserted\"}");
     }
 
-    @GetMapping
+    @GetMapping("{semester}/{courseCode}")
     public ResponseEntity<List<GradeCategory>> findCategoryByCourse(
-            @RequestParam String courseCode,
-            @RequestParam String semester,
+            @PathVariable String semester,
+            @PathVariable String courseCode,
             HttpSession session
     ) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");

@@ -850,6 +850,36 @@ class Client {
         });
     }
 
+    async getGradeCategoriesInCourse(semester, coursesCode) {
+        return fetch(`${this.baseUrl}/gradecategories/${semester}/${coursesCode}`, {
+            method: 'GET',
+            headers: this.headers,
+            credentials: this.credentials,
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error(`Error fetching grade categories: ${response.json().message}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+    async insertGradeCategory(data) {
+        return fetch(`${this.baseUrl}/gradecategories`, {
+            method: 'POST',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: JSON.stringify(data),
+        }).then(response => {
+            if (response.ok) {
+                return true;
+            } else {
+                throw new Error(`Error inserting grade categories: ${response.json().message}`);
+
+            }
+        })
+    }
+
 }
 
 
