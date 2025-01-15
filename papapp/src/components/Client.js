@@ -1063,7 +1063,7 @@ class Client {
                 throw new Error(error.message);
             });
     }
-    async findAllGradesOfCourseForUser(semesters, courseCode, userId) {
+    async getAllGradesOfCourseForUser(semesters, courseCode, userId) {
         return fetch(`${this.baseUrl}/grades/${semesters}/${courseCode}/${userId}/user`, {
             method: 'GET',
             headers: this.headers,
