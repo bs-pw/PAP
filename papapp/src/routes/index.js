@@ -32,6 +32,7 @@ import GradeCategoriesForm from "../pages/admin/semester/courses/gradeCategories
 import LecurerSemesterPage from "../pages/lecturer/LecurerSemesterPage";
 import LecturerCoursePage from "../pages/lecturer/LecturerCoursePage";
 import LecturerGradeMenuPage from "../pages/lecturer/LecturerGradeMenuPage";
+import LecturerGradePage from "../pages/lecturer/grades/LecturerGradePage";
 
 //import useAuthStatus from './useAuthStatus';
 
@@ -115,8 +116,21 @@ export const router = createBrowserRouter([
                                     },
                                     {
                                         path: ":courseId",
-                                        element: <LecturerGradeMenuPage />
-                                    }
+                                        children: [
+                                            {
+                                                index: true,
+                                                element: <LecturerGradeMenuPage />,
+                                            },
+                                            {
+                                                path: "grade-by-student",
+                                                element: <LecturerGradePage type="student" />
+                                            },
+                                            {
+                                                path: "grade-by-category",
+                                                element: <LecturerGradePage type="category" />
+                                            }
+                                        ]
+                                    },
                                 ]
                             }
                         ],
