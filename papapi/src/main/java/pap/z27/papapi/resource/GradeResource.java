@@ -108,7 +108,12 @@ public class GradeResource {
         }
         if (userRepo.checkIfStudentIsInCourse(userId,courseCode,semester)==0)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        if (!userTypeId.equals(0) && !thisUserId.equals(userId) && userRepo.checkIfIsCoordinator(userId,courseCode,semester)==0 && userRepo.checkIfIsLecturerOfCourse(userId,courseCode,semester)==0) {
+        System.out.println(!userTypeId.equals(0));
+        System.out.println(!thisUserId.equals(userId));
+        System.out.println(userRepo.checkIfIsCoordinator(userId,courseCode,semester));
+        System.out.println(userRepo.checkIfIsLecturerOfCourse(userId,courseCode,semester)==0);
+
+        if (!userTypeId.equals(0) && !thisUserId.equals(userId) && userRepo.checkIfIsCoordinator(thisUserId,courseCode,semester)==0 && userRepo.checkIfIsLecturerOfCourse(thisUserId,courseCode,semester)==0) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(gradeRepo.findGradesOfCourseForUser(semester,courseCode,userId));
