@@ -2,6 +2,8 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +16,7 @@ import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 import pap.z27.papapi.domain.User;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -80,10 +83,14 @@ public class UserResource {
                             user.getMail(),
                             user.getUser_type_id());
 
-
-        if(userRepo.insertUser(usr)==0)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Couldn't insert user! \"}");
-        return ResponseEntity.ok("{\"message\":\"ok\"}");
+        try{
+            if(userRepo.insertUser(usr)==0)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Couldn't insert user! \"}");
+            return ResponseEntity.ok("{\"message\":\"ok\"}");
+        }catch(DataAccessException e){
+//            System.out.println(e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @PutMapping(path = "{userId}")

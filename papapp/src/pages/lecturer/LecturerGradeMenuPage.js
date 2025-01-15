@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useClient } from '../../components/ClientContext';
 
@@ -11,12 +11,16 @@ const LecturerGradeMenuPage = () => {
 
     const amICoordinator = async () => {
         try {
-            const data = await client.checkIfIsCoord(semesterId, courseId, client.userId);
+            const data = await client.checkIfIsCoordinatorOfCourse(semesterId, courseId, client.userId);
             setAmICoo(data);
         } catch (error) {
             console.log('Error');
         }
     }
+
+    useEffect(() => {
+        amICoordinator();
+    }, [])
 
     return (
         <>

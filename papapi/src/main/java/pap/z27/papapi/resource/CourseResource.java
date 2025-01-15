@@ -3,6 +3,7 @@ package pap.z27.papapi.resource;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,12 @@ public class CourseResource {
 
     @GetMapping("/{courseCode}")
     public ResponseEntity<Course> getCourse(@PathVariable String courseCode) {
-        return ResponseEntity.ok(courseRepo.findCourse(courseCode));
+        try{
+            return ResponseEntity.ok(courseRepo.findCourse(courseCode));
+        }catch(DataAccessException e){
+            System.out.println(e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @PostMapping

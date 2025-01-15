@@ -24,7 +24,7 @@ public class CourseRepo {
         return jdbcClient.sql("SELECT * from COURSES where course_code=?")
                 .param(courseCode)
                 .query(Course.class)
-                .single();
+                .optional().orElse(null);
     }
     public Integer insertCourse(Course course) {
         return jdbcClient.sql("INSERT INTO COURSES (course_code, title) VALUES (?,?)")
