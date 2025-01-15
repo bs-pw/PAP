@@ -137,36 +137,46 @@ public class GradeResource {
         return ResponseEntity.ok("{\"message\":\"Grade inserted\"}");
     }
 
-    @PutMapping()
-    public ResponseEntity<String> updateGrade(@RequestBody Grade grade, HttpSession session) {
+    @PutMapping("{semester}/{courseCode}/{categoryId}/{userId}")
+    public ResponseEntity<String> updateGrade(
+            @PathVariable String semester,
+            @PathVariable String courseCode,
+            @PathVariable Integer categoryId,
+            @PathVariable Integer userId,
+            @RequestBody Grade grade,
+            HttpSession session) {
         String status = canUserUpdateGrade(grade, session);
         if (!status.equals("ok")) {
             return ResponseEntity.badRequest().body(status);
         }
-
         if(grade.getGrade()<0 && grade.getGrade()>gradeCategoryRepo.getGradeCategory(
                 grade.getSemester(), grade.getCourse_code(), grade.getCategory_id()
         ).getMax_grade())
             return ResponseEntity.badRequest().body("{\"message\":\"Grade must be in [0, max grade].\"}");
-        if(gradeRepo.updateGrade(grade)==0)
+        if(gradeRepo.updateGrade(semester,courseCode,categoryId,userId, grade)==0)
             return ResponseEntity.badRequest().body("{\"message\":\"Grade could not be changed.\"}");
 
         return ResponseEntity.ok("{\"message\":\"Grade changed\"}");
     }
 
-    @DeleteMapping
-    public ResponseEntity<String> removeGrade(@RequestBody Grade grade, HttpSession session) {
+    @DeleteMapping("{semester}/{courseCode}/{categoryId}/{userId}")
+    public ResponseEntity<String> removeGrade(
+            @PathVariable String semester,
+            @PathVariable String courseCode,
+            @PathVariable Integer categoryId,
+            @PathVariable Integer userId,
+            HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
+        Grade grade = new Grade(categoryId,courseCode,semester,userId,null,null,null,null);
         String status = canUserUpdateGrade(grade, session);
         if (!status.equals("ok")) {
             return ResponseEntity.badRequest().body(status);
         }
 
-        if(gradeRepo.removeGrade(grade)==0) {
+        if(gradeRepo.removeGrade(semester,courseCode,categoryId,userId)==0) {
             return ResponseEntity.badRequest().body("{\"message\":\"Grade could not be deleted\"}");
         }
         return ResponseEntity.ok("{\"message\":\"Grade deleted\"}");

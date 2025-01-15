@@ -1,6 +1,7 @@
 package pap.z27.papapi.repo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.CourseInSemester;
@@ -72,49 +73,44 @@ public class GradeRepo {
                 .param(grade.getDescription())
                 .update();
     }
-    public Integer updateGrade(Grade grade) {
-        return jdbcClient.sql("UPDATE GRADES set grade=?,\"date\"=?,description=?, who_inserted_id=? where category_id=? and course_code=? and semester=? and user_id=?")
-                .param(grade.getGrade())
-                .param(grade.getDate())
-                .param(grade.getDescription())
-                .param(grade.getWho_inserted_id())
-                .param(grade.getCategory_id())
-                .param(grade.getCourse_code())
-                .param(grade.getSemester())
-                .param(grade.getUser_id())
-                .update();
-//        (Integer categoryId, String course_code, String semester,
-//                GradeCategory gradeCategory) {
-//            StringBuilder query = new StringBuilder("UPDATE GRADE_CATEGORIES SET ");
-//            List<Object> params = new java.util.ArrayList<>();
-//            if (gradeCategory.getDescription() != null) {
-//                query.append("description=?, ");
-//                params.add(gradeCategory.getDescription());
-//            }
-//            if (gradeCategory.getMax_grade() != null) {
-//                query.append("max_grade=?, ");
-//                params.add(gradeCategory.getMax_grade());
-//            }
-//            if (params.isEmpty()) return 0;
-//            else {
-//                query.setLength(query.length() - 2);
-//                query.append(" WHERE category_id=? AND course_code=? AND semester=?");
-//                params.add(categoryId);
-//                params.add(course_code);
-//                params.add(semester);
-//                return jdbcClient.sql(query.toString())
-//                        .params(params)
-//                        .update();
-//            }
-//        }
+    public Integer updateGrade(String semester, String courseCode,Integer categoryId, Integer userId, Grade grade) {
+        StringBuilder query = new StringBuilder("UPDATE GRADES SET ");
+        List<Object> params = new java.util.ArrayList<>();
+        if (grade.getDescription() != null) {
+            query.append("description=?, ");
+            params.add(grade.getDescription());
+        }
+        if (grade.getGrade() != null) {
+            query.append("grade=?, ");
+            params.add(grade.getGrade());
+        }
+        if (grade.getDate() != null) {
+            query.append("date=?, ");
+            params.add(grade.getDate());
+        }
+        if (grade.getWho_inserted_id() != null) {
+            query.append("WHO_INSERTED_ID=?, ");
+            params.add(grade.getWho_inserted_id());
+        }
+        if (params.isEmpty()) return 0;
+        else {
+            query.setLength(query.length() - 2);
+            query.append(" WHERE category_id=? AND course_code=? AND semester=? AND user_id=?");
+            params.add(categoryId);
+            params.add(courseCode);
+            params.add(semester);
+            params.add(userId);
+            return jdbcClient.sql(query.toString())
+                    .params(params)
+                    .update();
+        }
     }
-
-    public Integer removeGrade(Grade grade) {
+    public Integer removeGrade(String semester, String courseCode,Integer categoryId, Integer userId) {
         return jdbcClient.sql("DELETE FROM GRADES WHERE USER_ID=? AND COURSE_CODE=? AND SEMESTER=? AND CATEGORY_ID=?")
-                .param(grade.getUser_id())
-                .param(grade.getCourse_code())
-                .param(grade.getSemester())
-                .param(grade.getCategory_id())
+                .param(userId)
+                .param(courseCode)
+                .param(semester)
+                .param(categoryId)
                 .update();
     }
 }
