@@ -11,8 +11,7 @@ const LecurerSemesterPage = () => {
 
     const getSemestersByLecturer = async () => {
         try {
-            const data = await client.getSemesterByLecturer(client.userId);
-            // const result = data.map(({ course_code }) => ({ course_code }));
+            const data = await client.getSemesterByCoordinatorAndLecturer(client.userId);
             getSemesters(data);
         } catch (error) {
             await setError('Błąd podczas ładowania danych: ' + error.message);
