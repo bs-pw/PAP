@@ -12,7 +12,7 @@ const LecturerCoursePage = () => {
 
     const getCoursesInSemester = async () => {
         try {
-            const data = await client.getCoursesInSemesterByCoordinator(semesterId, client.userId);
+            const data = await client.getCoursesInSemesterByLecturerAndCoordinator(semesterId, client.userId);
             const result = data.map(({ course_code }) => ({ course_code }));
             setCourseInSemester(result);
         } catch (error) {

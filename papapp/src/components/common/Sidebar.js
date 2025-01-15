@@ -19,7 +19,7 @@ const Sidebar = () => {
 
     const usersItems = [
         { link: '/', label: 'Strona główna' },
-        { link: '/lecturer', label: 'Wykładowcy' },
+        // { link: '/lecturer', label: 'Wykładowcy' },
         { link: '/settings', label: 'Ustawienia' },
     ];
 
@@ -33,7 +33,7 @@ const Sidebar = () => {
     const lecturerItem = [
         // { link: '/admin/users', label: 'Użytkownicy' },
         // { link: '/admin/courses', label: 'Kursy' },
-        { link: '/admin/semesters', label: 'Semestry' },
+        { link: '/admin/semesters', label: 'Koordynator' },
         // { link: '/admin/coursesinsemester/24Z', label: 'Kursy w semestrach' },
     ];
 
@@ -59,7 +59,7 @@ const Sidebar = () => {
 
                 {(client.userTypeId == 1 || client.userTypeId == 2) && (
                     <>
-                        <SidebarItem link="#" label='<i class="bi bi-gear"></i> Panel Administracyjny' />
+                        <SidebarItem link="/lecturer" label='<i class="bi bi-briefcase-fill"></i> Panel Wykładowcy' />
                         <ul className="nav flex-column mx-3">
                             {lecturerItem.map((item, index) => (
                                 <SidebarItem key={index} link={item.link} label={item.label} />
