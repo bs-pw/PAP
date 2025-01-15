@@ -46,6 +46,10 @@ public class CourseInSemesterResource {
         return courseRepo.findAllCoursesInSemesterByCoordinator(semester, userId);
     }
 
+    @GetMapping("/bylecturer/{semester}/{userId}")
+    public List<CourseInSemester> getCoursesInSemesterByLecturer(@PathVariable String semester, @PathVariable Integer userId) {
+        return courseRepo.findAllCoursesInSemesterByLecturer(semester, userId);
+    }
 
     @PostMapping
     public ResponseEntity<String> insertCourseInSemester(@RequestBody CourseInSemester course, HttpSession session)

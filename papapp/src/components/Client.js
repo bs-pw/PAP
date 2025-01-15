@@ -849,6 +849,20 @@ class Client {
             throw new Error(error.message);
         });
     }
+    async getCoursesInSemesterByLecturers(semesterId, userId) {
+        return fetch(`${this.baseUrl}/courseinsemester/bylecturer/${semesterId}/${userId}`, {
+            method: 'GET',
+            headers: this.headers,
+            credentials: this.credentials,
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error(`Error fetching courses in semester: ${response.json().message}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
 
     async getGradeCategoriesInCourse(semester, coursesCode) {
         return fetch(`${this.baseUrl}/gradecategories/${semester}/${coursesCode}`, {
@@ -931,6 +945,7 @@ class Client {
                 throw new Error(error.message);
             });
     }
+
 
 
 

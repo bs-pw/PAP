@@ -53,6 +53,29 @@ public class GradeResource {
        return "ok";
     }
 
+    @GetMapping("{semester}/{courseCode}/{categoryId}/category")
+    public ResponseEntity<List<Grade>> getGradesByCategory(@PathVariable String semester,
+                                                           @PathVariable String courseCode,
+                                                           @PathVariable Integer categoryId,
+                                                           HttpSession session)
+    {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if(groupRepo.isLecturerOfCourse(userId,semester,courseCode)==0 &&
+                !userTypeId.equals(0) &&
+                userRepo.checkIfIsCoordinator(userId,courseCode,semester)==0)
+        {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        return ResponseEntity.ok(gradeRepo.getGradesByCategory(semester, courseCode, categoryId));
+    }
+
+
     @GetMapping
     public ResponseEntity<List<Grade>> getUserGrades(HttpSession session) {
         Integer userId = (Integer) session.getAttribute("user_id");
@@ -146,7 +169,7 @@ public class GradeResource {
         return ResponseEntity.ok(gradeRepo.findAllGradesOfCourse(courseCode, semester));
     }
 
-    @GetMapping("{semester}/{courseCode}/{groupNumber}")
+    @GetMapping("{semester}/{courseCode}/{groupNumber}/groups")
     public ResponseEntity<List<Grade>> getGroupGradesInSemester(@PathVariable String courseCode,
                                                                 @PathVariable String semester,
                                                                 @PathVariable Integer groupNumber,
