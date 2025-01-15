@@ -2,6 +2,7 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +37,12 @@ public class UserTypeResource {
         if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert user types\"}\"");
         }
-        if(userTypeRepo.insertUserType(userType)==0)
-            return ResponseEntity.badRequest().body("{\"message\":\"Couldn't insert user type\"}\"");
+        try {
+            if(userTypeRepo.insertUserType(userType)==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Couldn't insert user type\"}\"");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't insert user type\"}\"");
+        }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 
@@ -51,8 +56,12 @@ public class UserTypeResource {
         if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can update user types\"}\"");
         }
-        if(userTypeRepo.updateUserType(userType)==0)
-            return ResponseEntity.badRequest().body("{\"message\":\"Couldn't update user type\"}\"");
+        try {
+            if(userTypeRepo.updateUserType(userType)==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Couldn't update user type\"}\"");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't update user type\"}\"");
+        }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
     @DeleteMapping
@@ -66,8 +75,12 @@ public class UserTypeResource {
         if (thisUserTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can remove user types\"}\"");
         }
-        if(userTypeRepo.removeUserType(userTypeId)==0)
-            return ResponseEntity.badRequest().body("{\"message\":\"Couldn't remove user type\"}\"");
+        try {
+            if(userTypeRepo.removeUserType(userTypeId)==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Couldn't remove user type\"}\"");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't remove user type\"}\"");
+        }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 }

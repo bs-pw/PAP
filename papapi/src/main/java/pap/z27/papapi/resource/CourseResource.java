@@ -2,6 +2,7 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import pap.z27.papapi.repo.CourseRepo;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping(path = "api/course")
@@ -35,8 +37,8 @@ public class CourseResource {
         try{
             return ResponseEntity.ok(courseRepo.findCourse(courseCode));
         }catch(DataAccessException e){
-            System.out.println(e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            log.error("e: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -51,9 +53,9 @@ public class CourseResource {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert courses\"}");
         }
         try {
-            courseRepo.insertCourse(course);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("{\"message\":\"cannot insert course\"}");
+            if(courseRepo.insertCourse(course)==0) return ResponseEntity.badRequest().body("{\"message\":\"cannot insert course\"}");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"cannot insert course\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
@@ -69,8 +71,12 @@ public class CourseResource {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can update courses\"}");
         }
         course.setCourse_code(courseCode);
-        if(courseRepo.updateCourse(course)==0)
-            return ResponseEntity.badRequest().body("{\"message\":\"cannot update course\"}");
+        try {
+            if(courseRepo.updateCourse(course)==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"cannot update course\"}");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"cannot update course\"}");
+        }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 

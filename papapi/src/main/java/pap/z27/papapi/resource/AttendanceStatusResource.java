@@ -2,6 +2,7 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.AttendanceStatus;
@@ -26,8 +27,12 @@ public class AttendanceStatusResource {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         if (userTypeId != 0)
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert attendance statuses\"}");
-        if (attendanceStatusRepo.insertAttendanceStatus(attendanceStatus) == 0)
-            return ResponseEntity.badRequest().body("{\"message\":\"couldn't insert attendance status\"}");
+        try {
+            if (attendanceStatusRepo.insertAttendanceStatus(attendanceStatus) == 0)
+                return ResponseEntity.badRequest().body("{\"message\":\"couldn't insert attendance status\"}");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"couldn't insert attendance status\"}");
+        }
         return ResponseEntity.ok("{\"message\":\"inserted attendance status\"}");
     }
 
@@ -36,8 +41,12 @@ public class AttendanceStatusResource {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         if (userTypeId != 0)
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can delete attendance statuses\"}");
-        if (attendanceStatusRepo.removeAttendanceStatus(statusId)==0)
-            return ResponseEntity.badRequest().body("{\"message\":\"couldn't delete attendance status\"}");
+        try {
+            if (attendanceStatusRepo.removeAttendanceStatus(statusId)==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"couldn't delete attendance status\"}");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"couldn't delete attendance status\"}");
+        }
         return ResponseEntity.ok("{\"message\":\"deleted attendance status\"}");
     }
 
@@ -48,8 +57,12 @@ public class AttendanceStatusResource {
         if (userTypeId != 0)
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can update attendance statuses\"}");
 
-        if (attendanceStatusRepo.updateAttendanceStatus(attendanceStatus)==0)
-            return ResponseEntity.badRequest().body("{\"message\":\"couldn't update attendance status\"}");
+        try {
+            if (attendanceStatusRepo.updateAttendanceStatus(attendanceStatus)==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"couldn't update attendance status\"}");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"couldn't update attendance status\"}");
+        }
         return ResponseEntity.ok("{\"message\":\"updated attendance status\"}");
     }
 

@@ -2,6 +2,7 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +54,7 @@ public class FinalGradeResource {
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if (userTypeId != 0 && userRepo.checkIfIsCoordinator(userId,courseCode,semester)==0) {
+        if (userTypeId != 0 && userRepo.checkIfIsCoordinator(userId,courseCode,semester)==null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(userRepo.findAllEligibleUsersToCourse(new CourseInSemester(courseCode,semester)));
@@ -95,7 +96,7 @@ public class FinalGradeResource {
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
         if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
                 courseCode,
-                semester)==0)) {
+                semester)==null)) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(finalGradeRepo.findAllFinalGradesInCourse(courseCode, semester));
@@ -113,14 +114,18 @@ public class FinalGradeResource {
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
         if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
                 finalGrade.getCourse_code(),
-                finalGrade.getSemester())==0)) {
+                finalGrade.getSemester())==null)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admins/coordinators can add students to courses\"}");
         }
-        if(userRepo.checkIfIsLecturerOfCourse(finalGrade.getUser_id(),finalGrade.getCourse_code(),finalGrade.getSemester())!=0)
+        if(userRepo.checkIfIsLecturerOfCourse(finalGrade.getUser_id(),finalGrade.getCourse_code(),finalGrade.getSemester())!=null)
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"User is already lecturer of this course!\"}");
-        if(finalGradeRepo.insertFinalGrade(finalGrade)==0)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("{\"message\":\"Cannot insert final grade\"}");
+        try {
+            if(finalGradeRepo.insertFinalGrade(finalGrade)==0)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("{\"message\":\"Cannot insert final grade\"}");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Cannot insert final grade\"}");
+        }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 
@@ -136,13 +141,17 @@ public class FinalGradeResource {
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
         if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
                 finalGrade.getCourse_code(),
-                finalGrade.getSemester())==0)) {
+                finalGrade.getSemester())==null)) {
             return ResponseEntity.badRequest().body("{\"message\":\"Only admins/coordinators can remove students from courses\"}");
         }
 
-        if (finalGradeRepo.removeFinalGrade(finalGrade) == 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("{\"message\":\"Final grade not found\"}");
+        try {
+            if (finalGradeRepo.removeFinalGrade(finalGrade) == 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("{\"message\":\"Final grade not found\"}");
+            }
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
 
@@ -159,12 +168,16 @@ public class FinalGradeResource {
         }
         if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(userId,
                 finalGrade.getCourse_code(),
-                finalGrade.getSemester())==0)) {
+                finalGrade.getSemester())==null)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admins/coordinators can change final grades \"}");
         }
-        if (finalGradeRepo.updateFinalGrade(finalGrade) == 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("{\"message\":\"Couldn't update final grade\"}");
+        try {
+            if (finalGradeRepo.updateFinalGrade(finalGrade) == 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("{\"message\":\"Couldn't update final grade\"}");
+            }
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't update final grade\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

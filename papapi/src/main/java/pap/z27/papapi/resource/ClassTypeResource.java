@@ -2,6 +2,7 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,8 +38,12 @@ public class ClassTypeResource {
         if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert class types\"}\"");
         }
-        if(classTypeRepo.insertClassType(classType)==0)
-            return ResponseEntity.badRequest().body("{\"message\":\"Couldn't insert class type\"}\"");
+        try {
+            if(classTypeRepo.insertClassType(classType)==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Couldn't insert class type\"}\"");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't insert class type\"}\"");
+        }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 
@@ -69,8 +74,12 @@ public class ClassTypeResource {
         if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can remove class types\"}\"");
         }
-        if(classTypeRepo.removeClassType(classTypeId)==0)
-            return ResponseEntity.badRequest().body("{\"message\":\"Couldn't remove class type\"}\"");
+        try {
+            if(classTypeRepo.removeClassType(classTypeId)==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Couldn't remove class type\"}\"");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't remove class type\"}\"");
+        }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 }
