@@ -29,6 +29,8 @@ import ClassesInGroupForm from "../pages/admin/semester/courses/groups/classes/C
 import ClassesInGroupPage from "../pages/admin/semester/courses/groups/classes/ClassesInGroupPage";
 import GradeCategoriesPage from "../pages/admin/semester/courses/gradeCategories/GradeCategoriesPage";
 import GradeCategoriesForm from "../pages/admin/semester/courses/gradeCategories/GradeCategoriesForm";
+import LecurerSemesterPage from "../pages/lecturer/LecurerSemesterPage";
+import LecturerCoursePage from "../pages/lecturer/LecturerCoursePage";
 
 //import useAuthStatus from './useAuthStatus';
 
@@ -101,8 +103,12 @@ export const router = createBrowserRouter([
                         children: [
                             {
                                 index: true,
-                                element: <LecturerPage />,
+                                element: <LecurerSemesterPage />
                             },
+                            {
+                                path: ":semesterId",
+                                element: <LecturerCoursePage />
+                            }
                         ],
                     },
                     {
