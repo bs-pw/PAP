@@ -1028,6 +1028,39 @@ class Client {
             });
     }
 
+    async getGradesByCategory(semesters, courseCode, categoryId) {
+        return fetch(`${this.baseUrl}/grades/${semesters}/${courseCode}/${categoryId}/category`, {
+            method: 'GET',
+            headers: this.headers,
+            credentials: this.credentials
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error(`Error getting grades: ${response.json().message}`);
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
+    async findAllGradesOfCourseForUser(semesters, courseCode, userId) {
+        return fetch(`${this.baseUrl}/grades/${semesters}/${courseCode}/${userId}/user`, {
+            method: 'GET',
+            headers: this.headers,
+            credentials: this.credentials
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error(`Error getting grades: ${response.json().message}`);
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
+
 
 
 

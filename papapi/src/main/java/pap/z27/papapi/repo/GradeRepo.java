@@ -45,10 +45,10 @@ public class GradeRepo {
                 .list();
     }
 
-    public List<Grade> findAllGradesOfCourseForUser(CourseInSemester courseInSemester, Integer userID) {
+    public List<Grade> findAllGradesOfCourseForUser(String courseCode, String semester, Integer userID) {
         return jdbcClient.sql("SELECT * FROM GRADES WHERE course_code=? and semester=? and user_id=?" )
-                .param(courseInSemester.getCourse_code())
-                .param(courseInSemester.getSemester())
+                .param(courseCode)
+                .param(semester)
                 .param(userID)
                 .query(Grade.class)
                 .list();

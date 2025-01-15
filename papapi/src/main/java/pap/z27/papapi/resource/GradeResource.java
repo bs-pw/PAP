@@ -94,18 +94,23 @@ public class GradeResource {
         return ResponseEntity.ok(gradeRepo.getAllUserGrades(userId));
     }
 
-    @GetMapping(path = "{userId}")
-    public ResponseEntity<List<Grade>> getAllGrades(@PathVariable Integer userId, HttpSession session){
+    @GetMapping("{semester}/{courseCode}/{userId}/user")
+    public ResponseEntity<List<Grade>> findAllGradesOfCourseForUser(
+            @PathVariable String semester,
+            @PathVariable String courseCode,
+            @PathVariable Integer userId,
+            HttpSession session){
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         Integer thisUserId = (Integer) session.getAttribute("user_id");
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if (userTypeId.equals(3) && !thisUserId.equals(userId)) {
+        if (userRepo.checkIfStudentIsInCourse(userId,courseCode,semester)==0)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        if (!userTypeId.equals(0) && !thisUserId.equals(userId) && userRepo.checkIfIsCoordinator(userId,courseCode,semester)==0 && userRepo.checkIfIsLecturerOfCourse(userId,courseCode,semester)==0) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-
-        return ResponseEntity.ok(gradeRepo.getAllUserGrades(userId));
+        return ResponseEntity.ok(gradeRepo.findAllGradesOfCourseForUser(courseCode,semester,userId));
     }
 
     @PostMapping
