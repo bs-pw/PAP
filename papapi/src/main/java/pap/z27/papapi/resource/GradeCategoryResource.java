@@ -73,24 +73,15 @@ public class GradeCategoryResource {
     //TODO: funkcja zwracająca sumę możliwych do uzyskania punktów z przedmiotu w danym semestrze. zapytanie typu /api/gradecategories/{semester}/{courseCode}/sum
 
     @GetMapping("{semester}/{courseCode}/{categoryId}")
-    public ResponseEntity<GradeCategory> getGradesByCategory(@PathVariable String semester,
+    public ResponseEntity<GradeCategory> getGradeCategory(@PathVariable String semester,
                                                            @PathVariable String courseCode,
                                                            @PathVariable String categoryId,
                                                            HttpSession session)
     {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
-        Integer userId = (Integer) session.getAttribute("user_id");
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
-        if(groupRepo.isLecturerOfCourse(userId,semester,courseCode)==0 &&
-                !userTypeId.equals(0) &&
-                userRepo.checkIfIsCoordinator(userId,courseCode,semester)==0)
-        {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
         return ResponseEntity.ok(gradeCategoryRepo.getGradeCategory(semester, courseCode, categoryId));
     }
 
