@@ -124,7 +124,8 @@ alter table final_grades
                                                 semester );
 
 create table grade_categories (
-   category_id number(6) not null,
+   category_id number(6)
+      generated always as identity ( start with 1 increment by 1 ),
    course_code varchar2(5 char) not null,
    semester    varchar2(4 char) not null,
    description varchar2(128 char),

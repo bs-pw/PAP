@@ -38,11 +38,11 @@ public class AttendanceRepo {
                 .list();
     }
 
-    public List<AttendanceDTO> findAllAttendancesInGroup(String courseCode, String semester, Integer gorupNr) {
+    public List<AttendanceDTO> findAllAttendancesInGroup(String courseCode, String semester, Integer groupNr) {
         return jdbcClient.sql("SELECT a.user_id,a.course_code,a.semester,a.group_number,a.class_id_for_group,a.\"date\",ats.status, a.who_inserted_id from ATTENDANCES a inner join ATTENDANCE_STATUSES ats on a.attendance_status_id=ats.attendance_status_id WHERE a.course_code=? and a.semester=? and a.group_number=?")
                 .param(courseCode)
                 .param(semester)
-                .param(gorupNr)
+                .param(groupNr)
                 .query(AttendanceDTO.class)
                 .list();
     }
