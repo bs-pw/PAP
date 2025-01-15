@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.CourseInSemester;
+import pap.z27.papapi.domain.subclasses.UserAndFinalGrade;
+import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 
 import java.util.List;
 @Repository
@@ -53,6 +55,13 @@ public class CourseInSemesterRepo {
                 .param(userID)
                 .param(semester)
                 .query(CourseInSemester.class)
+                .list();
+    }
+    public List<UserPublicInfo> findAllUsersInCourse(String courseCode, String semester) {
+        return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.mail FROM USERS u join FINAL_GRADES fg on u.user_id=fg.user_id join USER_TYPES ut on u.user_type_id = ut.user_type_id where fg.course_code=? and fg.semester=?")
+                .param(courseCode)
+                .params(semester)
+                .query(UserPublicInfo.class)
                 .list();
     }
     public Integer insertCourseInSemester(CourseInSemester courseInSemester) {

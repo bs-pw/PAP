@@ -10,6 +10,8 @@ import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.Group;
 import pap.z27.papapi.domain.MyClass;
 import pap.z27.papapi.domain.Semester;
+import pap.z27.papapi.domain.subclasses.UserAndFinalGrade;
+import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 import pap.z27.papapi.repo.CourseInSemesterRepo;
 import pap.z27.papapi.repo.UserRepo;
 
@@ -21,11 +23,13 @@ import java.util.List;
 public class CourseInSemesterResource {
     private final CourseInSemesterRepo courseRepo;
     private final UserRepo userRepo;
+    private final CourseInSemesterRepo courseInSemesterRepo;
 
     @Autowired
-    public CourseInSemesterResource(CourseInSemesterRepo courseRepo, UserRepo userRepo) {
+    public CourseInSemesterResource(CourseInSemesterRepo courseRepo, UserRepo userRepo, CourseInSemesterRepo courseInSemesterRepo) {
         this.courseRepo = courseRepo;
         this.userRepo = userRepo;
+        this.courseInSemesterRepo = courseInSemesterRepo;
     }
     @GetMapping
     public List<CourseInSemester> getCoursesInSemester() {
@@ -50,7 +54,24 @@ public class CourseInSemesterResource {
     public List<CourseInSemester> getCoursesInSemesterByLecturerAndCoordinator(@PathVariable String semester, @PathVariable Integer userId) {
         return courseRepo.findAllCoursesInSemesterByLecturerAndCoordinator(semester, userId);
     }
+    @GetMapping("{semester}/{courseCode}")
+    public ResponseEntity<List<UserPublicInfo>> getUsersInCourse(@PathVariable("courseCode") String courseCode,
+                                                                       @PathVariable("semester") String semester,
+                                                                       HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
+        Integer coordinatorId = (Integer) session.getAttribute("user_id");
+        if (userTypeId != 0 && userRepo.checkIfIsCoordinator(coordinatorId,
+                courseCode, semester)==0 &&
+                userRepo.checkIfIsLecturerOfCourse(coordinatorId, courseCode, semester)==0
+                ) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(courseInSemesterRepo.findAllUsersInCourse(courseCode, semester));
+    }
     @PostMapping
     public ResponseEntity<String> insertCourseInSemester(@RequestBody CourseInSemester course, HttpSession session)
     {
