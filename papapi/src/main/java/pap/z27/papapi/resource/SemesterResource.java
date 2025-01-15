@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.ClassType;
 import pap.z27.papapi.domain.Semester;
+import pap.z27.papapi.domain.subclasses.SemesterCode;
 import pap.z27.papapi.repo.SemesterRepo;
 
 import java.util.List;
@@ -34,6 +35,23 @@ public class SemesterResource {
     {
         return semesterRepo.getSemester(semesterCode);
     }
+
+    @GetMapping("/bylecturer/{userId}")
+    public ResponseEntity<List<SemesterCode>> getSemesterByCoordinatorAndLecturer(@PathVariable Integer userId)
+    {
+        return ResponseEntity.ok(semesterRepo.getSemestersByCoordinatorAndLecturer(userId));
+    }
+    @GetMapping("/bycoordinator/{userId}")
+    public ResponseEntity<List<SemesterCode>> getSemesterByCoordinator(@PathVariable Integer userId)
+    {
+        return ResponseEntity.ok(semesterRepo.getSemestersByCoordinator(userId));
+    }
+    @GetMapping("/bystudent/{userId}")
+    public ResponseEntity<List<SemesterCode>> getSemesterByStudent(@PathVariable Integer userId)
+    {
+        return ResponseEntity.ok(semesterRepo.getSemestersByStudent(userId));
+    }
+
 
     @PostMapping
     public ResponseEntity<String> insertSemester (@RequestBody Semester semester, HttpSession session)

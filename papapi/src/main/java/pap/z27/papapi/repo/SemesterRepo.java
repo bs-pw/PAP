@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.Semester;
+import pap.z27.papapi.domain.subclasses.SemesterCode;
 
 import java.util.List;
 
@@ -25,6 +26,26 @@ public class SemesterRepo {
                 .param(semesterCode)
                 .query(Semester.class)
                 .single();
+    }
+
+    public List<SemesterCode> getSemestersByCoordinatorAndLecturer(Integer userId) {
+        return jdbcClient.sql("SELECT c.SEMESTER from COORDINATORS c  where user_id=? UNION SELECT s.SEMESTER from LECTURERS s  where user_id=?")
+                .param(userId)
+                .param(userId)
+                .query(SemesterCode.class)
+                .list();
+    }
+    public List<SemesterCode> getSemestersByCoordinator(Integer userId) {
+        return jdbcClient.sql("SELECT s.SEMESTER from COORDINATORS s  where user_id=?")
+                .param(userId)
+                .query(SemesterCode.class)
+                .list();
+    }
+    public List<SemesterCode> getSemestersByStudent(Integer userId) {
+        return jdbcClient.sql("SELECT s.SEMESTER from STUDENTS_IN_GROUPS s  where user_id=?")
+                .param(userId)
+                .query(SemesterCode.class)
+                .list();
     }
     public Integer insertSemester(Semester semester) {
         return jdbcClient.sql("INSERT INTO SEMESTERS (semester_code, start_date, end_date) VALUES (?,?,?)")

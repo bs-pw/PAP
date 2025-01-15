@@ -945,6 +945,55 @@ class Client {
                 throw new Error(error.message);
             });
     }
+    async getSemesterByCoordinatorAndLecturer(userId) {
+        return fetch(`${this.baseUrl}/semester/bylecturer/${userId}`, {
+            method: 'GET',
+            headers: this.headers,
+            credentials: this.credentials
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error(`Error getting semester: ${response.json().message}`);
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
+    async getSemesterByCoordinator(userId) {
+        return fetch(`${this.baseUrl}/semester/bycoordinator/${userId}`, {
+            method: 'GET',
+            headers: this.headers,
+            credentials: this.credentials
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error(`Error getting semester: ${response.json().message}`);
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+            
+    }
+    async getSemesterByStudent(userId) {
+        return fetch(`${this.baseUrl}/semester/bystudent/${userId}`, {
+            method: 'GET',
+            headers: this.headers,
+            credentials: this.credentials
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error(`Error getting semester: ${response.json().message}`);
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
 
 
 
