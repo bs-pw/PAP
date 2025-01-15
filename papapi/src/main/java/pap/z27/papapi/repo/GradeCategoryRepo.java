@@ -24,7 +24,7 @@ public class GradeCategoryRepo {
                 .list();
     }
 
-    public GradeCategory getGradeCategory(String semester, String courseCode, String gradeCategory) {
+    public GradeCategory getGradeCategory(String semester, String courseCode, Integer gradeCategory) {
         return jdbcClient.sql("SELECT * FROM GRADE_CATEGORIES WHERE SEMESTER=? and COURSE_CODE=? and CATEGORY_ID=?")
                 .param(semester)
                 .param(courseCode)

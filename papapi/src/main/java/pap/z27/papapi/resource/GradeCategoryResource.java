@@ -75,7 +75,7 @@ public class GradeCategoryResource {
     @GetMapping("{semester}/{courseCode}/{categoryId}")
     public ResponseEntity<GradeCategory> getGradeCategory(@PathVariable String semester,
                                                            @PathVariable String courseCode,
-                                                           @PathVariable String categoryId,
+                                                           @PathVariable Integer categoryId,
                                                            HttpSession session)
     {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");

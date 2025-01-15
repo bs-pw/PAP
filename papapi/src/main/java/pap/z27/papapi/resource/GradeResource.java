@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.FinalGrade;
 import pap.z27.papapi.domain.Grade;
+import pap.z27.papapi.repo.GradeCategoryRepo;
 import pap.z27.papapi.repo.GradeRepo;
 import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
@@ -21,12 +22,14 @@ public class GradeResource {
     public final GradeRepo gradeRepo;
     public final UserRepo userRepo;
     public final GroupRepo groupRepo;
+    private final GradeCategoryRepo gradeCategoryRepo;
 
     @Autowired
-    public GradeResource(GradeRepo gradeRepo, UserRepo userRepo, GroupRepo groupRepo) {
+    public GradeResource(GradeRepo gradeRepo, UserRepo userRepo, GroupRepo groupRepo, GradeCategoryRepo gradeCategoryRepo) {
         this.gradeRepo = gradeRepo;
         this.userRepo = userRepo;
         this.groupRepo = groupRepo;
+        this.gradeCategoryRepo = gradeCategoryRepo;
     }
 
     private String canUserUpdateGrade(Grade grade, HttpSession session) {
@@ -115,7 +118,10 @@ public class GradeResource {
         if (!status.equals("ok")) {
             return ResponseEntity.badRequest().body(status);
         }
-
+        if(grade.getGrade()<0 && grade.getGrade()>gradeCategoryRepo.getGradeCategory(
+                grade.getSemester(), grade.getCourse_code(), grade.getCategory_id()
+        ).getMax_grade())
+            return ResponseEntity.badRequest().body("{\"message\":\"Grade must be in [0, max grade].\"}");
         if(gradeRepo.insertGrade(grade)==0)
             return ResponseEntity.badRequest().body("{\"message\":\"Grade could not be inserted.\"}");
 
@@ -129,6 +135,10 @@ public class GradeResource {
             return ResponseEntity.badRequest().body(status);
         }
 
+        if(grade.getGrade()<0 && grade.getGrade()>gradeCategoryRepo.getGradeCategory(
+                grade.getSemester(), grade.getCourse_code(), grade.getCategory_id()
+        ).getMax_grade())
+            return ResponseEntity.badRequest().body("{\"message\":\"Grade must be in [0, max grade].\"}");
         if(gradeRepo.updateGrade(grade)==0)
             return ResponseEntity.badRequest().body("{\"message\":\"Grade could not be changed.\"}");
 

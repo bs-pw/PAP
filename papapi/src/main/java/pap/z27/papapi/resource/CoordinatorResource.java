@@ -28,8 +28,13 @@ public class CoordinatorResource {
 
 
     @GetMapping("{semester}/{courseCode}")
-    public List<UserPublicInfo> getCourseCoordinators(@PathVariable("courseCode") String courseCode, @PathVariable("semester") String semester) {
-       return userRepo.findAllCourseCoordinators(new CourseInSemester(courseCode,semester));
+    public ResponseEntity<List<UserPublicInfo>> getCourseCoordinators(@PathVariable("courseCode") String courseCode, @PathVariable("semester") String semester) {
+       return ResponseEntity.ok(userRepo.findAllCourseCoordinators(new CourseInSemester(courseCode,semester)));
+    }
+
+    @GetMapping("{semester}/{courseCode}/amicoordinator/{userId}")
+    public ResponseEntity<Boolean> checkIfIsCoordinatorOfCourse(@PathVariable("courseCode") String courseCode, @PathVariable("semester") String semester, @PathVariable("userId") Integer userId) {
+        return ResponseEntity.ok(userRepo.checkIfIsCoordinator(userId,courseCode,semester)!=0);
     }
 
     @GetMapping("{semester}/{courseCode}/available")
