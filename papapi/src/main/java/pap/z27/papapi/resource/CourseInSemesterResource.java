@@ -68,8 +68,8 @@ public class CourseInSemesterResource {
 
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
         if (userTypeId != 0 && userRepo.checkIfIsCoordinator(coordinatorId,
-                courseCode, semester)==null &&
-                userRepo.checkIfIsLecturerOfCourse(coordinatorId, courseCode, semester)==null
+                courseCode, semester)==0 &&
+                userRepo.checkIfIsLecturerOfCourse(coordinatorId, courseCode, semester)==0
                 ) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
