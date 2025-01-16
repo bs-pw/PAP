@@ -24,4 +24,5 @@ public class GradeDTO {
     private String who_inserted_surname;
     private Double grade;
     private Timestamp date;
+    private String description;
 }
