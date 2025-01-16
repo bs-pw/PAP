@@ -2,6 +2,7 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import pap.z27.papapi.repo.AttendanceRepo;
 import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 
 
@@ -71,7 +73,7 @@ public class AttendanceResource {
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if (userTypeId != 0 && groupRepo.isLecturerOfGroup(thisUserId,semester,courseCode,groupNr)==0) {
+        if (userTypeId != 0 && groupRepo.isLecturerOfGroup(thisUserId,semester,courseCode,groupNr)==null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(attendanceRepo.findAllAttendancesInGroup(courseCode,semester,groupNr));
@@ -100,7 +102,7 @@ public class AttendanceResource {
             if(groupRepo.isLecturerOfGroup(userId,
                     attendance.getSemester(),
                     attendance.getCourse_code(),
-                    attendance.getGroup_number()) == 0)
+                    attendance.getGroup_number()) == null)
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Lecturer does not lead the group\"}");
 
             if (attendance.getDate() == null) {
@@ -110,11 +112,16 @@ public class AttendanceResource {
             if(groupRepo.isStudentInGroup(attendance.getUser_id(),
                     attendance.getSemester(),
                     attendance.getCourse_code(),
-                    attendance.getGroup_number()) == 0)
+                    attendance.getGroup_number()) == null)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"No such student in the group\"}");
             attendance.setWho_inserted_id(userId);
-            if(attendanceRepo.insertAttendance(attendance)==0)
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\" Cannot insert attendances\"}");
+            try {
+                if(attendanceRepo.insertAttendance(attendance)==0)
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\" Cannot insert attendances\"}");
+            } catch (DataAccessException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"message\":\"Server error, cannot insert attendances\"}");
+            }
+
             return ResponseEntity.ok("{\"message\":\"ok\"}");
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only lecturers can insert attendances\"}");
@@ -129,16 +136,20 @@ public class AttendanceResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         if(userTypeId.equals(1)) {
-            if(groupRepo.isLecturerOfGroup(userId,attendance.getSemester(),attendance.getCourse_code(),attendance.getGroup_number()) == 0)
+            if(groupRepo.isLecturerOfGroup(userId,attendance.getSemester(),attendance.getCourse_code(),attendance.getGroup_number()) == null)
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Lecturer does not lead the group\"}");
             if(groupRepo.isStudentInGroup(attendance.getUser_id(),
                     attendance.getSemester(),
                     attendance.getCourse_code(),
-                    attendance.getGroup_number()) == 0)
+                    attendance.getGroup_number()) == null)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"No such student in the group\"}");
             attendance.setWho_inserted_id(userId);
-            if(attendanceRepo.updateAttendance(attendance)==0)
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\" Cannot update attendances\"}");
+            try {
+                if(attendanceRepo.updateAttendance(attendance)==0)
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\" Cannot update attendances\"}");
+            } catch (DataAccessException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"message\":\"Server error, cannot update attendances\"}");
+            }
             return ResponseEntity.ok("{\"message\":\"ok\"}");
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only lecturers can update attendances\"}");

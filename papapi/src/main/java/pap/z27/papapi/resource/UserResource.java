@@ -43,10 +43,17 @@ public class UserResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Integer userTypeId = userRepo.findUsersTypeId(userId);
+        if (userTypeId == null) {
+            return ResponseEntity.notFound().build();
+        }
         if(!thisUserTypeId.equals(0) && (userTypeId.equals(3) || userTypeId.equals(4)) && !thisUserId.equals(userId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.ok(userRepo.findUsersInfoByID(userId));
+        UserInfo response = userRepo.findUsersInfoByID(userId);
+        if (response == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/all")
@@ -89,7 +96,7 @@ public class UserResource {
             return ResponseEntity.ok("{\"message\":\"ok\"}");
         }catch(DataAccessException e){
 //            System.out.println(e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -105,7 +112,7 @@ public class UserResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        if (userRepo.countUserById(userId) == 0) {
+        if (userRepo.countUserById(userId) == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"ID not found!\"}");
         }
         if(user.getPassword()!=null)
@@ -123,8 +130,12 @@ public class UserResource {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admin and user himself can update his profile! \"}\"");
         }
         else {
-            if(userRepo.updateUsersPasswordOrMail(userId, user)==0)
-                return ResponseEntity.badRequest().body("{\"message\":\"Incorrect data! \"}\"");
+            try {
+                if(userRepo.updateUsersPasswordOrMail(userId, user)==0)
+                    return ResponseEntity.badRequest().body("{\"message\":\"Incorrect data! \"}\"");
+            } catch (DataAccessException e) {
+                return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't update user! \"}\"");
+            }
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
 
@@ -141,8 +152,12 @@ public class UserResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         if((Integer)session.getAttribute("user_type_id") == 0) {
-            if(userRepo.updateUsersType(userId, user_type_id)==0)
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad type id!\"}");
+            try {
+                if(userRepo.updateUsersType(userId, user_type_id)==0)
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad type id!\"}");
+            } catch (DataAccessException e) {
+                return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't update user type!\"}");
+            }
             return ResponseEntity.ok("{\"message\":\"ok\"}");
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"No Permission!\"}");
@@ -165,14 +180,18 @@ public class UserResource {
         if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"Only admin can remove users!\"}\"");
         }
-        if (userRepo.countUserById(userId) == 0) {
+        if (userRepo.countUserById(userId) == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"ID not found!\"}");
         }
         Integer thisUserId = (Integer)session.getAttribute("user_id");
         if(thisUserId.equals(userId))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Can't remove your own profile! \"}");
-        if(userRepo.removeUser(userId)==0)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Couldn't remove user! \"}");
+        try {
+            if(userRepo.removeUser(userId)==0)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Couldn't remove user! \"}");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't remove user! \"}");
+        }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 }

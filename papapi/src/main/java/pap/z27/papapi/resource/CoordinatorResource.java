@@ -2,6 +2,7 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class CoordinatorResource {
 
     @GetMapping("{semester}/{courseCode}/amicoordinator/{userId}")
     public ResponseEntity<Boolean> checkIfIsCoordinatorOfCourse(@PathVariable("courseCode") String courseCode, @PathVariable("semester") String semester, @PathVariable("userId") Integer userId) {
-        return ResponseEntity.ok(userRepo.checkIfIsCoordinator(userId,courseCode,semester)!=0);
+        return ResponseEntity.ok(userRepo.checkIfIsCoordinator(userId,courseCode,semester)!=null);
     }
 
     @GetMapping("{semester}/{courseCode}/available")
@@ -60,17 +61,24 @@ public class CoordinatorResource {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert coordinator\"}\"");
         }
         Integer userTypeId =userRepo.findUsersTypeId(coordinator.getUser_id());
+        if (userTypeId == null) {
+            return ResponseEntity.notFound().build();
+        }
         if (userTypeId!=1 && userTypeId!=2) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only teachers can be coordinators\"}");
         }
 
-        if (userRepo.checkIfStudentIsInCourse(coordinator.getUser_id(),coordinator.getCourse_code(),coordinator.getSemester())!=0)
+        if (userRepo.checkIfStudentIsInCourse(coordinator.getUser_id(),coordinator.getCourse_code(),coordinator.getSemester())!=null)
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("{\"message\":\"User is already a student in this course.\"}");
 
         CourseInSemester courseInSemester = new CourseInSemester(coordinator.getCourse_code(),coordinator.getSemester());
-        if (courseInSemesterRepo.insertCoordinator(coordinator.getUser_id(), courseInSemester) == 0) {
-            return ResponseEntity.badRequest().body("{\"message\":\"Couldn't add coordinator\"}");
+        try {
+            if (courseInSemesterRepo.insertCoordinator(coordinator.getUser_id(), courseInSemester) == 0) {
+                return ResponseEntity.badRequest().body("{\"message\":\"Couldn't add coordinator\"}");
+            }
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't add coordinator\"}");
         }
 
         return ResponseEntity.ok("{\"message\":\"ok\"}");
@@ -85,8 +93,12 @@ public class CoordinatorResource {
         if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"Only admins can delete coordinators\"}");
         }
-        if (courseInSemesterRepo.removeCoordinator(coordinatorId, new CourseInSemester(courseCode,semester)) == 0) {
-            return ResponseEntity.badRequest().body("{\"message\":\"Couldn't delete coordinator\"}");
+        try {
+            if (courseInSemesterRepo.removeCoordinator(coordinatorId, new CourseInSemester(courseCode,semester)) == 0) {
+                return ResponseEntity.badRequest().body("{\"message\":\"Couldn't delete coordinator\"}");
+            }
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't delete coordinator\"}");
         }
 
         return ResponseEntity.ok("{\"message\":\"ok\"}");

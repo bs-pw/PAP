@@ -17,7 +17,7 @@ public class AuthRepo {
             String passwordFromDB = jdbcClient.sql("SELECT password FROM USERS where mail=?")
                 .param(mail)
                 .query(Password.class)
-                .single()
+                .optional().orElse(null)
                 .getPassword();
             return passwordFromDB.equals(password.getPassword());
         }catch (Exception e){

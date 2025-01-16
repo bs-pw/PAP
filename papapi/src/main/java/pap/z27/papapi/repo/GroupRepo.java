@@ -200,7 +200,7 @@ public class GroupRepo {
                 .param(semester)
                 .param(course_code)
                 .query(Integer.class)
-                .single();
+                .optional().orElse(null);
     }
 
     public Integer removeLecturer(UserInGroup lecturer) {
@@ -219,7 +219,7 @@ public class GroupRepo {
                 .param(course_code)
                 .param(group_number)
                 .query(Integer.class)
-                .single();
+                .optional().orElse(null);
     }
     public Integer isLecturerOfGroup(Integer userId, String semester, String course_code, Integer group_number) {
         return jdbcClient.sql("SELECT count(*) from LECTURERS where USER_ID=? and SEMESTER=? and COURSE_CODE=? and GROUP_NUMBER=?")
@@ -228,7 +228,7 @@ public class GroupRepo {
                 .param(course_code)
                 .param(group_number)
                 .query(Integer.class)
-                .single();
+                .optional().orElse(null);
     }
     public Integer isLecturerOfCourse(Integer userId, String semester, String course_code) {
         return jdbcClient.sql("SELECT count(*) from LECTURERS where USER_ID=? and SEMESTER=? and COURSE_CODE=?")
@@ -236,7 +236,7 @@ public class GroupRepo {
                 .param(semester)
                 .param(course_code)
                 .query(Integer.class)
-                .single();
+                .optional().orElse(null);
     }
     public List<UserPublicInfo> findLecturersOfGroup(String courseCode, String semester, Integer groupNr){
         return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.mail FROM USERS u join LECTURERS sig ON u.user_id=sig.user_id join " +

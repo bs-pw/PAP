@@ -2,6 +2,7 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,12 +42,16 @@ public class GradeCategoryResource {
         Integer userId = (Integer) session.getAttribute("user_id");
         if(userTypeId != 0)
         {
-            if(userRepo.checkIfIsCoordinator(userId,gradeCategory.getCourse_code(),gradeCategory.getSemester())==0)
+            if(userRepo.checkIfIsCoordinator(userId,gradeCategory.getCourse_code(),gradeCategory.getSemester())==null)
                 return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can insert grade category \"}");
         }
-        if (gradeCategoryRepo.insertGradeCategory(gradeCategory) == 0)
-        {
-            return ResponseEntity.badRequest().body("{\"message\":\"Could not insert grade category\"}");
+        try {
+            if (gradeCategoryRepo.insertGradeCategory(gradeCategory) == 0)
+            {
+                return ResponseEntity.badRequest().body("{\"message\":\"Could not insert grade category\"}");
+            }
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Could not insert grade category\"}");
         }
         return ResponseEntity.ok("{\"message\":\"grade category inserted\"}");
     }
@@ -62,7 +67,7 @@ public class GradeCategoryResource {
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if(groupRepo.isLecturerOfCourse(userId,semester,courseCode)==0 && !userTypeId.equals(0) && userRepo.checkIfIsCoordinator(userId,courseCode,semester)==0)
+        if(groupRepo.isLecturerOfCourse(userId,semester,courseCode)==null && !userTypeId.equals(0) && userRepo.checkIfIsCoordinator(userId,courseCode,semester)==null)
         {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -82,7 +87,11 @@ public class GradeCategoryResource {
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.ok(gradeCategoryRepo.getGradeCategory(semester, courseCode, categoryId));
+        GradeCategory response = gradeCategoryRepo.getGradeCategory(semester, courseCode, categoryId);
+        if (response == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(response);
     }
 
 
@@ -100,13 +109,17 @@ public class GradeCategoryResource {
 
         if (!userTypeId.equals(0)
                 && (userRepo.checkIfIsCoordinator(
-                        userId, course_code, semester)==0))
+                        userId, course_code, semester)==null))
         {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only course coordinator or admin can update grade category\"}");
         }
 
-        if (gradeCategoryRepo.updateGradeCategory(categoryId, course_code, semester, gradeCategory) != 0) {
-            return ResponseEntity.ok("{\"message\":\"grade category updated\"}");
+        try {
+            if (gradeCategoryRepo.updateGradeCategory(categoryId, course_code, semester, gradeCategory) != 0) {
+                return ResponseEntity.ok("{\"message\":\"grade category updated\"}");
+            }
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Could not update grade category\"}");
         }
         return ResponseEntity.badRequest().body("{\"message\":\"Couldn't update grade category.\"}");
     }
@@ -124,13 +137,17 @@ public class GradeCategoryResource {
 
         if (!userTypeId.equals(0)
                 && (userRepo.checkIfIsCoordinator(
-                userId, course_code, semester)==0))
+                userId, course_code, semester)==null))
         {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only course coordinator or admin can update grade category\"}");
         }
 
-        if (gradeCategoryRepo.removeGradeCategory(course_code, semester, categoryId) != 0) {
-            return ResponseEntity.ok("{\"message\":\"grade category deleted\"}");
+        try {
+            if (gradeCategoryRepo.removeGradeCategory(course_code, semester, categoryId) != 0) {
+                return ResponseEntity.ok("{\"message\":\"grade category deleted\"}");
+            }
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Could not delete grade category\"}");
         }
         return ResponseEntity.badRequest().body("{\"message\":\"Couldn't delete grade category.\"}");
     }

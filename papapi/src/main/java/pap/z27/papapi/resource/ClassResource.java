@@ -2,6 +2,7 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +35,15 @@ public class ClassResource {
             @PathVariable("courseCode") String courseCode,
             @PathVariable("groupNr") Integer groupNr,
             @PathVariable("classIdForGroup") Integer classIdForGroup
-    ) {
-        return ResponseEntity.ok(classRepo.findClass(courseCode,semester,groupNr,classIdForGroup));
+    )
+    {
+        ClassInfo response = classRepo.findClass(courseCode,semester,groupNr,classIdForGroup);
+        if (response == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(response);
     }
+
     @GetMapping
     public ResponseEntity<List<ClassDTO>> getAllClasses(HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
@@ -58,6 +65,9 @@ public class ClassResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Integer lookUpType = userRepo.findUsersTypeId(userId);
+        if (lookUpType == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         Integer thisUserId = (Integer) session.getAttribute("user_id");
 
         if (userId.equals(thisUserId) || userTypeId.equals(0)) {
@@ -92,15 +102,19 @@ public class ClassResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Integer userId = (Integer) session.getAttribute("user_id");
-        if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, myClass.getCourse_code(), myClass.getSemester(), myClass.getGroup_number())==0)
-                && userRepo.checkIfIsCoordinator(userId, myClass.getCourse_code(), myClass.getSemester())==0)
+        if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, myClass.getCourse_code(), myClass.getSemester(), myClass.getGroup_number())==null)
+                && userRepo.checkIfIsCoordinator(userId, myClass.getCourse_code(), myClass.getSemester())==null)
         {
             ResponseEntity.badRequest().body("{\"message\":\"only admins, lecturers or coordinators of courses can create classes\"}");
         }
 
-        if(classRepo.insertClass(myClass)==0)
-        {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot insert class\"}");
+        try {
+            if(classRepo.insertClass(myClass)==0)
+            {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot insert class\"}");
+            }
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Server error, cannot insert class\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
@@ -118,8 +132,8 @@ public class ClassResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Integer userId = (Integer) session.getAttribute("user_id");
-        if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, myClass.getCourse_code(), myClass.getSemester(), myClass.getGroup_number())==0)
-                && userRepo.checkIfIsCoordinator(userId, myClass.getCourse_code(), myClass.getSemester())==0)
+        if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, myClass.getCourse_code(), myClass.getSemester(), myClass.getGroup_number())==null)
+                && userRepo.checkIfIsCoordinator(userId, myClass.getCourse_code(), myClass.getSemester())==null)
         {
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"only admins, lecturers or coordinators of courses can update classes\"}");
         }
@@ -130,9 +144,13 @@ public class ClassResource {
         myClass.setSemester(semester);
         myClass.setGroup_number(groupNr);
         myClass.setClass_id_for_group(classIdForGroup);
-        if(classRepo.updateClass(myClass)==0)
-        {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot update class\"}");
+        try {
+            if(classRepo.updateClass(myClass)==0)
+            {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot update class\"}");
+            }
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Server error, cannot update class\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
 
@@ -156,14 +174,18 @@ public class ClassResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Integer userId = (Integer) session.getAttribute("user_id");
-        if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, courseCode, semester, groupNr)==0)
-                && userRepo.checkIfIsCoordinator(userId, courseCode, semester)==0)
+        if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, courseCode, semester, groupNr)==null)
+                && userRepo.checkIfIsCoordinator(userId, courseCode, semester)==null)
         {
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"only admins, lecturers or coordinators of courses can remove classes\"}");
         }
-        if(classRepo.removeClass(courseCode,semester,groupNr,classIdForGroup)==0)
-        {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot remove class\"}");
+        try {
+            if(classRepo.removeClass(courseCode,semester,groupNr,classIdForGroup)==0)
+            {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot remove class\"}");
+            }
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Server error, cannot remove class\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

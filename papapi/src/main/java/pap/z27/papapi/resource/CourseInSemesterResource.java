@@ -2,7 +2,9 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,7 @@ import pap.z27.papapi.repo.UserRepo;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping(path = "api/courseinsemester")
@@ -65,8 +68,8 @@ public class CourseInSemesterResource {
 
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
         if (userTypeId != 0 && userRepo.checkIfIsCoordinator(coordinatorId,
-                courseCode, semester)==0 &&
-                userRepo.checkIfIsLecturerOfCourse(coordinatorId, courseCode, semester)==0
+                courseCode, semester)==null &&
+                userRepo.checkIfIsLecturerOfCourse(coordinatorId, courseCode, semester)==null
                 ) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -85,9 +88,10 @@ public class CourseInSemesterResource {
         }
 
         try {
-            courseRepo.insertCourseInSemester(course);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("{\"message\":\"cannot insert course in the semester\"}");
+            if(courseRepo.insertCourseInSemester(course)==0) return ResponseEntity.badRequest().body("{\"message\":\"cannot insert course in the semester\"}");
+        } catch (DataAccessException e) {
+            log.error("e: ", e);
+            return ResponseEntity.internalServerError().body("{\"message\":\"cannot insert course in the semester\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
@@ -102,9 +106,13 @@ public class CourseInSemesterResource {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"only admin can delete courses.\"}\"");
         }
 
-        if (courseRepo.removeCourseInSemester(course) == 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("{\"message\":\"Course not found\"}");
+        try {
+            if (courseRepo.removeCourseInSemester(course) == 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("{\"message\":\"Course not found\"}");
+            }
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Cannot remove course\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
