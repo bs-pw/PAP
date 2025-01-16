@@ -153,7 +153,7 @@ public class GradeResource {
                         notAddedCounter++;
                 }
             }
-            catch (DataAccessException e){notAddedCounter++;}
+            catch (DataAccessException e){notAddedCounter++; System.out.println(e.getMessage());}
         }
         if(notAddedCounter==grades.size())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(notAddedCounter);
