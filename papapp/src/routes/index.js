@@ -144,7 +144,7 @@ export const router = createBrowserRouter([
                                                     },
                                                     {
                                                         path: ":searchId",
-                                                        // element: <LecturerGradesListPage type="category" />
+                                                        element: <LecturerGradesListPage type="category" />
                                                     }
                                                 ]
                                             }
