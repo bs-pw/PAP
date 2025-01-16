@@ -201,21 +201,21 @@ public class GradeResource {
         return ResponseEntity.ok("{\"message\":\"Grade deleted\"}");
     }
 
-    @GetMapping("{semester}/{courseCode}")
-    public ResponseEntity<List<Grade>> getAllCourseGradesInSemester(@PathVariable String courseCode, @PathVariable String semester, HttpSession session) {
-        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
-        if (userTypeId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        Integer userId = (Integer) session.getAttribute("user_id");
-
-        if (!userTypeId.equals(0) &&
-            userRepo.checkIfIsCoordinator(userId, courseCode, semester) == null &&
-            groupRepo.isLecturerOfCourse(userId, semester, courseCode) == null) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-        return ResponseEntity.ok(gradeRepo.findAllGradesOfCourse(courseCode, semester));
-    }
+//    @GetMapping("{semester}/{courseCode}")
+//    public ResponseEntity<List<Grade>> getAllCourseGradesInSemester(@PathVariable String courseCode, @PathVariable String semester, HttpSession session) {
+//        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+//        if (userTypeId == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
+//        Integer userId = (Integer) session.getAttribute("user_id");
+//
+//        if (!userTypeId.equals(0) &&
+//            userRepo.checkIfIsCoordinator(userId, courseCode, semester) == null &&
+//            groupRepo.isLecturerOfCourse(userId, semester, courseCode) == null) {
+//                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+//        }
+//        return ResponseEntity.ok(gradeRepo.findAllGradesOfCourse(courseCode, semester));
+//    }
 
     @GetMapping("{semester}/{courseCode}/{groupNumber}/groups")
     public ResponseEntity<List<GradeDTO>> getGroupGradesInSemester(@PathVariable String courseCode,
