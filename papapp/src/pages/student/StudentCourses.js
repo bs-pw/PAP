@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useClient } from '../../components/ClientContext';
 import List from '../../components/common/List';
 import React, { useState, useEffect } from 'react';
+import Schedule from '../../components/common/Schedule';
 
 const StudentCourses = () => {
   const [courses, setCourses] = useState([]);
@@ -12,12 +13,12 @@ const StudentCourses = () => {
   const getCourses = async () => {
     try {
       const data = await client.getStudentCourses(client.userId);
-      const result = data.map(({ course_code, semester, group_number }) => ({
-        course_code,
-        semester,
-        group_number
-      }));
-      setCourses(result);
+      // const result = data.map(({ course_code, semester, group_number }) => ({
+      //   course_code,
+      //   semester,
+      //   group_number
+      // }));
+      setCourses(data);
     } catch (error) {
       setError('Błąd podczas ładowania danych: ' + error.message);
     }
@@ -33,7 +34,7 @@ const StudentCourses = () => {
   }, []);
 
   return (
-    <List listName='Lista kursów' columnNames={['Nazwa', 'Semestr', 'Nr grupy']} data={courses} error={error} userButtons={true} handleViev={handleViev} id="course_code" />
+    <Schedule data={courses} />
   )
 }
 
