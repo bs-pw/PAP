@@ -23,6 +23,7 @@ public class GradeDTO {
     private String who_inserted_name;
     private String who_inserted_surname;
     private Double grade;
+    private Double max_grade;
     private Timestamp date;
     private String description;
 }

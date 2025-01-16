@@ -20,7 +20,7 @@ public class GradeRepo {
     {
         return jdbcClient.sql("SELECT g.CATEGORY_ID, gd.DESCRIPTION category_description, g.COURSE_CODE, g.SEMESTER, " +
                         "g.USER_ID, u.NAME user_name,u.SURNAME user_surname, g.WHO_INSERTED_ID, w.NAME who_inserted_name," +
-                                "w.SURNAME who_inserted_surname, g.GRADE, g.\"date\",g.DESCRIPTION FROM GRADES g join GRADE_CATEGORIES gd on g.CATEGORY_ID=gd.CATEGORY_ID" +
+                                "w.SURNAME who_inserted_surname, g.GRADE, gd.MAX_GRADE, g.\"date\",g.DESCRIPTION FROM GRADES g join GRADE_CATEGORIES gd on g.CATEGORY_ID=gd.CATEGORY_ID" +
                                 " and g.SEMESTER=gd.SEMESTER and g.COURSE_CODE=gd.COURSE_CODE join USERS u on g.USER_ID=u.USER_ID join USERS w " +
                                 "on g.WHO_INSERTED_ID=w.USER_ID JOIN STUDENTS_IN_GROUPS sig ON g.user_id = sig.user_id AND g.course_code = sig.course_code AND g.semester = sig.semester " +
                 "WHERE g.course_code = ? AND g.semester = ? AND sig.group_number = ?")
@@ -34,7 +34,7 @@ public class GradeRepo {
     public List<GradeDTO> findGradesByCategory(String semester, String courseCode, Integer categoryId) {
         return jdbcClient.sql("SELECT g.CATEGORY_ID, gd.DESCRIPTION category_description, g.COURSE_CODE, g.SEMESTER, " +
                         "g.USER_ID, u.NAME user_name,u.SURNAME user_surname, g.WHO_INSERTED_ID, w.NAME who_inserted_name," +
-                                "w.SURNAME who_inserted_surname, g.GRADE, g.\"date\", g.DESCRIPTION FROM GRADES g join GRADE_CATEGORIES gd on g.CATEGORY_ID=gd.CATEGORY_ID" +
+                                "w.SURNAME who_inserted_surname, g.GRADE, gd.MAX_GRADE, g.\"date\", g.DESCRIPTION FROM GRADES g join GRADE_CATEGORIES gd on g.CATEGORY_ID=gd.CATEGORY_ID" +
                                 " and g.SEMESTER=gd.SEMESTER and g.COURSE_CODE=gd.COURSE_CODE join USERS u on g.USER_ID=u.USER_ID join USERS w " +
                                 "on g.WHO_INSERTED_ID=w.USER_ID WHERE g.SEMESTER = ? AND g.COURSE_CODE = ? AND g.CATEGORY_ID = ?")
                 .param(semester)
@@ -47,7 +47,7 @@ public class GradeRepo {
     public List<GradeDTO> findGradesOfCourseForUser(String semester, String courseCode, Integer userID) {
         return jdbcClient.sql("SELECT g.CATEGORY_ID, gd.DESCRIPTION category_description, g.COURSE_CODE, g.SEMESTER, " +
                 "g.USER_ID, u.NAME user_name,u.SURNAME user_surname, g.WHO_INSERTED_ID, w.NAME who_inserted_name," +
-                        "w.SURNAME who_inserted_surname, g.GRADE, g.\"date\", g.DESCRIPTION FROM GRADES g join GRADE_CATEGORIES gd on g.CATEGORY_ID=gd.CATEGORY_ID" +
+                        "w.SURNAME who_inserted_surname, g.GRADE, gd.MAX_GRADE, g.\"date\", g.DESCRIPTION FROM GRADES g join GRADE_CATEGORIES gd on g.CATEGORY_ID=gd.CATEGORY_ID" +
                         " and g.SEMESTER=gd.SEMESTER and g.COURSE_CODE=gd.COURSE_CODE join USERS u on g.USER_ID=u.USER_ID join USERS w " +
                         "on g.WHO_INSERTED_ID=w.USER_ID WHERE g.SEMESTER=? and g.COURSE_CODE=? and g.USER_ID=?")
                 .param(semester)
@@ -59,7 +59,7 @@ public class GradeRepo {
     public List<GradeDTO> getUserGrades(Integer userID) {
         return jdbcClient.sql("SELECT g.CATEGORY_ID, gd.DESCRIPTION category_description, g.COURSE_CODE, g.SEMESTER, " +
                         "g.USER_ID, u.NAME user_name,u.SURNAME user_surname, g.WHO_INSERTED_ID, w.NAME who_inserted_name," +
-                        "w.SURNAME who_inserted_surname, g.GRADE, g.\"date\", g.DESCRIPTION FROM GRADES g join GRADE_CATEGORIES gd on g.CATEGORY_ID=gd.CATEGORY_ID" +
+                        "w.SURNAME who_inserted_surname, g.GRADE, gd.MAX_GRADE, g.\"date\", g.DESCRIPTION FROM GRADES g join GRADE_CATEGORIES gd on g.CATEGORY_ID=gd.CATEGORY_ID" +
                         " and g.SEMESTER=gd.SEMESTER and g.COURSE_CODE=gd.COURSE_CODE join USERS u on g.USER_ID=u.USER_ID join USERS w " +
                         "on g.WHO_INSERTED_ID=w.USER_ID WHERE g.USER_ID=?")
                 .param(userID)
