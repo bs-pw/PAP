@@ -36,8 +36,7 @@ public class CourseRepo {
         return jdbcClient.sql("DELETE FROM COURSES WHERE course_code=?")
                 .param(course_code)
                 .update();
-    }//delete if nothing is connected - change in ddl - cascade
-
+    }
     public Integer updateCourse(Course course) {
         return jdbcClient.sql("UPDATE COURSES SET title=? WHERE course_code=?")
                 .param(course.getTitle())

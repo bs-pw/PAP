@@ -35,29 +35,29 @@ public class GradeResource {
         this.gradeCategoryRepo = gradeCategoryRepo;
     }
 
-    private String canUserUpdateGrade(Grade grade, HttpSession session) {
-        Integer userId = (Integer) session.getAttribute("user_id");
-        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
-        if (userTypeId == 3) {
-            return "{\"message\":\"Students cannot manipulate grades\"}";
-        }
-
-        grade.setWho_inserted_id(userId);
-        if (grade.getDate() == null) {
-            grade.setDate(LocalDate.now());
-        }
-
-        if (userTypeId != 0) {
-            // Check if lecturer is inserting a grade for student in his group
-            if (groupRepo.isStudentInLecturerGroup(grade.getUser_id(),
-                    userId,
-                    grade.getSemester(),
-                    grade.getCourse_code()) == null) {
-                return "{\"message\":\"Lecturer does not lead the student's group.\"}";
-            }
-        }
-        return "ok";
-    }
+//    private String canUserUpdateGrade(Grade grade, HttpSession session) {
+//        Integer userId = (Integer)session.getAttribute("user_id");
+//        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+//        if (userTypeId == 3) {
+//            return "{\"message\":\"Students cannot manipulate grades\"}";
+//        }
+//
+//        grade.setWho_inserted_id(userId);
+//        if (grade.getDate() == null) {
+//            grade.setDate(LocalDate.now());
+//        }
+//
+//        if (userTypeId != 0) {
+//            // Check if lecturer is inserting a grade for student in his group
+//            if (groupRepo.isStudentInLecturerGroup(grade.getUser_id(),
+//                    userId,
+//                    grade.getSemester(),
+//                    grade.getCourse_code()) == 0) {
+//                return "{\"message\":\"Lecturer does not lead the student's group.\"}";
+//            }
+//        }
+//       return "ok";
+//    }
 
     @GetMapping("{semester}/{courseCode}/{categoryId}/category")
     public ResponseEntity<List<GradeDTO>> getGradesByCategory(@PathVariable String semester,
@@ -108,71 +108,102 @@ public class GradeResource {
         }
         if (userRepo.checkIfStudentIsInCourse(userId, courseCode, semester) == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        if (!userTypeId.equals(0) && !thisUserId.equals(userId) && userRepo.checkIfIsCoordinator(userId, courseCode, semester) == null && userRepo.checkIfIsLecturerOfCourse(userId, courseCode, semester) == null) {
-            System.out.println(!userTypeId.equals(0));
-            System.out.println(!thisUserId.equals(userId));
-            System.out.println(userRepo.checkIfIsCoordinator(userId, courseCode, semester));
-            System.out.println(userRepo.checkIfIsLecturerOfCourse(userId, courseCode, semester) == 0);
 
             if (!userTypeId.equals(0) && !thisUserId.equals(userId) && userRepo.checkIfIsCoordinator(thisUserId, courseCode, semester) == 0 && userRepo.checkIfIsLecturerOfCourse(thisUserId, courseCode, semester) == 0) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
-        }
+
             return ResponseEntity.ok(gradeRepo.findGradesOfCourseForUser(semester, courseCode, userId));
         }
 
-    @PostMapping
-    public ResponseEntity<String> insertGrade(@RequestBody Grade grade, HttpSession session) {
+    @PostMapping("{semester}/{courseCode}")
+    public ResponseEntity<Integer> insertGrades(
+            @PathVariable String semester,
+            @PathVariable String courseCode,
+            @RequestBody List<Grade> grades,
+            HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        Integer thisUserId = (Integer) session.getAttribute("user_id");
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        String status = canUserUpdateGrade(grade, session);
-        if (!status.equals("ok")) {
-            return ResponseEntity.badRequest().body(status);
+        if (!userTypeId.equals(0) && userRepo.checkIfIsCoordinator(thisUserId,courseCode,semester)==0 && userRepo.checkIfIsLecturerOfCourse(thisUserId,courseCode,semester)==0) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        GradeCategory category = gradeCategoryRepo.getGradeCategory(grade.getSemester(), grade.getCourse_code(), grade.getCategory_id());
-        if (category == null) {
-            return ResponseEntity.badRequest().body("{\"message\":\"Grade category does not exist.\"}");
+        int notAddedCounter=0;
+        for(var grade:grades) {
+            try {
+//                if (grade.getGrade() < 0 && grade.getGrade() > gradeCategoryRepo.getGradeCategory(
+//                        grade.getSemester(), grade.getCourse_code(), grade.getCategory_id()
+//                ).getMax_grade())
+//                    return ResponseEntity.badRequest().body("{\"message\":\"Grade must be in [0, max grade].\"}");
+                grade.setWho_inserted_id(thisUserId);
+                if (gradeRepo.updateGrade(semester, courseCode, grade) == 0)
+                {
+                    grade.setSemester(semester);
+                    grade.setCourse_code(courseCode);
+                    if (gradeRepo.insertGrade(grade) == 0)
+                        notAddedCounter++;
+                }
+            }
+            catch (DataAccessException e){notAddedCounter++;}
         }
-        if(grade.getGrade()<0 && grade.getGrade()>category.getMax_grade())
-            return ResponseEntity.badRequest().body("{\"message\":\"Grade must be in [0, max grade].\"}");
-        try {
-            if(gradeRepo.insertGrade(grade)==0)
-                return ResponseEntity.badRequest().body("{\"message\":\"Grade could not be inserted.\"}");
-        } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Grade could not be inserted.\"}");
-        }
-        return ResponseEntity.ok("{\"message\":\"Grade inserted\"}");
+        if(notAddedCounter>0)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(notAddedCounter);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("{semester}/{courseCode}/{categoryId}/{userId}")
-    public ResponseEntity<String> updateGrade(
-            @PathVariable String semester,
-            @PathVariable String courseCode,
-            @PathVariable Integer categoryId,
-            @PathVariable Integer userId,
-            @RequestBody Grade grade,
-            HttpSession session) {
-        String status = canUserUpdateGrade(grade, session);
-        if (!status.equals("ok")) {
-            return ResponseEntity.badRequest().body(status);
-        }
-        GradeCategory category = gradeCategoryRepo.getGradeCategory(grade.getSemester(), grade.getCourse_code(), grade.getCategory_id());
-        if (category == null) {
-            return ResponseEntity.badRequest().body("{\"message\":\"Grade category does not exist.\"}");
-        }
-        if(grade.getGrade()<0 && grade.getGrade()>category.getMax_grade())
-            return ResponseEntity.badRequest().body("{\"message\":\"Grade must be in [0, max grade].\"}");
-        try {
-            if(gradeRepo.updateGrade(semester,courseCode,categoryId,userId, grade)==0)
-                return ResponseEntity.badRequest().body("{\"message\":\"Grade could not be changed.\"}");
-        } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Grade could not be changed.\"}");
-        }
+//    @PostMapping
+//    public ResponseEntity<String> insertGrade(@RequestBody Grade grade, HttpSession session) {
+//        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+//        if (userTypeId == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
+//        String status = canUserUpdateGrade(grade, session);
+//        if (!status.equals("ok")) {
+//            return ResponseEntity.badRequest().body(status);
+//        }
+//               GradeCategory category = gradeCategoryRepo.getGradeCategory(grade.getSemester(), grade.getCourse_code(), grade.getCategory_id());
+//        if (category == null) {
+//            return ResponseEntity.badRequest().body("{\"message\":\"Grade category does not exist.\"}");
+//        }
+//        if(grade.getGrade()<0 && grade.getGrade()>category.getMax_grade())
+//            return ResponseEntity.badRequest().body("{\"message\":\"Grade must be in [0, max grade].\"}");
+//        try {
+//            if(gradeRepo.insertGrade(grade)==0)
+//                return ResponseEntity.badRequest().body("{\"message\":\"Grade could not be inserted.\"}");
+//        } catch (DataAccessException e) {
+//            return ResponseEntity.internalServerError().body("{\"message\":\"Grade could not be inserted.\"}");
+//        }
+//        return ResponseEntity.ok("{\"message\":\"Grade inserted\"}");
+//    }
 
-        return ResponseEntity.ok("{\"message\":\"Grade changed\"}");
-    }
+//    @PutMapping("{semester}/{courseCode}/{categoryId}/{userId}")
+//    public ResponseEntity<String> updateGrade(
+//            @PathVariable String semester,
+//            @PathVariable String courseCode,
+//            @PathVariable Integer categoryId,
+//            @PathVariable Integer userId,
+//            @RequestBody Grade grade,
+//            HttpSession session) {
+//        String status = canUserUpdateGrade(grade, session);
+//        if (!status.equals("ok")) {
+//            return ResponseEntity.badRequest().body(status);
+//        }
+//        if(grade.getGrade()<0 && grade.getGrade()>gradeCategoryRepo.getGradeCategory(
+//                grade.getSemester(), grade.getCourse_code(), grade.getCategory_id()
+//        ).getMax_grade())
+//            return ResponseEntity.badRequest().body("{\"message\":\"Grade must be in [0, max grade].\"}");
+//        Integer thisUserId = (Integer) session.getAttribute("user_id");
+//        grade.setWho_inserted_id(thisUserId);
+//        grade.setDate(LocalDate.now());
+//try {
+//        if(gradeRepo.updateGrade(semester,courseCode,categoryId,userId, grade)==0)
+//            return ResponseEntity.badRequest().body("{\"message\":\"Grade could not be changed.\"}");
+//    } catch (DataAccessException e) {
+//        return ResponseEntity.internalServerError().body("{\"message\":\"Grade could not be changed.\"}");
+//    }
+//    }
 
     @DeleteMapping("{semester}/{courseCode}/{categoryId}/{userId}")
     public ResponseEntity<String> removeGrade(
@@ -182,14 +213,22 @@ public class GradeResource {
             @PathVariable Integer userId,
             HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        Integer thisUserId = (Integer) session.getAttribute("user_id");
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        Grade grade = new Grade(categoryId,courseCode,semester,userId,null,null,null,null);
-        String status = canUserUpdateGrade(grade, session);
-        if (!status.equals("ok")) {
-            return ResponseEntity.badRequest().body(status);
+        if (!userTypeId.equals(0) && userRepo.checkIfIsCoordinator(thisUserId,courseCode,semester)==0 && userRepo.checkIfIsLecturerOfCourse(thisUserId,courseCode,semester)==0) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+//        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+//        if (userTypeId == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
+//        Grade grade = new Grade(categoryId,courseCode,semester,userId,null,null,null);
+//        String status = canUserUpdateGrade(grade, session);
+//        if (!status.equals("ok")) {
+//            return ResponseEntity.badRequest().body(status);
+//        }
 
         try {
             if(gradeRepo.removeGrade(semester,courseCode,categoryId,userId)==0) {
