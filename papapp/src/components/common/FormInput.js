@@ -1,9 +1,9 @@
 import React from 'react'
 
-const FormInput = ({ name, type, label, value, onChange, required }) => {
+const FormInput = ({ name, type, label = false, value, onChange, step, required }) => {
     return (
         <div className="mb-3">
-            <label htmlFor={name} className="form-label">{label}</label>
+            {label && <label htmlFor={name} className="form-label">{label}</label>}
             <input
                 type={type}
                 className="form-control"
@@ -12,6 +12,7 @@ const FormInput = ({ name, type, label, value, onChange, required }) => {
                 value={value}
                 onChange={onChange}
                 required={required}
+                step={step}
             />
         </div>
     )

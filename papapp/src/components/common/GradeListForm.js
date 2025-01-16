@@ -1,7 +1,7 @@
 import React from 'react'
 import FormInput from './FormInput'
 
-const GradeListForm = ({ listName, error, data, onChange, onSubmit }) => {
+const GradeListForm = ({ listName, error, columnNames, data, onChange, onSubmit, buttonName }) => {
 
     return (
         <div>
@@ -12,15 +12,23 @@ const GradeListForm = ({ listName, error, data, onChange, onSubmit }) => {
                 <table className='table'>
                     <thead>
                         <tr>
-                            <td></td>
-                            <td></td>
+                            {
+                                columnNames.map((column, index) => {
+                                    return <th key={index}>{column}</th>
+                                })
+                            }
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((item) => (
+                        {data.map((element) => (
                             <tr>
-                                <td></td>
-                                <td><FormInput onChange={onChange} /></td>
+                                <td>{element.label}</td>
+                                {
+                                    element.forms.map((item) => (
+                                        <td><FormInput key={item.key} name={`data[${item.key}][${item.fieldId}]`} type={item.type} value={item.value} onChange={onChange} step={item.step} /></td>
+                                    ))
+                                }
+
                             </tr>
                         ))}
                     </tbody>
