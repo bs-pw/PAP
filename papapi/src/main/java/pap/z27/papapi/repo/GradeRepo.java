@@ -78,7 +78,7 @@ public class GradeRepo {
                 .update();
     }
     public Integer updateGrade(String semester, String courseCode, Grade grade) {
-        StringBuilder query = new StringBuilder("UPDATE GRADES SET date=DEFAULT");
+        StringBuilder query = new StringBuilder("UPDATE GRADES SET date=DEFAULT, ");
         List<Object> params = new java.util.ArrayList<>();
         if (grade.getDescription() != null) {
             query.append("description=?, ");

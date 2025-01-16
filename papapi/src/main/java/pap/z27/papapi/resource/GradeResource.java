@@ -133,14 +133,14 @@ public class GradeResource {
         }
         int notAddedCounter=0;
         for(var gradeEntity:grades.entrySet()) {
+            Grade grade = gradeEntity.getValue();
+            grade.setCategory_id(gradeEntity.getKey());
+            grade.setWho_inserted_id(thisUserId);
             try {
-                Grade grade = gradeEntity.getValue();
-                grade.setCategory_id(gradeEntity.getKey());
 //                if (grade.getGrade() < 0 && grade.getGrade() > gradeCategoryRepo.getGradeCategory(
 //                        grade.getSemester(), grade.getCourse_code(), grade.getCategory_id()
 //                ).getMax_grade())
 //                    return ResponseEntity.badRequest().body("{\"message\":\"Grade must be in [0, max grade].\"}");
-                grade.setWho_inserted_id(thisUserId);
                 System.out.println(grade.getDescription());
                 System.out.println(grade.getCategory_id());
 
