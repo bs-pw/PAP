@@ -1129,6 +1129,21 @@ class Client {
                 throw new Error(error.message);
             });
     }
+    async updateCourse(courseCode, data) {
+        return fetch(`${this.baseUrl}/course/${courseCode}`, {
+            method: 'PUT',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: JSON.stringify(data)
+        }).then(response => {
+            if (response.ok) {
+                return true;
+            }
+            throw new Error(`Error updating course: ${response.statusText}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
 
 
 }
