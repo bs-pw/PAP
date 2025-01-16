@@ -66,7 +66,7 @@ public class GroupResource {
         }
         if(userTypeId != 0)
         {
-            if(userRepo.checkIfIsCoordinator(userId,group.getCourse_code(),group.getSemester())==null)
+            if(userRepo.checkIfIsCoordinator(userId,group.getCourse_code(),group.getSemester())==0)
                 return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can remove groups \"}");
         }
         try {

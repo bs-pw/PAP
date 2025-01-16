@@ -1,0 +1,51 @@
+.schedule-container {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    padding: 20px;
+}
+
+.day-column {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.day-header {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.day-content {
+    padding: 10px;
+    position: relative;
+    min-height: 300px;
+}
+
+.class-block {
+    background-color: #2196F3;
+    color: white;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    padding: 5px;
+    text-align: center;
+    font-size: 12px;
+    overflow: hidden;
+}
+
+.class-info {
+    font-weight: bold;
+}
+
+.class-time {
+    margin-top: 5px;
+}
+
+.class-room {
+    margin-top: 5px;
+    font-size: 11px;
+}

@@ -334,7 +334,7 @@ class Client {
     }
 
     async getStudentCourses(userId) {
-        return fetch(`${this.baseUrl}/class/${userId}`, {
+        return fetch(`${this.baseUrl}/classes/${userId}`, {
             method: 'GET',
             headers: this.headers,
             credentials: this.credentials,
@@ -995,7 +995,7 @@ class Client {
             .catch(error => {
                 throw new Error(error.message);
             });
-            
+
     }
     async getSemesterByStudent(userId) {
         return fetch(`${this.baseUrl}/semester/bystudent/${userId}`, {
