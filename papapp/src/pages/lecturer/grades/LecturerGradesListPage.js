@@ -24,7 +24,7 @@ const LecturerGradesListPage = ({ type = "student" }) => {
                 data.map(({ category_id, description }) => (formData[category_id] = { name: description }))
                 data = await client.getAllGradesOfCourseForUser(semesterId, courseId, searchId);
                 // data = data.map(({ user_id, name, surname }) => ({ user_id, name, surname }))
-                data.map(({ category_id, category_description, grade, description }) => (formData[category_id] = { name: category_description, grade, description }))
+                data.map(({ category_id, category_description, grade, description }) => (formData[category_id] = { name: category_description, grade, description, category_id, user_id: searchId }))
                 setListData(formData);
             } else {
                 data = await client.getGradesByCategory(semesterId, courseId, searchId);
