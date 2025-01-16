@@ -121,7 +121,7 @@ public class GradeResource {
     public ResponseEntity<Integer> insertGrades(
             @PathVariable String semester,
             @PathVariable String courseCode,
-            @RequestBody Map<Object,Grade> grades,
+            @RequestBody Map<Integer,Grade> grades,
             HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         Integer thisUserId = (Integer) session.getAttribute("user_id");
@@ -135,6 +135,7 @@ public class GradeResource {
         for(var gradeEntity:grades.entrySet()) {
             try {
                 Grade grade = gradeEntity.getValue();
+                grade.setCategory_id(gradeEntity.getKey());
 //                if (grade.getGrade() < 0 && grade.getGrade() > gradeCategoryRepo.getGradeCategory(
 //                        grade.getSemester(), grade.getCourse_code(), grade.getCategory_id()
 //                ).getMax_grade())
