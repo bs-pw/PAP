@@ -54,7 +54,7 @@ public class FinalGradeResource {
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if (userTypeId != 0 && userRepo.checkIfIsCoordinator(userId,courseCode,semester)==0) {
+        if (userTypeId != 0 && !userRepo.checkIfIsCoordinator(userId,courseCode,semester)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(userRepo.findAllEligibleUsersToCourse(new CourseInSemester(courseCode,semester)));
@@ -94,9 +94,9 @@ public class FinalGradeResource {
         }
 
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
-        if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
+        if (userTypeId != 0 && !userRepo.checkIfIsCoordinator(coordinatorId,
                 courseCode,
-                semester)==0)) {
+                semester)) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(finalGradeRepo.findAllFinalGradesInCourse(courseCode, semester));
@@ -112,12 +112,12 @@ public class FinalGradeResource {
         }
 
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
-        if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
+        if (userTypeId != 0 && !userRepo.checkIfIsCoordinator(coordinatorId,
                 finalGrade.getCourse_code(),
-                finalGrade.getSemester())==0)) {
+                finalGrade.getSemester())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admins/coordinators can add students to courses\"}");
         }
-        if(userRepo.checkIfIsLecturerOfCourse(finalGrade.getUser_id(),finalGrade.getCourse_code(),finalGrade.getSemester())!=0)
+        if(userRepo.checkIfIsLecturerOfCourse(finalGrade.getUser_id(),finalGrade.getCourse_code(),finalGrade.getSemester()))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"User is already lecturer of this course!\"}");
         try {
             if(finalGradeRepo.insertFinalGrade(finalGrade)==0)
@@ -139,9 +139,9 @@ public class FinalGradeResource {
         }
 
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
-        if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
+        if (userTypeId != 0 && !userRepo.checkIfIsCoordinator(coordinatorId,
                 finalGrade.getCourse_code(),
-                finalGrade.getSemester())==0)) {
+                finalGrade.getSemester())) {
             return ResponseEntity.badRequest().body("{\"message\":\"Only admins/coordinators can remove students from courses\"}");
         }
 
@@ -166,9 +166,9 @@ public class FinalGradeResource {
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if (userTypeId != 0 && (userRepo.checkIfIsCoordinator(userId,
+        if (userTypeId != 0 && !userRepo.checkIfIsCoordinator(userId,
                 finalGrade.getCourse_code(),
-                finalGrade.getSemester())==0)) {
+                finalGrade.getSemester())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admins/coordinators can change final grades \"}");
         }
         try {

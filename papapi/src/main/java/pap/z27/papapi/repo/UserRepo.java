@@ -253,47 +253,47 @@ public class UserRepo {
 //        return jdbcClient.sql("SELECT * FROM USERS").query(User.class).list();
 //    }
 
-    public Integer checkIfIsCoordinator(UserInGroup userInGroup){
+    public Boolean checkIfIsCoordinator(UserInGroup userInGroup){
         return jdbcClient.sql("SELECT count(*) FROM COORDINATORS where user_id=? and COURSE_CODE=? and SEMESTER=?")
                 .param(userInGroup.getUser_id())
                 .param(userInGroup.getCourse_code())
                 .param(userInGroup.getSemester())
                 .query(Integer.class)
-                .single();
+                .single()!=0;
     }
 
-    public Integer checkIfIsCoordinator(Integer userId, String courseCode, String semester) {
+    public Boolean checkIfIsCoordinator(Integer userId, String courseCode, String semester) {
         return jdbcClient.sql("SELECT count(*) FROM COORDINATORS where user_id=? and COURSE_CODE=? and SEMESTER=?")
                 .param(userId)
                 .param(courseCode)
                 .param(semester)
                 .query(Integer.class)
-                .single();
+                .single()!=0;
     }
-    public Integer checkIfIsLecturer(Integer userId, String courseCode, String semester, Integer group_number) {
+    public Boolean checkIfIsLecturer(Integer userId, String courseCode, String semester, Integer group_number) {
         return jdbcClient.sql("SELECT count(*) FROM LECTURERS where user_id=? and COURSE_CODE=? and SEMESTER=? and GROUP_NUMBER=?")
                 .param(userId)
                 .param(courseCode)
                 .param(semester)
                 .param(group_number)
                 .query(Integer.class)
-                .single();
+                .single()!=0;
     }
-    public Integer checkIfIsLecturerOfCourse(Integer userId, String courseCode, String semester) {
+    public Boolean checkIfIsLecturerOfCourse(Integer userId, String courseCode, String semester) {
         return jdbcClient.sql("SELECT count(*) FROM LECTURERS where user_id=? and COURSE_CODE=? and SEMESTER=?")
                 .param(userId)
                 .param(courseCode)
                 .param(semester)
                 .query(Integer.class)
-                .single();
+                .single()!=0;
     }
-    public Integer checkIfStudentIsInCourse(Integer userId, String courseCode, String semester) {
+    public Boolean checkIfStudentIsInCourse(Integer userId, String courseCode, String semester) {
         return jdbcClient.sql("SELECT count(*) FROM FINAL_GRADES where user_id=? and COURSE_CODE=? and SEMESTER=?")
                 .param(userId)
                 .param(courseCode)
                 .param(semester)
                 .query(Integer.class)
-                .single();
+                .single()!=0;
     }
     public Integer removeUser(Integer userId) {
         return jdbcClient.sql("DELETE FROM USERS where user_id=?")

@@ -102,8 +102,8 @@ public class ClassResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Integer userId = (Integer) session.getAttribute("user_id");
-        if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, myClass.getCourse_code(), myClass.getSemester(), myClass.getGroup_number())==0)
-                && userRepo.checkIfIsCoordinator(userId, myClass.getCourse_code(), myClass.getSemester())==0)
+        if (userTypeId != 0 && !userRepo.checkIfIsLecturer(userId, myClass.getCourse_code(), myClass.getSemester(), myClass.getGroup_number())
+                && !userRepo.checkIfIsCoordinator(userId, myClass.getCourse_code(), myClass.getSemester()))
         {
             ResponseEntity.badRequest().body("{\"message\":\"only admins, lecturers or coordinators of courses can create classes\"}");
         }
@@ -132,8 +132,8 @@ public class ClassResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Integer userId = (Integer) session.getAttribute("user_id");
-        if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, myClass.getCourse_code(), myClass.getSemester(), myClass.getGroup_number())==0)
-                && userRepo.checkIfIsCoordinator(userId, myClass.getCourse_code(), myClass.getSemester())==0)
+        if (userTypeId != 0 && !userRepo.checkIfIsLecturer(userId, myClass.getCourse_code(), myClass.getSemester(), myClass.getGroup_number())
+                && !userRepo.checkIfIsCoordinator(userId, myClass.getCourse_code(), myClass.getSemester()))
         {
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"only admins, lecturers or coordinators of courses can update classes\"}");
         }
@@ -174,8 +174,8 @@ public class ClassResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Integer userId = (Integer) session.getAttribute("user_id");
-        if (userTypeId != 0 && (userRepo.checkIfIsLecturer(userId, courseCode, semester, groupNr)==0)
-                && userRepo.checkIfIsCoordinator(userId, courseCode, semester)==0)
+        if (userTypeId != 0 && !userRepo.checkIfIsLecturer(userId, courseCode, semester, groupNr)
+                && !userRepo.checkIfIsCoordinator(userId, courseCode, semester))
         {
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"only admins, lecturers or coordinators of courses can remove classes\"}");
         }

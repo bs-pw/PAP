@@ -42,7 +42,7 @@ public class GradeCategoryResource {
         Integer userId = (Integer) session.getAttribute("user_id");
         if(userTypeId != 0)
         {
-            if(userRepo.checkIfIsCoordinator(userId,gradeCategory.getCourse_code(),gradeCategory.getSemester())==0)
+            if(!userRepo.checkIfIsCoordinator(userId,gradeCategory.getCourse_code(),gradeCategory.getSemester()))
                 return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can insert grade category \"}");
         }
         try {
@@ -67,7 +67,7 @@ public class GradeCategoryResource {
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if(groupRepo.isLecturerOfCourse(userId,semester,courseCode)==null && !userTypeId.equals(0) && userRepo.checkIfIsCoordinator(userId,courseCode,semester)==0)
+        if(groupRepo.isLecturerOfCourse(userId,semester,courseCode)==null && !userTypeId.equals(0) && !userRepo.checkIfIsCoordinator(userId,courseCode,semester))
         {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -108,8 +108,8 @@ public class GradeCategoryResource {
         Integer userId = (Integer) session.getAttribute("user_id");
 
         if (!userTypeId.equals(0)
-                && (userRepo.checkIfIsCoordinator(
-                        userId, course_code, semester)==0))
+                && !userRepo.checkIfIsCoordinator(
+                        userId, course_code, semester))
         {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only course coordinator or admin can update grade category\"}");
         }
@@ -136,8 +136,8 @@ public class GradeCategoryResource {
         Integer userId = (Integer) session.getAttribute("user_id");
 
         if (!userTypeId.equals(0)
-                && (userRepo.checkIfIsCoordinator(
-                userId, course_code, semester)==0))
+                && !userRepo.checkIfIsCoordinator(
+                userId, course_code, semester))
         {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only course coordinator or admin can update grade category\"}");
         }

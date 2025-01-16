@@ -74,7 +74,7 @@ create table classes (
    day                number(2) not null,
    hour               number(4) not null,
    length             number(4) not null,
-   "where"            varchar2(32 char) not null,
+   "where"            varchar2(8 char) not null,
    class_type_id      number(3) not null
 );
 
@@ -379,3 +379,23 @@ alter table final_grades
 alter table attendance_statuses add constraint unique_attendance_status unique ( status );
 alter table class_types add constraint unique_class_type unique ( type );
 alter table user_types add constraint unique_user_type unique ( type );
+
+
+-- TRIGGERS
+CREATE OR REPLACE TRIGGER check_grade_trigger
+BEFORE INSERT OR UPDATE ON grades
+FOR EACH ROW
+DECLARE
+    v_max_grade grade_categories.max_grade%TYPE;
+BEGIN
+    SELECT gc.max_grade
+    INTO v_max_grade
+    FROM grade_categories gc
+    WHERE gc.category_id = :new.category_id;
+    
+    IF :new.grade > v_max_grade OR :new.grade < 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Grade cannot be greater than the max grade for this category and lower than 0.');
+    END IF;
+END;
+/
+ALTER TRIGGER check_grade_trigger ENABLE;

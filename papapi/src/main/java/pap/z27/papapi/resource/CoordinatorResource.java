@@ -35,7 +35,7 @@ public class CoordinatorResource {
 
     @GetMapping("{semester}/{courseCode}/amicoordinator/{userId}")
     public ResponseEntity<Boolean> checkIfIsCoordinatorOfCourse(@PathVariable("courseCode") String courseCode, @PathVariable("semester") String semester, @PathVariable("userId") Integer userId) {
-        return ResponseEntity.ok(userRepo.checkIfIsCoordinator(userId,courseCode,semester)!=0);
+        return ResponseEntity.ok(userRepo.checkIfIsCoordinator(userId,courseCode,semester));
     }
 
     @GetMapping("{semester}/{courseCode}/available")
@@ -68,7 +68,7 @@ public class CoordinatorResource {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only teachers can be coordinators\"}");
         }
 
-        if (userRepo.checkIfStudentIsInCourse(coordinator.getUser_id(),coordinator.getCourse_code(),coordinator.getSemester())!=0)
+        if (userRepo.checkIfStudentIsInCourse(coordinator.getUser_id(),coordinator.getCourse_code(),coordinator.getSemester()))
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("{\"message\":\"User is already a student in this course.\"}");
 
