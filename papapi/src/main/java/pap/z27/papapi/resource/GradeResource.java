@@ -118,7 +118,7 @@ public class GradeResource {
         }
 
     @PostMapping("{semester}/{courseCode}")
-    public ResponseEntity<Integer> insertGrades(
+    public ResponseEntity<String> insertGrades(
             @PathVariable String semester,
             @PathVariable String courseCode,
             @RequestBody Map<Object,Grade> grades,
@@ -131,31 +131,37 @@ public class GradeResource {
         if (!userTypeId.equals(0) && userRepo.checkIfIsCoordinator(thisUserId,courseCode,semester)==0 && userRepo.checkIfIsLecturerOfCourse(thisUserId,courseCode,semester)==0) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        int notAddedCounter=0;
+        int exceptionsCounter=0;
         for(var gradeEntity:grades.entrySet()) {
+
             Grade grade = gradeEntity.getValue();
+            if(grade.getGrade()==null) {
+                try {
+                    gradeRepo.removeGrade(semester, courseCode, grade.getCategory_id(), grade.getUser_id());
+                } catch (DataAccessException e) {
+                    exceptionsCounter++;
+                }
+                continue;
+            }
             grade.setWho_inserted_id(thisUserId);
-//            if(grade.getDescription()==null && grade.getGrade()==null && grade.getCategory_id() &&) {}
+
             try {
 //                if (grade.getGrade() < 0 && grade.getGrade() > gradeCategoryRepo.getGradeCategory(
 //                        grade.getSemester(), grade.getCourse_code(), grade.getCategory_id()
 //                ).getMax_grade())
 //                    return ResponseEntity.badRequest().body("{\"message\":\"Grade must be in [0, max grade].\"}");
-                System.out.println(grade.getDescription());
-                System.out.println(grade.getCategory_id());
 
                 if (gradeRepo.updateGrade(semester, courseCode, grade) == 0)
                 {
                     grade.setSemester(semester);
                     grade.setCourse_code(courseCode);
-                    if (gradeRepo.insertGrade(grade) == 0)
-                        notAddedCounter++;
+                    gradeRepo.insertGrade(grade);
                 }
             }
-            catch (DataAccessException e){notAddedCounter++; System.out.println(e.getMessage());}
+            catch (DataAccessException e){exceptionsCounter++;}
         }
-        if(notAddedCounter==grades.size())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(notAddedCounter);
+        if(exceptionsCounter>0)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\" Problem with: "+exceptionsCounter+ " grades.\"}");
         return ResponseEntity.ok().build();
     }
 
