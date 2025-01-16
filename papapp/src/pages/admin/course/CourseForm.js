@@ -26,7 +26,13 @@ const CourseForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (id) {
-
+            try {
+                const response = await client.updateCourse(id, formData);
+                // setMessage("Kurs został dodany");
+                navigate("..");
+            } catch (error) {
+                setMessage(error.message || "Błąd");
+            }
         } else {
             try {
                 const response = await client.createCourse(formData);

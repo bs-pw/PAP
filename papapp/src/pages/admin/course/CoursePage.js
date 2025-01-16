@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import CoursesList from '../../../components/common/List'
 import { useClient } from '../../../components/ClientContext'
 import { useState, useEffect } from 'react'
@@ -8,6 +8,7 @@ const CoursePage = () => {
     const [users, setUsers] = useState([]);
     const [error, setError] = useState(null);
     const client = useClient();
+    const navigate = useNavigate();
 
     const getCourses = async () => {
         try {
@@ -30,6 +31,11 @@ const CoursePage = () => {
         }
     }
 
+    const handleEdit = (e) => {
+        e.preventDefault();
+        navigate(`edit/${e.target.value}`)
+    }
+
     useEffect(() => {
         getCourses();
     }, []);
@@ -37,8 +43,8 @@ const CoursePage = () => {
 
     return (
         <>
-            <Link to="/admin/courses/create" className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >
-            <CoursesList listName='Lista kursów' adminButtons={true} columnNames={['Skrót', 'Nazwa']} data={users} handleDelete={handleDelete} error={error} id="course_code" />
+            <Link to="create" className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >
+            <CoursesList listName='Lista kursów' adminButtons={true} columnNames={['Skrót', 'Nazwa']} data={users} handleDelete={handleDelete} handleEdit={handleEdit} error={error} id="course_code" />
         </>
     )
 }

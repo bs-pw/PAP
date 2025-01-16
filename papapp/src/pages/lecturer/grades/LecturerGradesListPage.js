@@ -18,7 +18,7 @@ const LecturerGradesListPage = ({ type = "student" }) => {
         try {
             let data;
             if (type === "student") {
-                data = await client.findAllGradesOfCourseForUser(semesterId, courseId, searchId);
+                data = await client.getAllGradesOfCourseForUser(semesterId, courseId, searchId);
                 // data = data.map(({ user_id, name, surname }) => ({ user_id, name, surname }))
             } else {
                 data = await client.getGradesByCategory(semesterId, courseId, searchId);
@@ -41,7 +41,7 @@ const LecturerGradesListPage = ({ type = "student" }) => {
 
     console.log(listData)
 
-    const item = { key: '2', fieldId: 'grade', value: '5', type: text }
+    const item = { key: '2', fieldId: 'grade', value: '5', type: 'text' }
 
     const data = listData.map(({ grade }) => ({ grade }))
     // const columnNames = ["Imię i Nazwisko", "Ocena", "Opis"]

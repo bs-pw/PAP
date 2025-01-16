@@ -20,14 +20,14 @@ const GradeListForm = ({ listName, error, columnNames, data, onChange, onSubmit,
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((element) => (
+                        {data.map((item) => (
                             <tr>
-                                <td>{element.label}</td>
-                                {
-                                    element.forms.map((item) => (
-                                        <td><FormInput key={item.key} name={`data[${item.key}][${item.fieldId}]`} type={item.type} value={item.value} onChange={onChange} step={item.step} /></td>
-                                    ))
-                                }
+                                <td>{item.user_id} {item.user_name} {item.user_surname}</td>
+
+                                <td><FormInput key={item.category_id} name={`data[${item.category_id}][grade]`} type="number" value={item.value} onChange={onChange} step={item.step} /></td>
+
+                                <td><FormInput key={item.key} name={`data[${item.key}][${item.fieldId}]`} type={item.type} value={item.value} onChange={onChange} step={item.step} /></td>
+
 
                             </tr>
                         ))}
