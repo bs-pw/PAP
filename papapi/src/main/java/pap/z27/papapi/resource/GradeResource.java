@@ -134,7 +134,7 @@ public class GradeResource {
         int notAddedCounter=0;
         for(var gradeEntity:grades.entrySet()) {
             Grade grade = gradeEntity.getValue();
-            grade.setCategory_id(gradeEntity.getKey());
+//            grade.setCategory_id(gradeEntity.getKey());
             grade.setWho_inserted_id(thisUserId);
 
             try {
@@ -144,6 +144,7 @@ public class GradeResource {
 //                    return ResponseEntity.badRequest().body("{\"message\":\"Grade must be in [0, max grade].\"}");
                 System.out.println(grade.getDescription());
                 System.out.println(grade.getCategory_id());
+                System.out.println(grade.getUser_id());
 
                 if (gradeRepo.updateGrade(semester, courseCode, grade) == 0)
                 {
