@@ -1079,8 +1079,38 @@ class Client {
                 throw new Error(error.message);
             });
     }
-    async insertGrade(data) {
-        return fetch(`${this.baseUrl}/grades`, {
+    // async insertGrade(data) {
+    //     return fetch(`${this.baseUrl}/grades`, {
+    //         method: 'POST',
+    //         headers: this.headers,
+    //         credentials: this.credentials,
+    //         body: JSON.stringify(data),
+    //     }).then(response => {
+    //         if (response.ok) {
+    //             return true;
+    //         } else {
+    //             throw new Error(`Error inserting grade: ${response.json().message}`);
+
+    //         }
+    //     })
+    // }
+    // async updateGrade(semester, course_code, categoryId, userId, data) {
+    //     return fetch(`${this.baseUrl}/grades/${semester}/${course_code}/${categoryId}/${userId}`, {
+    //         method: 'PUT',
+    //         headers: this.headers,
+    //         credentials: this.credentials,
+    //         body: JSON.stringify(data)
+    //     }).then(response => {
+    //         if (response.ok) {
+    //             return true;
+    //         }
+    //         throw new Error(`Error updating grade: ${response.statusText}`);
+    //     }).catch(error => {
+    //         throw new Error(error.message);
+    //     });
+    // }
+    async insertGrade(semesterId, courseId, data) {
+        return fetch(`${this.baseUrl}/grades/${semesterId}/${courseId}`, {
             method: 'POST',
             headers: this.headers,
             credentials: this.credentials,
@@ -1093,21 +1123,6 @@ class Client {
 
             }
         })
-    }
-    async updateGrade(semester, course_code, categoryId, userId, data) {
-        return fetch(`${this.baseUrl}/grades/${semester}/${course_code}/${categoryId}/${userId}`, {
-            method: 'PUT',
-            headers: this.headers,
-            credentials: this.credentials,
-            body: JSON.stringify(data)
-        }).then(response => {
-            if (response.ok) {
-                return true;
-            }
-            throw new Error(`Error updating grade: ${response.statusText}`);
-        }).catch(error => {
-            throw new Error(error.message);
-        });
     }
     async deleteGrade(semester, course_code, categoryId, userId) {
         return fetch(`${this.baseUrl}/grades/${semester}/${course_code}/${categoryId}/${userId}`,

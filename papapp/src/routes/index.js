@@ -131,7 +131,7 @@ export const router = createBrowserRouter([
                                                     },
                                                     {
                                                         path: ":searchId",
-                                                        // element: <LecturerGradesListPage type="student" />
+                                                        element: <LecturerGradesListPage type="student" />
                                                     }
                                                 ]
                                             },

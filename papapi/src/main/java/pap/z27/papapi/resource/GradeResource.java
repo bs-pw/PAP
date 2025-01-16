@@ -140,6 +140,9 @@ public class GradeResource {
 //                ).getMax_grade())
 //                    return ResponseEntity.badRequest().body("{\"message\":\"Grade must be in [0, max grade].\"}");
                 grade.setWho_inserted_id(thisUserId);
+                System.out.println(grade.getDescription());
+                System.out.println(grade.getCategory_id());
+
                 if (gradeRepo.updateGrade(semester, courseCode, grade) == 0)
                 {
                     grade.setSemester(semester);
