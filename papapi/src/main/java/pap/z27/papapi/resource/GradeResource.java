@@ -136,6 +136,7 @@ public class GradeResource {
             Grade grade = gradeEntity.getValue();
             grade.setCategory_id(gradeEntity.getKey());
             grade.setWho_inserted_id(thisUserId);
+
             try {
 //                if (grade.getGrade() < 0 && grade.getGrade() > gradeCategoryRepo.getGradeCategory(
 //                        grade.getSemester(), grade.getCourse_code(), grade.getCategory_id()
@@ -154,7 +155,7 @@ public class GradeResource {
             }
             catch (DataAccessException e){notAddedCounter++;}
         }
-        if(notAddedCounter>0)
+        if(notAddedCounter==grades.size())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(notAddedCounter);
         return ResponseEntity.ok().build();
     }
