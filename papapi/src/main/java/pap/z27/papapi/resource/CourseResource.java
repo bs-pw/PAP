@@ -81,7 +81,20 @@ public class CourseResource {
     }
 
     @DeleteMapping("/{courseCode}")
-    public ResponseEntity<String> deleteCourse(@PathVariable String courseCode) {
+    public ResponseEntity<String> deleteCourse(@PathVariable String courseCode, HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (userTypeId != 0) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"only admin can remove courses\"}");
+        }
+        try {
+            if(courseRepo.removeCourse(courseCode)==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"cannot remove course\"}");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"cannot remove course\"}");
+        }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 

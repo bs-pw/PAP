@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 @Getter
 @Setter
@@ -22,5 +23,5 @@ public class GradeDTO {
     private String who_inserted_name;
     private String who_inserted_surname;
     private Double grade;
-    private LocalDate date;
+    private Timestamp date;
 }
