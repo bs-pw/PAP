@@ -67,19 +67,18 @@ public class GradeRepo {
                 .list();
     }
     public Integer insertGrade(Grade grade) {
-        return jdbcClient.sql("INSERT INTO GRADES (category_id,course_code,semester,user_id,who_inserted_id,grade,\"date\",description) VALUES (?,?,?,?,?,?,?,?)")
+        return jdbcClient.sql("INSERT INTO GRADES (category_id,course_code,semester,user_id,who_inserted_id,grade,\"date\",description) VALUES (?,?,?,?,?,?,DEFAULT,?)")
                 .param(grade.getCategory_id())
                 .param(grade.getCourse_code())
                 .param(grade.getSemester())
                 .param(grade.getUser_id())
                 .param(grade.getWho_inserted_id())
                 .param(grade.getGrade())
-                .param(grade.getDate())
                 .param(grade.getDescription())
                 .update();
     }
-    public Integer updateGrade(String semester, String courseCode,Integer categoryId, Integer userId, Grade grade) {
-        StringBuilder query = new StringBuilder("UPDATE GRADES SET ");
+    public Integer updateGrade(String semester, String courseCode, Grade grade) {
+        StringBuilder query = new StringBuilder("UPDATE GRADES SET date=DEFAULT");
         List<Object> params = new java.util.ArrayList<>();
         if (grade.getDescription() != null) {
             query.append("description=?, ");
@@ -89,10 +88,6 @@ public class GradeRepo {
             query.append("grade=?, ");
             params.add(grade.getGrade());
         }
-        if (grade.getDate() != null) {
-            query.append("date=?, ");
-            params.add(grade.getDate());
-        }
         if (grade.getWho_inserted_id() != null) {
             query.append("WHO_INSERTED_ID=?, ");
             params.add(grade.getWho_inserted_id());
@@ -101,10 +96,10 @@ public class GradeRepo {
         else {
             query.setLength(query.length() - 2);
             query.append(" WHERE category_id=? AND course_code=? AND semester=? AND user_id=?");
-            params.add(categoryId);
+            params.add(grade.getCategory_id());
             params.add(courseCode);
             params.add(semester);
-            params.add(userId);
+            params.add(grade.getUser_id());
             return jdbcClient.sql(query.toString())
                     .params(params)
                     .update();
