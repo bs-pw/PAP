@@ -240,7 +240,7 @@ public class UserRepo {
                 .param(userInGroup.getCourse_code())
                 .param(userInGroup.getSemester())
                 .query(Integer.class)
-                .optional().orElse(null);
+                .single();
     }
 //    public String getUserStatus(Integer userId) {
 //        return jdbcClient.sql("SELECT status from USERS where USER_ID=?")
@@ -259,7 +259,7 @@ public class UserRepo {
                 .param(userInGroup.getCourse_code())
                 .param(userInGroup.getSemester())
                 .query(Integer.class)
-                .optional().orElse(null);
+                .single();
     }
 
     public Integer checkIfIsCoordinator(Integer userId, String courseCode, String semester) {
@@ -268,7 +268,7 @@ public class UserRepo {
                 .param(courseCode)
                 .param(semester)
                 .query(Integer.class)
-                .optional().orElse(null);
+                .single();
     }
     public Integer checkIfIsLecturer(Integer userId, String courseCode, String semester, Integer group_number) {
         return jdbcClient.sql("SELECT count(*) FROM LECTURERS where user_id=? and COURSE_CODE=? and SEMESTER=? and GROUP_NUMBER=?")
@@ -277,7 +277,7 @@ public class UserRepo {
                 .param(semester)
                 .param(group_number)
                 .query(Integer.class)
-                .optional().orElse(null);
+                .single();
     }
     public Integer checkIfIsLecturerOfCourse(Integer userId, String courseCode, String semester) {
         return jdbcClient.sql("SELECT count(*) FROM LECTURERS where user_id=? and COURSE_CODE=? and SEMESTER=?")
@@ -285,7 +285,7 @@ public class UserRepo {
                 .param(courseCode)
                 .param(semester)
                 .query(Integer.class)
-                .optional().orElse(null);
+                .single();
     }
     public Integer checkIfStudentIsInCourse(Integer userId, String courseCode, String semester) {
         return jdbcClient.sql("SELECT count(*) FROM FINAL_GRADES where user_id=? and COURSE_CODE=? and SEMESTER=?")
@@ -293,7 +293,7 @@ public class UserRepo {
                 .param(courseCode)
                 .param(semester)
                 .query(Integer.class)
-                .optional().orElse(null);
+                .single();
     }
     public Integer removeUser(Integer userId) {
         return jdbcClient.sql("DELETE FROM USERS where user_id=?")

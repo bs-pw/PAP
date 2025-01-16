@@ -42,7 +42,7 @@ public class GradeCategoryResource {
         Integer userId = (Integer) session.getAttribute("user_id");
         if(userTypeId != 0)
         {
-            if(userRepo.checkIfIsCoordinator(userId,gradeCategory.getCourse_code(),gradeCategory.getSemester())==null)
+            if(userRepo.checkIfIsCoordinator(userId,gradeCategory.getCourse_code(),gradeCategory.getSemester())==0)
                 return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can insert grade category \"}");
         }
         try {
@@ -67,7 +67,7 @@ public class GradeCategoryResource {
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if(groupRepo.isLecturerOfCourse(userId,semester,courseCode)==null && !userTypeId.equals(0) && userRepo.checkIfIsCoordinator(userId,courseCode,semester)==null)
+        if(groupRepo.isLecturerOfCourse(userId,semester,courseCode)==null && !userTypeId.equals(0) && userRepo.checkIfIsCoordinator(userId,courseCode,semester)==0)
         {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -109,7 +109,7 @@ public class GradeCategoryResource {
 
         if (!userTypeId.equals(0)
                 && (userRepo.checkIfIsCoordinator(
-                        userId, course_code, semester)==null))
+                        userId, course_code, semester)==0))
         {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only course coordinator or admin can update grade category\"}");
         }
@@ -137,7 +137,7 @@ public class GradeCategoryResource {
 
         if (!userTypeId.equals(0)
                 && (userRepo.checkIfIsCoordinator(
-                userId, course_code, semester)==null))
+                userId, course_code, semester)==0))
         {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only course coordinator or admin can update grade category\"}");
         }

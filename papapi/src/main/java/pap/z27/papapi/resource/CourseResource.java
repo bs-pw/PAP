@@ -50,7 +50,7 @@ public class CourseResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         if (userTypeId != 0) {
-            return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert courses\"}");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"only admin can insert courses\"}");
         }
         try {
             if(courseRepo.insertCourse(course)==0) return ResponseEntity.badRequest().body("{\"message\":\"cannot insert course\"}");
@@ -68,7 +68,7 @@ public class CourseResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         if (userTypeId != 0) {
-            return ResponseEntity.badRequest().body("{\"message\":\"only admin can update courses\"}");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"only admin can update courses\"}");
         }
         course.setCourse_code(courseCode);
         try {

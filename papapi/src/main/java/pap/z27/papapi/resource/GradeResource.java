@@ -72,7 +72,7 @@ public class GradeResource {
 
         if (groupRepo.isLecturerOfCourse(userId, semester, courseCode) == null &&
                 !userTypeId.equals(0) &&
-                userRepo.checkIfIsCoordinator(userId, courseCode, semester) == null) {
+                userRepo.checkIfIsCoordinator(userId, courseCode, semester) == 0) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -106,7 +106,7 @@ public class GradeResource {
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if (userRepo.checkIfStudentIsInCourse(userId, courseCode, semester) == null)
+        if (userRepo.checkIfStudentIsInCourse(userId, courseCode, semester) == 0)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
             if (!userTypeId.equals(0) && !thisUserId.equals(userId) && userRepo.checkIfIsCoordinator(thisUserId, courseCode, semester) == 0 && userRepo.checkIfIsLecturerOfCourse(thisUserId, courseCode, semester) == 0) {
@@ -268,7 +268,7 @@ public class GradeResource {
         Integer userId = (Integer) session.getAttribute("user_id");
 
         if (!userTypeId.equals(0) &&
-            userRepo.checkIfIsCoordinator(userId, courseCode, semester) == null &&
+            userRepo.checkIfIsCoordinator(userId, courseCode, semester) == 0 &&
             groupRepo.isLecturerOfCourse(userId, semester, courseCode) == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
