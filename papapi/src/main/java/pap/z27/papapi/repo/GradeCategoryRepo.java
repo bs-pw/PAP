@@ -29,7 +29,8 @@ public class GradeCategoryRepo {
                 .param(semester)
                 .param(courseCode)
                 .param(gradeCategory)
-                .query(GradeCategory.class).single();
+                .query(GradeCategory.class)
+                .optional().orElse(null);
     }
 
     public Integer insertGradeCategory(GradeCategory gradeCategory) {

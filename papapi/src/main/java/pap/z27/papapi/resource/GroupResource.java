@@ -2,6 +2,7 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,12 +43,16 @@ public class GroupResource {
         }
         if(userTypeId != 0)
         {
-            if(userRepo.checkIfIsCoordinator(userId,group.getCourse_code(),group.getSemester())==0)
+            if(userRepo.checkIfIsCoordinator(userId,group.getCourse_code(),group.getSemester())==null)
                 return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can insert groups \"}");
         }
+        try {
             if(groupRepo.insertGroup(group)==0)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("{\"message\":\"Cannot insert group (group might already exist)\"}");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Cannot insert group (group might already exist)\"}");
+        }
 
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
@@ -61,12 +66,16 @@ public class GroupResource {
         }
         if(userTypeId != 0)
         {
-            if(userRepo.checkIfIsCoordinator(userId,group.getCourse_code(),group.getSemester())==0)
+            if(userRepo.checkIfIsCoordinator(userId,group.getCourse_code(),group.getSemester())==null)
                 return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can remove groups \"}");
         }
-        if (groupRepo.removeGroup(group) == 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("{\"message\":\"Group not found\"}");
+        try {
+            if (groupRepo.removeGroup(group) == 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("{\"message\":\"Group not found\"}");
+            }
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Cannot remove group\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

@@ -25,6 +25,9 @@ public class AuthResource {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Credentials credentials, HttpServletRequest request) {
         String hash_pass = userRepo.findPasswordByMail(credentials.getMail());
+        if (hash_pass == null) {
+            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("{\"message\":\"Złe dane logowania!\"}");
+        }
         if (securityConfig.passwordEncoder().matches(credentials.getPassword(), hash_pass)) {
             HttpSession session = request.getSession(false);
             if (session == null) {
@@ -32,6 +35,9 @@ public class AuthResource {
             }
             session.setAttribute("mail", credentials.getMail());
             UserLoginInfo user = userRepo.findUsersLoginInfoByMail(credentials.getMail());
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("{\"message\":\"Złe dane logowania!\"}");
+            }
             session.setAttribute("name", user.getName());
             session.setAttribute("surname", user.getSurname());
             session.setAttribute("user_id", user.getUser_id());

@@ -23,7 +23,7 @@ public class UserRepo {
         return jdbcClient.sql("SELECT COUNT(*) FROM USERS where user_id=?")
                 .param(userId)
                 .query(Integer.class)
-                .single();
+                .optional().orElse(null);
     }
     public List<UserPublicInfo> findAllUsers() {
         return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.mail" +
@@ -35,7 +35,7 @@ public class UserRepo {
         return jdbcClient.sql("SELECT password FROM USERS where mail=?")
                 .param(mail)
                 .query(Password.class)
-                .single()
+                .optional().orElse(null)
                 .getPassword();
     }
     public UserInfo findUsersInfoByID(Integer userId) {
@@ -43,21 +43,21 @@ public class UserRepo {
                         " FROM USERS u join USER_TYPES ut using(USER_TYPE_ID) where user_id=?")
                 .param(userId)
                 .query(UserInfo.class)
-                .single();
+                .optional().orElse(null);
     }
     public UserPublicInfo findUsersInfoByMail(String mail) {
         return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.mail" +
                         " FROM USERS u join USER_TYPES ut using(USER_TYPE_ID) where mail=?")
                 .param(mail)
                 .query(UserPublicInfo.class)
-                .single();
+                .optional().orElse(null);
     }
     public UserLoginInfo findUsersLoginInfoByMail(String mail) {
         return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,u.user_type_id,u.mail" +
                         " FROM USERS u where mail=?")
                 .param(mail)
                 .query(UserLoginInfo.class)
-                .single();
+                .optional().orElse(null);
     }
     public List<UserPublicInfo> findAllCourseCoordinators(CourseInSemester courseInSemester) {
         return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.mail" +
@@ -226,7 +226,7 @@ public class UserRepo {
         return jdbcClient.sql("SELECT USER_TYPE_ID from USERS where USER_ID=?")
                 .param(userId)
                 .query(Integer.class)
-                .single();
+                .optional().orElse(null);
     }
 //    public Type findUsersType(Integer userId) {
 //        return jdbcClient.sql("SELECT USER_TYPE_ID from USERS where USER_ID=?")
@@ -240,7 +240,7 @@ public class UserRepo {
                 .param(userInGroup.getCourse_code())
                 .param(userInGroup.getSemester())
                 .query(Integer.class)
-                .single();
+                .optional().orElse(null);
     }
 //    public String getUserStatus(Integer userId) {
 //        return jdbcClient.sql("SELECT status from USERS where USER_ID=?")
@@ -259,7 +259,7 @@ public class UserRepo {
                 .param(userInGroup.getCourse_code())
                 .param(userInGroup.getSemester())
                 .query(Integer.class)
-                .single();
+                .optional().orElse(null);
     }
 
     public Integer checkIfIsCoordinator(Integer userId, String courseCode, String semester) {
@@ -268,7 +268,7 @@ public class UserRepo {
                 .param(courseCode)
                 .param(semester)
                 .query(Integer.class)
-                .single();
+                .optional().orElse(null);
     }
     public Integer checkIfIsLecturer(Integer userId, String courseCode, String semester, Integer group_number) {
         return jdbcClient.sql("SELECT count(*) FROM LECTURERS where user_id=? and COURSE_CODE=? and SEMESTER=? and GROUP_NUMBER=?")
@@ -277,7 +277,7 @@ public class UserRepo {
                 .param(semester)
                 .param(group_number)
                 .query(Integer.class)
-                .single();
+                .optional().orElse(null);
     }
     public Integer checkIfIsLecturerOfCourse(Integer userId, String courseCode, String semester) {
         return jdbcClient.sql("SELECT count(*) FROM LECTURERS where user_id=? and COURSE_CODE=? and SEMESTER=?")
@@ -285,7 +285,7 @@ public class UserRepo {
                 .param(courseCode)
                 .param(semester)
                 .query(Integer.class)
-                .single();
+                .optional().orElse(null);
     }
     public Integer checkIfStudentIsInCourse(Integer userId, String courseCode, String semester) {
         return jdbcClient.sql("SELECT count(*) FROM FINAL_GRADES where user_id=? and COURSE_CODE=? and SEMESTER=?")
@@ -293,7 +293,7 @@ public class UserRepo {
                 .param(courseCode)
                 .param(semester)
                 .query(Integer.class)
-                .single();
+                .optional().orElse(null);
     }
     public Integer removeUser(Integer userId) {
         return jdbcClient.sql("DELETE FROM USERS where user_id=?")

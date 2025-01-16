@@ -25,7 +25,7 @@ public class SemesterRepo {
         return jdbcClient.sql("SELECT * from SEMESTERS where semester_code=?")
                 .param(semesterCode)
                 .query(Semester.class)
-                .single();
+                .optional().orElse(null);
     }
 
     public List<SemesterCode> getSemestersByCoordinatorAndLecturer(Integer userId) {

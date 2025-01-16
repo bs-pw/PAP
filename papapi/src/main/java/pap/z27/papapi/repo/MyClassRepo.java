@@ -55,7 +55,7 @@ public class MyClassRepo {
                 .param(groupNr)
                 .param(classIdForGroup)
                 .query(ClassInfo.class)
-                .single();
+                .optional().orElse(null);
     }
 
     public List<MyClass> findClassPlanBySemester(String courseCode, String semester) {

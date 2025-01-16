@@ -3,6 +3,7 @@ package pap.z27.papapi.resource;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +32,13 @@ public class SemesterResource {
     }
 
     @GetMapping("/{semesterCode}")
-    public Semester getSemester(@PathVariable String semesterCode)
+    public ResponseEntity<Semester> getSemester(@PathVariable String semesterCode)
     {
-        return semesterRepo.getSemester(semesterCode);
+        Semester response = semesterRepo.getSemester(semesterCode);
+        if (response == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/bylecturer/{userId}")
@@ -64,8 +69,12 @@ public class SemesterResource {
         if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert semesters\"}\"");
         }
-        if(semesterRepo.insertSemester(semester)==0)
-            return ResponseEntity.badRequest().body("{\"message\":\"Couldn't insert semester\"}\"");
+        try {
+            if(semesterRepo.insertSemester(semester)==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Couldn't insert semester\"}\"");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't insert semester\"}\"");
+        }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 
@@ -75,9 +84,13 @@ public class SemesterResource {
        if (userTypeId != 0) {
            return ResponseEntity.badRequest().body("{\"message\":\"only admin can delete semesters\"}\"");
        }
-       if (semesterRepo.removeSemester(semesterCode) == 0)
-           return ResponseEntity.badRequest().body("{\"message\":\"semester couldn't be removed\"}\"");
-       return ResponseEntity.ok("{\"message\":\"semester removed\"}");
+        try {
+            if (semesterRepo.removeSemester(semesterCode) == 0)
+                return ResponseEntity.badRequest().body("{\"message\":\"semester couldn't be removed\"}\"");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"semester couldn't be removed\"}\"");
+        }
+        return ResponseEntity.ok("{\"message\":\"semester removed\"}");
     }
 
     @PutMapping
@@ -86,8 +99,12 @@ public class SemesterResource {
         if (userTypeId != 0) {
             return ResponseEntity.badRequest().body("{\"message\":\"only admin can update semesters\"}\"");
         }
-        if (semesterRepo.updateSemester(semester) == 0)
-            return ResponseEntity.badRequest().body("{\"message\":\"semester couldn't be updated\"}\"");
+        try {
+            if (semesterRepo.updateSemester(semester) == 0)
+                return ResponseEntity.badRequest().body("{\"message\":\"semester couldn't be updated\"}\"");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"semester couldn't be updated\"}\"");
+        }
         return ResponseEntity.ok("{\"message\":\"semester updated\"}");
     }
 }

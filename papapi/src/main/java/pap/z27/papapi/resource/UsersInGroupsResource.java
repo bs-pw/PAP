@@ -2,6 +2,7 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,18 +36,18 @@ public class UsersInGroupsResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Integer userId = (Integer) session.getAttribute("user_id");
-        if (userTypeId.equals(4) || (userTypeId.equals(3) && groupRepo.isStudentInGroup(userId,semester,courseCode,groupNr)==0)){
+        if (userTypeId.equals(4) || (userTypeId.equals(3) && groupRepo.isStudentInGroup(userId,semester,courseCode,groupNr)==null)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(groupRepo.findStudentsInGroup(courseCode,semester,groupNr));
     }
-@GetMapping("/{semester}/{courseCode}/{groupNr}/lecturers")
-public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable("semester") String semester,
-                                                                @PathVariable("courseCode") String courseCode,
-                                                                @PathVariable("groupNr") Integer groupNr) {
 
-    return ResponseEntity.ok(groupRepo.findLecturersOfGroup(courseCode,semester,groupNr));
-}
+    @GetMapping("/{semester}/{courseCode}/{groupNr}/lecturers")
+    public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable("semester") String semester,
+                                                                    @PathVariable("courseCode") String courseCode,
+                                                                    @PathVariable("groupNr") Integer groupNr) {
+        return ResponseEntity.ok(groupRepo.findLecturersOfGroup(courseCode,semester,groupNr));
+    }
 
     @GetMapping("/{semester}/{courseCode}/{groupNr}/available/students")
     public ResponseEntity<List<UserPublicInfo>> getAllEligibleStudentsToGroup(@PathVariable("semester") String semester,
@@ -60,7 +61,7 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
         if (thisUserTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
                 courseCode,
-                semester)==0)) {
+                semester)==null)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(groupRepo.findEligibleStudentsToGroup(semester,courseCode,groupNr));
@@ -78,7 +79,7 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
         if (thisUserTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
                 courseCode,
-                semester)==0)) {
+                semester)==null)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(groupRepo.findEligibleLecturersToGroup(semester,courseCode,groupNr));
@@ -93,41 +94,53 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
         if (thisUserTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
                 userInGroup.getCourse_code(), 
-                userInGroup.getSemester())==0)) {
+                userInGroup.getSemester())==null)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admins/coordinators can add students to groups\"}");
         }
 
         Integer userId = userInGroup.getUser_id();
         Integer userTypeId = userRepo.findUsersTypeId(userId);
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("{\"message\":\"User doesn't exist.\"}");
+        }
         switch (asWho){
             case "students":
                 if (userTypeId!= 3 && userTypeId!= 2) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                             .body("{\"message\":\"User is not a student.\"}");
                 }
-                if (groupRepo.isLecturerOfGroup(userId,userInGroup.getSemester(),userInGroup.getCourse_code(),userInGroup.getGroup_number())!=0)
+                if (groupRepo.isLecturerOfGroup(userId,userInGroup.getSemester(),userInGroup.getCourse_code(),userInGroup.getGroup_number())!=null)
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .body("{\"message\":\"User is already a lecturer of this group.\"}");
 
-                if (userRepo.checkIfIsCoordinator(userId,userInGroup.getCourse_code(),userInGroup.getSemester())!=0)
+                if (userRepo.checkIfIsCoordinator(userId,userInGroup.getCourse_code(),userInGroup.getSemester())!=null)
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .body("{\"message\":\"User is already a coordinator of this group.\"}");
 
-                if (userRepo.countUsersFinalGrades(userInGroup)==0)
+                if (userRepo.countUsersFinalGrades(userInGroup)==null)
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                             .body("{\"message\":\"User is not signed up for this course.\"}");
-                groupRepo.addStudentToGroup(userInGroup);
+                try {
+                    groupRepo.addStudentToGroup(userInGroup);
+                } catch (DataAccessException e) {
+                    return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't add student to group.\"}");
+                }
                 return ResponseEntity.ok("{\"message\":\"ok\"}");
             case "lecturers":
                 if (userTypeId != 2 && userTypeId!= 1) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                             .body("{\"message\":\"User is not a lecturer.\"}");
                 }
-                if (userRepo.checkIfStudentIsInCourse(userId,userInGroup.getCourse_code(),userInGroup.getSemester())!=0)
+                if (userRepo.checkIfStudentIsInCourse(userId,userInGroup.getCourse_code(),userInGroup.getSemester())!=null)
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .body("{\"message\":\"User is already a student in this course.\"}");
 
-                groupRepo.addLecturerToGroup(userInGroup);
+                try {
+                    groupRepo.addLecturerToGroup(userInGroup);
+                } catch (DataAccessException e) {
+                    return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't add lecturer to group.\"}");
+                }
                 return ResponseEntity.ok("{\"message\":\"ok\"}");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -139,6 +152,10 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
                                                   HttpSession session) {
         Integer affectedUsersId = userInGroup.getUser_id();
         Integer affectedUsersTypeId = userRepo.findUsersTypeId(affectedUsersId);
+        if (affectedUsersTypeId == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("{\"message\":\"User doesn't exist.\"}");
+        }
 
         Integer userTypeId = (Integer)session.getAttribute("user_type_id");
         if (userTypeId == null) {
@@ -150,20 +167,28 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
         }
         if (userTypeId == 0) {
            if (affectedUsersTypeId == 3) {
+               try {
                    if(groupRepo.updateStudentsGroup(userInGroup, newGroupNr)==0)
                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                            .body("{\"message\":\"Couldn't change student's group.\"}");
+               } catch (DataAccessException e) {
+                   return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't change student's group.\"}");
+               }
 
                return ResponseEntity.ok("{\"message\":\"ok\"}");
            }
         }
         if (userTypeId==1) {
-            if (userRepo.checkIfIsCoordinator(userInGroup)==0)
+            if (userRepo.checkIfIsCoordinator(userInGroup)==null)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("{\"message\":\"Lecturer that is not a coordinator of the course cannot change groups.\"}");
-            if(groupRepo.updateStudentsGroup(userInGroup, newGroupNr)==0)
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("{\"message\":\"Couldn't change student's group.\"}");
+            try {
+                if(groupRepo.updateStudentsGroup(userInGroup, newGroupNr)==0)
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("{\"message\":\"Couldn't change student's group.\"}");
+            } catch (DataAccessException e) {
+                return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't change student's group.\"}");
+            }
 
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
@@ -181,12 +206,17 @@ public ResponseEntity<List<UserPublicInfo>> getAllLecturersOfGroup(@PathVariable
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         UserInGroup uig = new UserInGroup(thisUserId,courseCode,semester,groupNr);
-        if (userTypeId != 0 && userRepo.checkIfIsCoordinator(uig)==0) {
+        if (userTypeId != 0 && userRepo.checkIfIsCoordinator(uig)==null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("{\"message\":\"only coordinators can remove students/lectureres from groups.\"}");
         }
         uig.setUser_id(userId);
-        int result = groupRepo.removeStudentFromGroup(uig)+groupRepo.removeLecturerFromGroup(uig);
+        int result = 0;
+        try {
+            result = groupRepo.removeStudentFromGroup(uig)+groupRepo.removeLecturerFromGroup(uig);
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't update user's group.\"}");
+        }
         if(result==0)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("{\"message\":\"Couldn't remove user from group.\"}");

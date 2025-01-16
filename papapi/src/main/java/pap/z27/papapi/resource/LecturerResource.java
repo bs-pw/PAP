@@ -2,6 +2,7 @@ package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,17 +39,25 @@ public class LecturerResource {
         }
         if(userTypeId != 0)
         {
-            if(userRepo.checkIfIsCoordinator(userId,group.getCourse_code(),group.getSemester())==0)
+            if(userRepo.checkIfIsCoordinator(userId,group.getCourse_code(),group.getSemester())==null)
                 return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can insert lecturers \"}");
         }
         Integer insertedTypeId = userRepo.findUsersTypeId(lecturerId);
+        if (insertedTypeId == null) {
+            return ResponseEntity.badRequest().body("{\"message\":\"lecturer not found\"}");
+        }
         if (insertedTypeId == 3) {
             return ResponseEntity.badRequest().body("{\"message\":\"students cannot be lecturers\"}");
         }
         else if (insertedTypeId == 4) {
             return ResponseEntity.badRequest().body("{\"message\":\"inactive users cannot be lecturers\"}");
         }
-        groupRepo.addLecturerToGroup(lecturerId, group);
+        try {
+            if (groupRepo.addLecturerToGroup(lecturerId, group)==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Couldn't add lecturer to group\"}");
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't add lecturer to group\"}");
+        }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
 
@@ -81,11 +90,15 @@ public class LecturerResource {
         }
         if(userTypeId != 0)
         {
-            if(userRepo.checkIfIsCoordinator(userId,lecturer.getCourse_code(),lecturer.getSemester())==0)
+            if(userRepo.checkIfIsCoordinator(userId,lecturer.getCourse_code(),lecturer.getSemester())==null)
                 return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can remove lecturers \"}");
         }
-        if (groupRepo.removeLecturer(lecturer) == 0) {
-            return ResponseEntity.badRequest().body("{\"message\":\"Couldn't delete lecturer (lecturer might not exist).\"}");
+        try {
+            if (groupRepo.removeLecturer(lecturer) == 0) {
+                return ResponseEntity.badRequest().body("{\"message\":\"Couldn't delete lecturer (lecturer might not exist).\"}");
+            }
+        } catch (DataAccessException e) {
+            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't delete lecturer (lecturer might not exist).\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
