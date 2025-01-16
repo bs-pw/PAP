@@ -121,7 +121,7 @@ public class GradeResource {
     public ResponseEntity<Integer> insertGrades(
             @PathVariable String semester,
             @PathVariable String courseCode,
-            @RequestBody Map<Integer,Grade> grades,
+            @RequestBody Map<Object,Grade> grades,
             HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         Integer thisUserId = (Integer) session.getAttribute("user_id");
@@ -134,9 +134,8 @@ public class GradeResource {
         int notAddedCounter=0;
         for(var gradeEntity:grades.entrySet()) {
             Grade grade = gradeEntity.getValue();
-//            grade.setCategory_id(gradeEntity.getKey());
             grade.setWho_inserted_id(thisUserId);
-
+//            if(grade.getDescription()==null && grade.getGrade()==null && grade.getCategory_id() &&) {}
             try {
 //                if (grade.getGrade() < 0 && grade.getGrade() > gradeCategoryRepo.getGradeCategory(
 //                        grade.getSemester(), grade.getCourse_code(), grade.getCategory_id()
