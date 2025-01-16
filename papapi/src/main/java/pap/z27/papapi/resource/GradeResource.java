@@ -17,6 +17,7 @@ import pap.z27.papapi.repo.UserRepo;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
@@ -120,7 +121,7 @@ public class GradeResource {
     public ResponseEntity<Integer> insertGrades(
             @PathVariable String semester,
             @PathVariable String courseCode,
-            @RequestBody List<Grade> grades,
+            @RequestBody Map<Object,Grade> grades,
             HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         Integer thisUserId = (Integer) session.getAttribute("user_id");
@@ -131,8 +132,9 @@ public class GradeResource {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         int notAddedCounter=0;
-        for(var grade:grades) {
+        for(var gradeEntity:grades.entrySet()) {
             try {
+                Grade grade = gradeEntity.getValue();
 //                if (grade.getGrade() < 0 && grade.getGrade() > gradeCategoryRepo.getGradeCategory(
 //                        grade.getSemester(), grade.getCourse_code(), grade.getCategory_id()
 //                ).getMax_grade())
