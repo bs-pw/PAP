@@ -3,7 +3,7 @@ import Client from './Client';
 const ClientContext = createContext();
 
 export const ClientProvider = ({ children }) => {
-    const [client] = useState(new Client("http://app.usos.pro/api"));
+    const [client] = useState(new Client("https://app.usos.pro/api"));
 
     return (
         <ClientContext.Provider value={client}>
