@@ -1,6 +1,7 @@
 package pap.z27.papapi.repo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.CourseInSemester;
@@ -47,12 +48,17 @@ public class FinalGradeRepo {
                 .param(finalGrade.getSemester())
                 .update();
     }
-    public Integer updateFinalGrade(FinalGrade finalGrade) {
+    public Integer updateFinalGrade(String semester, String courseCode, FinalGrade finalGrade) {
         return jdbcClient.sql("UPDATE FINAL_GRADES set grade=? where user_id=? and course_code=? and semester=?")
                 .param(finalGrade.getGrade())
                 .param(finalGrade.getUser_id())
-                .param(finalGrade.getCourse_code())
-                .param(finalGrade.getSemester())
+                .param(courseCode)
+                .param(semester)
+                .update();
+    }
+    public Integer updateFinalGradeNullsToTwosInSemester(String semester){
+        return jdbcClient.sql("UPDATE FINAL_GRADES SET GRADE=2.0 WHERE SEMESTER=? and GRADE IS NULL")
+                .param(semester)
                 .update();
     }
 

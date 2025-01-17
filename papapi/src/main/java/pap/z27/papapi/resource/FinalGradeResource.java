@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.FinalGrade;
+import pap.z27.papapi.domain.Grade;
 import pap.z27.papapi.domain.Group;
 import pap.z27.papapi.domain.subclasses.UserAndFinalGrade;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
@@ -17,6 +18,7 @@ import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
@@ -157,27 +159,49 @@ public class FinalGradeResource {
 
     }
 
-    @PutMapping
-    public ResponseEntity<String> updateFinalGrade(
-            @RequestBody FinalGrade finalGrade,
+    @PutMapping("{semester}/{courseCode}")
+    public ResponseEntity<String> updateFinalGrades(
+            @PathVariable String semester,
+            @PathVariable String courseCode,
+            @RequestBody Map<Object, FinalGrade> finalGrades,
             HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         Integer userId = (Integer) session.getAttribute("user_id");
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if (userTypeId != 0 && !userRepo.checkIfIsCoordinator(userId,
-                finalGrade.getCourse_code(),
-                finalGrade.getSemester())) {
+        if (userTypeId != 0 && !userRepo.checkIfIsCoordinator(userId, courseCode, semester)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admins/coordinators can change final grades \"}");
+        }
+        int exceptionsCounter=0;
+        for(var finalGrade : finalGrades.values()) {
+            try {
+                finalGradeRepo.updateFinalGrade(semester, courseCode, finalGrade);
+            }
+            catch (DataAccessException e){exceptionsCounter++;}
+        }
+        if(exceptionsCounter>0)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\" Problem with: "+exceptionsCounter+ " final grades.\"}");
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/yourelate/{semester}")
+    public ResponseEntity<String> updateFinalGradeNullsToTwosInSemester(@PathVariable String semester,
+                                                               HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (userTypeId != 0) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admins/coordinators can change final grades \"}");
         }
         try {
-            if (finalGradeRepo.updateFinalGrade(finalGrade) == 0) {
+            if (finalGradeRepo.updateFinalGradeNullsToTwosInSemester(semester) == 0) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("{\"message\":\"Couldn't update final grade\"}");
+                        .body("{\"message\":\"Couldn't update final grades\"}");
             }
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't update final grade\"}");
+            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't update final grades\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

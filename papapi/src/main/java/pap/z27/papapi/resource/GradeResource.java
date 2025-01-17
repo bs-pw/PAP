@@ -134,9 +134,7 @@ public class GradeResource {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         int exceptionsCounter=0;
-        for(var gradeEntity:grades.entrySet()) {
-
-            Grade grade = gradeEntity.getValue();
+        for(var grade:grades.values()) {
             if(grade.getGrade()==null) {
                 try {
                     gradeRepo.removeGrade(semester, courseCode, grade.getCategory_id(), grade.getUser_id());

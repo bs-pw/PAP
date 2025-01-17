@@ -63,25 +63,31 @@ public class GradeCategoryResource {
             HttpSession session
     ) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
-        Integer userId = (Integer) session.getAttribute("user_id");
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if(groupRepo.isLecturerOfCourse(userId,semester,courseCode)==null && !userTypeId.equals(0) && !userRepo.checkIfIsCoordinator(userId,courseCode,semester))
-        {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
         return ResponseEntity.ok(gradeCategoryRepo.findAllCourseGradeCategories(courseCode, semester));
     }
 
-    //TODO: funkcja zwracająca sumę możliwych do uzyskania punktów z przedmiotu w danym semestrze. zapytanie typu /api/gradecategories/{semester}/{courseCode}/sum
+    @GetMapping("/{semester}/{courseCode}/sum")
+    public ResponseEntity<Integer> getMaxPointsToGetInCourse(@PathVariable String semester,
+                                                             @PathVariable String courseCode,
+                                                             HttpSession session
+                                                             )
+    {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(gradeCategoryRepo.getGradeCategoriesSumForCourse(semester,courseCode));
+    }
+
 
     @GetMapping("{semester}/{courseCode}/{categoryId}")
     public ResponseEntity<GradeCategory> getGradeCategory(@PathVariable String semester,
-                                                           @PathVariable String courseCode,
-                                                           @PathVariable Integer categoryId,
-                                                           HttpSession session)
+                                                          @PathVariable String courseCode,
+                                                          @PathVariable Integer categoryId,
+                                                          HttpSession session)
     {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         if (userTypeId == null) {
