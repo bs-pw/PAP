@@ -95,8 +95,7 @@ public class UserResource {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Couldn't insert user! \"}");
             return ResponseEntity.ok("{\"message\":\"ok\"}");
         }catch(DataAccessException e){
-//            System.out.println(e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 

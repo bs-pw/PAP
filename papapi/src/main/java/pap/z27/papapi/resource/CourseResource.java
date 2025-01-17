@@ -38,7 +38,7 @@ public class CourseResource {
             return ResponseEntity.ok(courseRepo.findCourse(courseCode));
         }catch(DataAccessException e){
             log.error("e: ", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
