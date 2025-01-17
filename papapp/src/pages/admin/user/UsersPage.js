@@ -46,6 +46,7 @@ const UsersPage = () => {
     }, []);
 
     const columnNames = ['ID', 'Imię', 'Nazwisko', 'Typ użytkownika', 'Email'];
+    console.log(users)
 
     return (
         <>

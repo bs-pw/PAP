@@ -38,6 +38,8 @@ import LecturerFinalGradesPage from "../pages/lecturer/grades/LecturerFinalGrade
 import StudentSemesterPage from "../pages/student/StudentSemesterPage";
 import StudentMenuPage from "../pages/student/StudentMenuPage";
 import StudentFinalGradesInSem from "../pages/student/StudentFinalGradesInSem";
+import StudentCoursesWithGrades from "../pages/student/grades/StudentCoursesWithGrades";
+import StudentGrades from "../pages/student/grades/StudentGrades";
 
 //import useAuthStatus from './useAuthStatus';
 
@@ -413,6 +415,19 @@ export const router = createBrowserRouter([
                                                 path: "final-grades",
                                                 element: <StudentFinalGradesInSem />
                                             },
+                                            {
+                                                path: "grades",
+                                                children: [
+                                                    {
+                                                        index: true,
+                                                        element: <StudentCoursesWithGrades />
+                                                    },
+                                                    {
+                                                        path: ":courseId",
+                                                        element: <StudentGrades />
+                                                    }
+                                                ]
+                                            }
                                         ],
                                     },
                                 ],
