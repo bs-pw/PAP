@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
+//@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping(path = "api/classes")
 public class ClassResource {
     private final MyClassRepo classRepo;

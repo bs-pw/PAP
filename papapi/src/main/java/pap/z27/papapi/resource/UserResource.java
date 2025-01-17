@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
+//@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping("/api/user")
 
 public class UserResource {

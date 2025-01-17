@@ -16,7 +16,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
+//@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping(path = "api/courseinsemester")
 public class CourseInSemesterResource {
     private final CourseInSemesterRepo courseRepo;

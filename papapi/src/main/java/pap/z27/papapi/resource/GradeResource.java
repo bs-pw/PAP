@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
+//@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping("/api/grades")
 public class GradeResource {
     public final GradeRepo gradeRepo;

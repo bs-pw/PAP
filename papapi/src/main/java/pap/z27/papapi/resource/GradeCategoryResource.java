@@ -14,7 +14,7 @@ import pap.z27.papapi.repo.UserRepo;
 import java.util.List;
 
 @RestController
-@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
+//@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping("/api/gradecategories")
 public class GradeCategoryResource {
     public final GradeCategoryRepo gradeCategoryRepo;

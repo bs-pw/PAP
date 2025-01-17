@@ -12,7 +12,7 @@ import pap.z27.papapi.repo.UserTypeRepo;
 import java.util.List;
 
 @RestController
-@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
+//@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping("/api/usertypes")
 public class UserTypeResource {
     private final UserTypeRepo userTypeRepo;

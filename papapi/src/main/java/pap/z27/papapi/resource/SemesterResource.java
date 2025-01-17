@@ -13,7 +13,7 @@ import pap.z27.papapi.repo.SemesterRepo;
 import java.util.List;
 
 @RestController
-@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
+//@CrossOrigin(originPatterns = "http://localhost:*", allowCredentials = "true")
 @RequestMapping("/api/semester")
 public class SemesterResource {
     private final SemesterRepo semesterRepo;
