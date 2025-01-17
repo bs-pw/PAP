@@ -42,7 +42,7 @@ public class GradeCategoryResource {
         Integer userId = (Integer) session.getAttribute("user_id");
         if(userTypeId != 0)
         {
-            if(userRepo.checkIfIsCoordinator(userId,gradeCategory.getCourse_code(),gradeCategory.getSemester())==0)
+            if(!userRepo.checkIfIsCoordinator(userId,gradeCategory.getCourse_code(),gradeCategory.getSemester()))
                 return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can insert grade category \"}");
         }
         try {
@@ -63,25 +63,31 @@ public class GradeCategoryResource {
             HttpSession session
     ) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
-        Integer userId = (Integer) session.getAttribute("user_id");
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if(groupRepo.isLecturerOfCourse(userId,semester,courseCode)==null && !userTypeId.equals(0) && userRepo.checkIfIsCoordinator(userId,courseCode,semester)==0)
-        {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
         return ResponseEntity.ok(gradeCategoryRepo.findAllCourseGradeCategories(courseCode, semester));
     }
 
-    //TODO: funkcja zwracająca sumę możliwych do uzyskania punktów z przedmiotu w danym semestrze. zapytanie typu /api/gradecategories/{semester}/{courseCode}/sum
+    @GetMapping("/{semester}/{courseCode}/sum")
+    public ResponseEntity<Integer> getMaxPointsToGetInCourse(@PathVariable String semester,
+                                                             @PathVariable String courseCode,
+                                                             HttpSession session
+                                                             )
+    {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(gradeCategoryRepo.getGradeCategoriesSumForCourse(semester,courseCode));
+    }
+
 
     @GetMapping("{semester}/{courseCode}/{categoryId}")
     public ResponseEntity<GradeCategory> getGradeCategory(@PathVariable String semester,
-                                                           @PathVariable String courseCode,
-                                                           @PathVariable Integer categoryId,
-                                                           HttpSession session)
+                                                          @PathVariable String courseCode,
+                                                          @PathVariable Integer categoryId,
+                                                          HttpSession session)
     {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         if (userTypeId == null) {
@@ -108,8 +114,8 @@ public class GradeCategoryResource {
         Integer userId = (Integer) session.getAttribute("user_id");
 
         if (!userTypeId.equals(0)
-                && (userRepo.checkIfIsCoordinator(
-                        userId, course_code, semester)==0))
+                && !userRepo.checkIfIsCoordinator(
+                        userId, course_code, semester))
         {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only course coordinator or admin can update grade category\"}");
         }
@@ -136,8 +142,8 @@ public class GradeCategoryResource {
         Integer userId = (Integer) session.getAttribute("user_id");
 
         if (!userTypeId.equals(0)
-                && (userRepo.checkIfIsCoordinator(
-                userId, course_code, semester)==0))
+                && !userRepo.checkIfIsCoordinator(
+                userId, course_code, semester))
         {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only course coordinator or admin can update grade category\"}");
         }

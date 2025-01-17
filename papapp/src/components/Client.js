@@ -1159,6 +1159,36 @@ class Client {
             throw new Error(error.message);
         });
     }
+    async updateFinalGrades(semester, courseCode, data) {
+        return fetch(`${this.baseUrl}/finalgrades/${semester}/${courseCode}`, {
+            method: 'PUT',
+            headers: this.headers,
+            credentials: this.credentials,
+            body: JSON.stringify(data)
+        }).then(response => {
+            if (response.ok) {
+                return true;
+            }
+            throw new Error(`Error updating final grades: ${response.statusText}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+    async updateFinalGradeNullsToTwosInSemester(semester) {
+        return fetch(`${this.baseUrl}/finalgrades/${semester}`, {
+            method: 'PUT',
+            headers: this.headers,
+            credentials: this.credentials
+        }).then(response => {
+            if (response.ok) {
+                return true;
+            }
+            throw new Error(`Error updating final grades: ${response.statusText}`);
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+    
 
 
 }

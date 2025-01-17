@@ -59,9 +59,9 @@ public class UsersInGroupsResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
-        if (thisUserTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
+        if (thisUserTypeId != 0 && !userRepo.checkIfIsCoordinator(coordinatorId,
                 courseCode,
-                semester)==0)) {
+                semester)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(groupRepo.findEligibleStudentsToGroup(semester,courseCode,groupNr));
@@ -77,9 +77,9 @@ public class UsersInGroupsResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
-        if (thisUserTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
+        if (thisUserTypeId != 0 && !userRepo.checkIfIsCoordinator(coordinatorId,
                 courseCode,
-                semester)==0)) {
+                semester)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(groupRepo.findEligibleLecturersToGroup(semester,courseCode,groupNr));
@@ -92,9 +92,9 @@ public class UsersInGroupsResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Integer coordinatorId = (Integer) session.getAttribute("user_id");
-        if (thisUserTypeId != 0 && (userRepo.checkIfIsCoordinator(coordinatorId,
+        if (thisUserTypeId != 0 && !userRepo.checkIfIsCoordinator(coordinatorId,
                 userInGroup.getCourse_code(), 
-                userInGroup.getSemester())==0)) {
+                userInGroup.getSemester())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admins/coordinators can add students to groups\"}");
         }
 
@@ -114,7 +114,7 @@ public class UsersInGroupsResource {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .body("{\"message\":\"User is already a lecturer of this group.\"}");
 
-                if (userRepo.checkIfIsCoordinator(userId,userInGroup.getCourse_code(),userInGroup.getSemester())!=0)
+                if (userRepo.checkIfIsCoordinator(userId,userInGroup.getCourse_code(),userInGroup.getSemester()))
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .body("{\"message\":\"User is already a coordinator of this group.\"}");
 
@@ -132,7 +132,7 @@ public class UsersInGroupsResource {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                             .body("{\"message\":\"User is not a lecturer.\"}");
                 }
-                if (userRepo.checkIfStudentIsInCourse(userId,userInGroup.getCourse_code(),userInGroup.getSemester())!=0)
+                if (userRepo.checkIfStudentIsInCourse(userId,userInGroup.getCourse_code(),userInGroup.getSemester()))
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .body("{\"message\":\"User is already a student in this course.\"}");
 
@@ -179,7 +179,7 @@ public class UsersInGroupsResource {
            }
         }
         if (userTypeId==1) {
-            if (userRepo.checkIfIsCoordinator(userInGroup)==0)
+            if (!userRepo.checkIfIsCoordinator(userInGroup))
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("{\"message\":\"Lecturer that is not a coordinator of the course cannot change groups.\"}");
             try {
@@ -206,7 +206,7 @@ public class UsersInGroupsResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         UserInGroup uig = new UserInGroup(thisUserId,courseCode,semester,groupNr);
-        if (userTypeId != 0 && userRepo.checkIfIsCoordinator(uig)==0) {
+        if (userTypeId != 0 && !userRepo.checkIfIsCoordinator(uig)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("{\"message\":\"only coordinators can remove students/lectureres from groups.\"}");
         }

@@ -33,6 +33,14 @@ public class GradeCategoryRepo {
                 .optional().orElse(null);
     }
 
+    public Integer getGradeCategoriesSumForCourse(String semester, String courseCode) {
+        return jdbcClient.sql("SELECT SUM(MAX_GRADE) FROM GRADE_CATEGORIES WHERE SEMESTER=? and COURSE_CODE=?")
+                .param(semester)
+                .param(courseCode)
+                .query(Integer.class)
+                .single();
+    }
+
     public Integer insertGradeCategory(GradeCategory gradeCategory) {
         return jdbcClient.sql("INSERT INTO GRADE_CATEGORIES (category_id,course_code,semester,description,max_grade)" +
                         "VALUES (DEFAULT,?,?,?,?)")

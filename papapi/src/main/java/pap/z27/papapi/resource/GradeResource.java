@@ -15,6 +15,8 @@ import pap.z27.papapi.repo.GradeRepo;
 import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 
+import java.sql.SQLDataException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +75,7 @@ public class GradeResource {
 
         if (groupRepo.isLecturerOfCourse(userId, semester, courseCode) == null &&
                 !userTypeId.equals(0) &&
-                userRepo.checkIfIsCoordinator(userId, courseCode, semester) == 0) {
+                !userRepo.checkIfIsCoordinator(userId, courseCode, semester)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -107,10 +109,10 @@ public class GradeResource {
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if (userRepo.checkIfStudentIsInCourse(userId, courseCode, semester) == 0)
+        if (!userRepo.checkIfStudentIsInCourse(userId, courseCode, semester))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-            if (!userTypeId.equals(0) && !thisUserId.equals(userId) && userRepo.checkIfIsCoordinator(thisUserId, courseCode, semester) == 0 && userRepo.checkIfIsLecturerOfCourse(thisUserId, courseCode, semester) == 0) {
+            if (!userTypeId.equals(0) && !thisUserId.equals(userId) && !userRepo.checkIfIsCoordinator(thisUserId, courseCode, semester) && !userRepo.checkIfIsLecturerOfCourse(thisUserId, courseCode, semester)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
@@ -128,13 +130,11 @@ public class GradeResource {
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if (!userTypeId.equals(0) && userRepo.checkIfIsCoordinator(thisUserId,courseCode,semester)==0 && userRepo.checkIfIsLecturerOfCourse(thisUserId,courseCode,semester)==0) {
+        if (!userTypeId.equals(0) && !userRepo.checkIfIsCoordinator(thisUserId,courseCode,semester) && !userRepo.checkIfIsLecturerOfCourse(thisUserId,courseCode,semester)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         int exceptionsCounter=0;
-        for(var gradeEntity:grades.entrySet()) {
-
-            Grade grade = gradeEntity.getValue();
+        for(var grade:grades.values()) {
             if(grade.getGrade()==null) {
                 try {
                     gradeRepo.removeGrade(semester, courseCode, grade.getCategory_id(), grade.getUser_id());
@@ -146,11 +146,6 @@ public class GradeResource {
             grade.setWho_inserted_id(thisUserId);
 
             try {
-//                if (grade.getGrade() < 0 && grade.getGrade() > gradeCategoryRepo.getGradeCategory(
-//                        grade.getSemester(), grade.getCourse_code(), grade.getCategory_id()
-//                ).getMax_grade())
-//                    return ResponseEntity.badRequest().body("{\"message\":\"Grade must be in [0, max grade].\"}");
-
                 if (gradeRepo.updateGrade(semester, courseCode, grade) == 0)
                 {
                     grade.setSemester(semester);
@@ -229,7 +224,7 @@ public class GradeResource {
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if (!userTypeId.equals(0) && userRepo.checkIfIsCoordinator(thisUserId,courseCode,semester)==0 && userRepo.checkIfIsLecturerOfCourse(thisUserId,courseCode,semester)==0) {
+        if (!userTypeId.equals(0) && !userRepo.checkIfIsCoordinator(thisUserId,courseCode,semester) && !userRepo.checkIfIsLecturerOfCourse(thisUserId,courseCode,semester)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 //        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
@@ -280,7 +275,7 @@ public class GradeResource {
         Integer userId = (Integer) session.getAttribute("user_id");
 
         if (!userTypeId.equals(0) &&
-            userRepo.checkIfIsCoordinator(userId, courseCode, semester) == 0 &&
+            !userRepo.checkIfIsCoordinator(userId, courseCode, semester) &&
             groupRepo.isLecturerOfCourse(userId, semester, courseCode) == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

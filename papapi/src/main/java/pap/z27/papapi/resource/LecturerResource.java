@@ -39,7 +39,7 @@ public class LecturerResource {
         }
         if(userTypeId != 0)
         {
-            if(userRepo.checkIfIsCoordinator(userId,group.getCourse_code(),group.getSemester())==0)
+            if(!userRepo.checkIfIsCoordinator(userId,group.getCourse_code(),group.getSemester()))
                 return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can insert lecturers \"}");
         }
         Integer insertedTypeId = userRepo.findUsersTypeId(lecturerId);
@@ -90,7 +90,7 @@ public class LecturerResource {
         }
         if(userTypeId != 0)
         {
-            if(userRepo.checkIfIsCoordinator(userId,lecturer.getCourse_code(),lecturer.getSemester())==0)
+            if(!userRepo.checkIfIsCoordinator(userId,lecturer.getCourse_code(),lecturer.getSemester()))
                 return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can remove lecturers \"}");
         }
         try {
