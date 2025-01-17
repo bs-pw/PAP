@@ -78,7 +78,7 @@ public class CoordinatorResource {
                 return ResponseEntity.badRequest().body("{\"message\":\"Couldn't add coordinator\"}");
             }
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't add coordinator\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't add coordinator\"}");
         }
 
         return ResponseEntity.ok("{\"message\":\"ok\"}");
@@ -98,7 +98,7 @@ public class CoordinatorResource {
                 return ResponseEntity.badRequest().body("{\"message\":\"Couldn't delete coordinator\"}");
             }
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't delete coordinator\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't delete coordinator\"}");
         }
 
         return ResponseEntity.ok("{\"message\":\"ok\"}");

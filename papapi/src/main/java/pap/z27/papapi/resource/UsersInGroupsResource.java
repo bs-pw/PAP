@@ -124,7 +124,7 @@ public class UsersInGroupsResource {
                 try {
                     groupRepo.addStudentToGroup(userInGroup);
                 } catch (DataAccessException e) {
-                    return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't add student to group.\"}");
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't add student to group.\"}");
                 }
                 return ResponseEntity.ok("{\"message\":\"ok\"}");
             case "lecturers":
@@ -139,7 +139,7 @@ public class UsersInGroupsResource {
                 try {
                     groupRepo.addLecturerToGroup(userInGroup);
                 } catch (DataAccessException e) {
-                    return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't add lecturer to group.\"}");
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't add lecturer to group.\"}");
                 }
                 return ResponseEntity.ok("{\"message\":\"ok\"}");
         }
@@ -172,7 +172,7 @@ public class UsersInGroupsResource {
                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                            .body("{\"message\":\"Couldn't change student's group.\"}");
                } catch (DataAccessException e) {
-                   return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't change student's group.\"}");
+                   return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't change student's group.\"}");
                }
 
                return ResponseEntity.ok("{\"message\":\"ok\"}");
@@ -187,7 +187,7 @@ public class UsersInGroupsResource {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("{\"message\":\"Couldn't change student's group.\"}");
             } catch (DataAccessException e) {
-                return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't change student's group.\"}");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't change student's group.\"}");
             }
 
         }
@@ -215,7 +215,7 @@ public class UsersInGroupsResource {
         try {
             result = groupRepo.removeStudentFromGroup(uig)+groupRepo.removeLecturerFromGroup(uig);
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't update user's group.\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't update user's group.\"}");
         }
         if(result==0)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

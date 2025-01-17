@@ -56,7 +56,7 @@ public class LecturerResource {
             if (groupRepo.addLecturerToGroup(lecturerId, group)==0)
                 return ResponseEntity.badRequest().body("{\"message\":\"Couldn't add lecturer to group\"}");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't add lecturer to group\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't add lecturer to group\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
@@ -98,7 +98,7 @@ public class LecturerResource {
                 return ResponseEntity.badRequest().body("{\"message\":\"Couldn't delete lecturer (lecturer might not exist).\"}");
             }
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't delete lecturer (lecturer might not exist).\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't delete lecturer (lecturer might not exist).\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

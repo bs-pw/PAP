@@ -51,7 +51,7 @@ public class GradeCategoryResource {
                 return ResponseEntity.badRequest().body("{\"message\":\"Could not insert grade category\"}");
             }
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Could not insert grade category\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Could not insert grade category\"}");
         }
         return ResponseEntity.ok("{\"message\":\"grade category inserted\"}");
     }
@@ -125,7 +125,7 @@ public class GradeCategoryResource {
                 return ResponseEntity.ok("{\"message\":\"grade category updated\"}");
             }
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Could not update grade category\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Could not update grade category\"}");
         }
         return ResponseEntity.badRequest().body("{\"message\":\"Couldn't update grade category.\"}");
     }
@@ -153,7 +153,7 @@ public class GradeCategoryResource {
                 return ResponseEntity.ok("{\"message\":\"grade category deleted\"}");
             }
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Could not delete grade category\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Could not delete grade category\"}");
         }
         return ResponseEntity.badRequest().body("{\"message\":\"Couldn't delete grade category.\"}");
     }

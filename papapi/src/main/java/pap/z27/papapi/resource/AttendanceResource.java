@@ -119,7 +119,7 @@ public class AttendanceResource {
                 if(attendanceRepo.insertAttendance(attendance)==0)
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\" Cannot insert attendances\"}");
             } catch (DataAccessException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"message\":\"Server error, cannot insert attendances\"}");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Server error, cannot insert attendances\"}");
             }
 
             return ResponseEntity.ok("{\"message\":\"ok\"}");
@@ -148,7 +148,7 @@ public class AttendanceResource {
                 if(attendanceRepo.updateAttendance(attendance)==0)
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\" Cannot update attendances\"}");
             } catch (DataAccessException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"message\":\"Server error, cannot update attendances\"}");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Server error, cannot update attendances\"}");
             }
             return ResponseEntity.ok("{\"message\":\"ok\"}");
         }

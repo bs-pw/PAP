@@ -6,7 +6,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pap.z27.papapi.domain.Semester;
 import pap.z27.papapi.domain.UserType;
 import pap.z27.papapi.repo.UserTypeRepo;
 
@@ -41,7 +40,7 @@ public class UserTypeResource {
             if(userTypeRepo.insertUserType(userType)==0)
                 return ResponseEntity.badRequest().body("{\"message\":\"Couldn't insert user type\"}\"");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't insert user type\"}\"");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't insert user type\"}\"");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
@@ -60,7 +59,7 @@ public class UserTypeResource {
             if(userTypeRepo.updateUserType(userType)==0)
                 return ResponseEntity.badRequest().body("{\"message\":\"Couldn't update user type\"}\"");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't update user type\"}\"");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't update user type\"}\"");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
@@ -79,7 +78,7 @@ public class UserTypeResource {
             if(userTypeRepo.removeUserType(userTypeId)==0)
                 return ResponseEntity.badRequest().body("{\"message\":\"Couldn't remove user type\"}\"");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't remove user type\"}\"");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't remove user type\"}\"");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

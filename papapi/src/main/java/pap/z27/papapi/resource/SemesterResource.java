@@ -73,7 +73,7 @@ public class SemesterResource {
             if(semesterRepo.insertSemester(semester)==0)
                 return ResponseEntity.badRequest().body("{\"message\":\"Couldn't insert semester\"}\"");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't insert semester\"}\"");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't insert semester\"}\"");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
@@ -88,7 +88,7 @@ public class SemesterResource {
             if (semesterRepo.removeSemester(semesterCode) == 0)
                 return ResponseEntity.badRequest().body("{\"message\":\"semester couldn't be removed\"}\"");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"semester couldn't be removed\"}\"");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"semester couldn't be removed\"}\"");
         }
         return ResponseEntity.ok("{\"message\":\"semester removed\"}");
     }
@@ -103,7 +103,7 @@ public class SemesterResource {
             if (semesterRepo.updateSemester(semester) == 0)
                 return ResponseEntity.badRequest().body("{\"message\":\"semester couldn't be updated\"}\"");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"semester couldn't be updated\"}\"");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"semester couldn't be updated\"}\"");
         }
         return ResponseEntity.ok("{\"message\":\"semester updated\"}");
     }

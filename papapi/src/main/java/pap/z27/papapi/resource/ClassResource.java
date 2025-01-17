@@ -114,7 +114,7 @@ public class ClassResource {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot insert class\"}");
             }
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Server error, cannot insert class\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Server error, cannot insert class\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
@@ -150,7 +150,7 @@ public class ClassResource {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot update class\"}");
             }
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Server error, cannot update class\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Server error, cannot update class\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
 
@@ -185,7 +185,7 @@ public class ClassResource {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot remove class\"}");
             }
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Server error, cannot remove class\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Server error, cannot remove class\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
