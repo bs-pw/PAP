@@ -8,6 +8,7 @@ const LecturerGradesListPage = ({ type = "student" }) => {
     const [error, setError] = useState('');
     const client = useClient();
     const { semesterId, courseId, searchId } = useParams('');
+    const [colName, setColName] = useState('Student');
 
     const getDataToList = async () => {
         try {
@@ -53,6 +54,9 @@ const LecturerGradesListPage = ({ type = "student" }) => {
     }
 
     useEffect(() => {
+        if (type === "student") {
+            setColName('Kategoria')
+        }
         getDataToList();
         // setListData({ 1: { name: "Kolokwium", grade: 5, description: "test" } })
     }, [])
@@ -66,7 +70,7 @@ const LecturerGradesListPage = ({ type = "student" }) => {
                 <table className='table'>
                     <thead>
                         <tr>
-                            <th>Kategoria</th>
+                            <th>{colName}</th>
                             <th>Ocena</th>
                             <th>Opis</th>
                         </tr>
