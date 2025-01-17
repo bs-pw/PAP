@@ -30,7 +30,8 @@ const LecturerFinalGradesPage = () => {
         e.preventDefault();
 
         try {
-            await client.insertGrade(semesterId, courseId, listData)
+            await client.updateFinalGrades(semesterId, courseId, listData)
+            setError("Zaktualizowano!")
         }
         catch (error) {
             await setError(error.message);

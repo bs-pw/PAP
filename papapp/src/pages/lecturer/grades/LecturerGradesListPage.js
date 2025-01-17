@@ -45,6 +45,7 @@ const LecturerGradesListPage = ({ type = "student" }) => {
 
         try {
             await client.insertGrade(semesterId, courseId, listData)
+            setError("Zaktualizowano!")
         }
         catch (error) {
             await setError(error.message);
