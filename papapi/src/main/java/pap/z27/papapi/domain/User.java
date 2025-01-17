@@ -48,7 +48,12 @@ public class User implements Serializable, UserDetails, CredentialsContainer {
 
     @Override
     public String getUsername() {
-        return mail;
+        return this.mail;
+    }
+
+    @Override 
+    public String getPassword() {
+    	return this.password;
     }
 
     @Override
