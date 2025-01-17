@@ -24,10 +24,11 @@ public class AuthResource {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Credentials credentials, HttpServletRequest request) {
-        String hash_pass = userRepo.findPasswordByMail(credentials.getMail());
-        if (hash_pass == null) {
+        Password password = userRepo.findPasswordByMail(credentials.getMail());
+        if (password == null) {
             return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("{\"message\":\"Złe dane logowania!\"}");
         }
+        String hash_pass=password.getPassword();
         if (securityConfig.passwordEncoder().matches(credentials.getPassword(), hash_pass)) {
             HttpSession session = request.getSession(false);
             if (session == null) {
