@@ -62,7 +62,7 @@ public class FinalGradeResource {
         return ResponseEntity.ok(userRepo.findAllEligibleUsersToCourse(new CourseInSemester(courseCode,semester)));
     }
 
-    @GetMapping("{semester}/user/{userId}")
+    @GetMapping("{semester}/student/{userId}")
     public ResponseEntity<List<FinalGrade>> getUsersFinalGradesInSemester(@PathVariable("userId") Integer userId,
                                                                             @PathVariable("semester") String semester,
                                                                     HttpSession session) {
@@ -72,18 +72,13 @@ public class FinalGradeResource {
         }
         Integer thisUserId = (Integer) session.getAttribute("user_id");
 
-        if (thisUserId.equals(userId)) {
+        if (thisUserId.equals(userId) || userTypeId.equals(0)) {
             if (userTypeId.equals(1)) {
                 return ResponseEntity.badRequest().build();
             }
             return ResponseEntity.ok(finalGradeRepo.findUsersFinalGradesInSemester(userId, semester));
         }
-
-        if (!userTypeId.equals(0)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
-        return ResponseEntity.ok(finalGradeRepo.findUsersFinalGradesInSemester(userId, semester));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @GetMapping("{semester}/course/{courseCode}")

@@ -1188,8 +1188,44 @@ class Client {
             throw new Error(error.message);
         });
     }
-    
-
+    async getStudentsFinalGrades(semester, userId) {
+        return fetch(`${this.baseUrl}/finalgrades/${semester}/student/${userId}`,
+            {
+                method: 'GET',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error getting students final grades: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
+    async getMaxPointsToGetInCourse(semester, courseCode) {
+        return fetch(`${this.baseUrl}/gradecategories/${semester}/${courseCode}/sum`,
+            {
+                method: 'GET',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error getting sum of grade categories' max grade in course: ${response.json().message}`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
 
 }
 

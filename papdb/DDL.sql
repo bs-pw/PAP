@@ -388,10 +388,10 @@ FOR EACH ROW
 DECLARE
     v_max_grade grade_categories.max_grade%TYPE;
 BEGIN
-    SELECT gc.max_grade
+    SELECT max_grade
     INTO v_max_grade
-    FROM grade_categories gc
-    WHERE gc.category_id = :new.category_id;
+    FROM grade_categories
+    WHERE category_id = :new.category_id;
     
     IF :new.grade > v_max_grade OR :new.grade < 0 THEN
         RAISE_APPLICATION_ERROR(-20001, 'Grade cannot be greater than the max grade for this category and lower than 0.');
@@ -399,3 +399,22 @@ BEGIN
 END;
 /
 ALTER TRIGGER check_grade_trigger ENABLE;
+
+
+CREATE OR REPLACE TRIGGER check_grade_category_trigger
+BEFORE INSERT OR UPDATE ON grade_categories
+FOR EACH ROW
+DECLARE
+    v_max_grade grades.grade%TYPE;
+BEGIN
+    SELECT max(grade)
+    INTO v_max_grade
+    FROM grades
+    WHERE category_id = :new.category_id;
+    
+    IF :new.max_grade < v_max_grade OR :new.max_grade <= 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Max grade cannot be lower than the maximum grade for this category and than 0.');
+    END IF;
+END;
+/
+ALTER TRIGGER check_grade_category_trigger ENABLE;
