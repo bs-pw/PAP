@@ -31,12 +31,6 @@ public class UserRepo {
                 .query(UserPublicInfo.class)
                 .list();
     }
-    public Password findPasswordByMail(String mail) {
-        return jdbcClient.sql("SELECT password FROM USERS where mail=?")
-                .param(mail)
-                .query(Password.class)
-                .optional().orElse(null);
-    }
     public UserInfo findUsersInfoByID(Integer userId) {
         return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,USER_TYPE_ID,ut.type,u.mail" +
                         " FROM USERS u join USER_TYPES ut using(USER_TYPE_ID) where user_id=?")

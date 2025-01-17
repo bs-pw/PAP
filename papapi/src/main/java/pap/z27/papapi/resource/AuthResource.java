@@ -18,36 +18,30 @@ import pap.z27.papapi.repo.UserRepo;
 @AllArgsConstructor
 
 public class AuthResource {
-    private AuthRepo loginRepo;
+    private AuthRepo authRepo;
     private UserRepo userRepo;
-    private SecurityConfig securityConfig;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Credentials credentials, HttpServletRequest request) {
-        Password password = userRepo.findPasswordByMail(credentials.getMail());
-        if (password == null) {
+
+        if(!authRepo.isPasswordCorrect(credentials))
+            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("{\"message\":\"Złe dane logowania!\"}");
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            session = request.getSession(true);
+        }
+        session.setAttribute("mail", credentials.getMail());
+        UserLoginInfo user = userRepo.findUsersLoginInfoByMail(credentials.getMail());
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("{\"message\":\"Złe dane logowania!\"}");
         }
-        String hash_pass=password.getPassword();
-        if (securityConfig.passwordEncoder().matches(credentials.getPassword(), hash_pass)) {
-            HttpSession session = request.getSession(false);
-            if (session == null) {
-                session = request.getSession(true);
-            }
-            session.setAttribute("mail", credentials.getMail());
-            UserLoginInfo user = userRepo.findUsersLoginInfoByMail(credentials.getMail());
-            if (user == null) {
-                return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("{\"message\":\"Złe dane logowania!\"}");
-            }
-            session.setAttribute("name", user.getName());
-            session.setAttribute("surname", user.getSurname());
-            session.setAttribute("user_id", user.getUser_id());
-            session.setAttribute("user_type_id", user.getUser_type_id());
-            session.setAttribute("loggedIn", true);
-            String response = "{\"loggedIn\":true, \"user_id\":\""+session.getAttribute("user_id")+"\", \"name\":\""+session.getAttribute("name")+"\", \"surname\":\""+session.getAttribute("surname")+"\", \"mail\":\""+session.getAttribute("mail")+"\", \"userTypeId\":\""+session.getAttribute("user_type_id")+"\"}";
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\":\"Złe dane logowania!\"}");
+        session.setAttribute("name", user.getName());
+        session.setAttribute("surname", user.getSurname());
+        session.setAttribute("user_id", user.getUser_id());
+        session.setAttribute("user_type_id", user.getUser_type_id());
+        session.setAttribute("loggedIn", true);
+        String response = "{\"loggedIn\":true, \"user_id\":\""+session.getAttribute("user_id")+"\", \"name\":\""+session.getAttribute("name")+"\", \"surname\":\""+session.getAttribute("surname")+"\", \"mail\":\""+session.getAttribute("mail")+"\", \"userTypeId\":\""+session.getAttribute("user_type_id")+"\"}";
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/logout")
