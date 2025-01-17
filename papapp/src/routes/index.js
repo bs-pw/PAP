@@ -35,6 +35,7 @@ import LecturerGradeMenuPage from "../pages/lecturer/LecturerGradeMenuPage";
 import LecturerGradePage from "../pages/lecturer/grades/LecturerGradePage";
 import LecturerGradesListPage from "../pages/lecturer/grades/LecturerGradesListPage";
 import LecturerFinalGradesPage from "../pages/lecturer/grades/LecturerFinalGradesPage";
+import StudentSemesterPage from "../pages/student/StudentSemesterPage";
 
 //import useAuthStatus from './useAuthStatus';
 
@@ -393,11 +394,20 @@ export const router = createBrowserRouter([
                                 ],
                             },
                             {
-                                path: "semesters",
+                                path: "semester",
                                 children: [
                                     {
                                         index: true,
-                                        element: <SemesterPage />,
+                                        element: <StudentSemesterPage />,
+                                    },
+                                    {
+                                        path: ":semesterId",
+                                        children: [
+                                            {
+                                                index: true,
+                                                element: <SemesterPage />,
+                                            },
+                                        ],
                                     },
                                 ],
                             },

@@ -31,11 +31,13 @@ const Sidebar = () => {
     ];
 
     const lecturerItem = [
-        // { link: '/admin/users', label: 'Użytkownicy' },
-        // { link: '/admin/courses', label: 'Kursy' },
-        { link: '/admin/semesters', label: 'Koordynator' },
-        // { link: '/admin/coursesinsemester/24Z', label: 'Kursy w semestrach' },
+        { link: '/lecturer', label: 'Oceny' },
+        { link: '/admin/semesters', label: '<i class="bi bi-gear"></i> Koordynator' },
     ];
+
+    const studentItems = [
+        { link: '/student/semester', label: 'Oceny' },
+    ]
 
     return (
         <div className="bg-dark text-white p-3" style={{ width: 250 }}>
@@ -59,9 +61,20 @@ const Sidebar = () => {
 
                 {(client.userTypeId == 1 || client.userTypeId == 2) && (
                     <>
-                        <SidebarItem link="/lecturer" label='<i class="bi bi-briefcase-fill"></i> Panel Wykładowcy' />
+                        <SidebarItem link="#" label='<i class="bi bi-briefcase-fill"></i> Panel Wykładowcy' />
                         <ul className="nav flex-column mx-3">
                             {lecturerItem.map((item, index) => (
+                                <SidebarItem key={index} link={item.link} label={item.label} />
+                            ))}
+                        </ul>
+                    </>
+                )}
+
+                {(client.userTypeId == 2 || client.userTypeId == 3) && (
+                    <>
+                        <SidebarItem link="#" label='<i class="bi bi-briefcase-fill"></i> Panel Studenta' />
+                        <ul className="nav flex-column mx-3">
+                            {studentItems.map((item, index) => (
                                 <SidebarItem key={index} link={item.link} label={item.label} />
                             ))}
                         </ul>

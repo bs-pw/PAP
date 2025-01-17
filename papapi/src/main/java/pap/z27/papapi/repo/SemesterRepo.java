@@ -36,13 +36,13 @@ public class SemesterRepo {
                 .list();
     }
     public List<SemesterCode> getSemestersByCoordinator(Integer userId) {
-        return jdbcClient.sql("SELECT s.SEMESTER from COORDINATORS s  where user_id=?")
+        return jdbcClient.sql("SELECT distinct s.SEMESTER from COORDINATORS s  where user_id=?")
                 .param(userId)
                 .query(SemesterCode.class)
                 .list();
     }
     public List<SemesterCode> getSemestersByStudent(Integer userId) {
-        return jdbcClient.sql("SELECT s.SEMESTER from STUDENTS_IN_GROUPS s  where user_id=?")
+        return jdbcClient.sql("SELECT distinct s.SEMESTER from STUDENTS_IN_GROUPS s  where user_id=?")
                 .param(userId)
                 .query(SemesterCode.class)
                 .list();
