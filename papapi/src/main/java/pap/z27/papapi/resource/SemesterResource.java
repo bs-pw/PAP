@@ -1,13 +1,11 @@
 package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pap.z27.papapi.domain.ClassType;
 import pap.z27.papapi.domain.Semester;
 import pap.z27.papapi.domain.subclasses.SemesterCode;
 import pap.z27.papapi.repo.SemesterRepo;

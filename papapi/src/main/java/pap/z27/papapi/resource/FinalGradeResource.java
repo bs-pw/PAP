@@ -3,18 +3,14 @@ package pap.z27.papapi.resource;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.FinalGrade;
-import pap.z27.papapi.domain.Grade;
-import pap.z27.papapi.domain.Group;
 import pap.z27.papapi.domain.subclasses.UserAndFinalGrade;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 import pap.z27.papapi.repo.FinalGradeRepo;
-import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 
 import java.util.List;
@@ -26,13 +22,11 @@ import java.util.Map;
 public class FinalGradeResource {
     private final FinalGradeRepo finalGradeRepo;
     private final UserRepo userRepo;
-    private final GroupRepo groupRepo;
 
     @Autowired
-    public FinalGradeResource(FinalGradeRepo finalGradeRepo, UserRepo userRepo, GroupRepo groupRepo) {
+    public FinalGradeResource(FinalGradeRepo finalGradeRepo, UserRepo userRepo) {
         this.finalGradeRepo = finalGradeRepo;
         this.userRepo = userRepo;
-        this.groupRepo = groupRepo;
     }
 
     @GetMapping("{userId}")

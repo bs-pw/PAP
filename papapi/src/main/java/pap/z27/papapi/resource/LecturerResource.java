@@ -7,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.Group;
-import pap.z27.papapi.domain.Lecturer;
-import pap.z27.papapi.domain.User;
 import pap.z27.papapi.domain.subclasses.UserInGroup;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 import pap.z27.papapi.repo.GroupRepo;
