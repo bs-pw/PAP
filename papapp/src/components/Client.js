@@ -1,5 +1,3 @@
-import { data, useParams } from "react-router-dom";
-
 class Client {
     loggedIn = null;
     userId = null;

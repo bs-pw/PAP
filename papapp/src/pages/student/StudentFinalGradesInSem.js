@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useClient } from '../../components/ClientContext';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import List from '../../components/common/List';
 
 const StudentFinalGradesInSem = () => {
     const [finalGrades, setFinalGrades] = useState([]);
     const [error, setError] = useState('');
     const client = useClient();
-    const navigate = useNavigate();
     const { semesterId } = useParams();
 
     const getStudentFinalGradesInSem = async () => {
