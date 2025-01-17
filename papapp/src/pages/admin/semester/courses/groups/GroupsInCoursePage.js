@@ -15,14 +15,14 @@ const GroupsInCoursePage = () => {
             const data = await client.getGroupsInSemesterInCourse(semesterId, courseId);
             const result = data.map(({ group_number }) => ({ group_number }))
             setGroups(result);
-            console.log(data)
+            //console.log(data)
         } catch (error) {
             setError(error.message);
         }
     }
 
     const handleDeleteGroup = async (e) => {
-        // console.log(e.target.value)
+        // //console.log(e.target.value)
         try {
             await client.deleteGroup(semesterId, courseId, e.target.value);
             getGroupsInSemesterInCourse();

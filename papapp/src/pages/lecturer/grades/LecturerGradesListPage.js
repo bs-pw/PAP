@@ -35,7 +35,7 @@ const LecturerGradesListPage = ({ type = "student" }) => {
     };
 
     const onChange = (e) => {
-        console.log(e);
+        //console.log(e);
         let keys = e.target.name.split(',');
         listData[keys[0]][keys[1]] = e.target.value;
     }

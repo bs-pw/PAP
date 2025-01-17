@@ -70,7 +70,7 @@ const ProtectedRoute = ({ isAuthRequired = true }) => {
         return <div>Ładowanie...</div>;
     }
 
-    console.log(isAuthRequired, client.loggedIn);
+    //console.log(isAuthRequired, client.loggedIn);
     if (isAuthRequired) {
         return client.loggedIn ? <Outlet /> : <Navigate to="/" />;
     } else {

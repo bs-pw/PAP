@@ -46,7 +46,7 @@ const SemesterForm = () => {
     const handleGetSemester = async (semesterId) => {
         try {
             const data = await client.getSemester(semesterId);
-            console.log(data);
+            //console.log(data);
             setFormData(data);
         } catch (error) {
             navigate('/admin/semesters');
@@ -58,7 +58,7 @@ const SemesterForm = () => {
             setFormName('Edytuj semestr');
             setButtonName('Zapisz');
             handleGetSemester(id);
-            console.log(formData);
+            //console.log(formData);
         }
     }, []);
 

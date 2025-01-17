@@ -10,7 +10,7 @@ const DashboardPage = () => {
     const getLecturers = async () => {
         try {
             const data = await client.getLecturers();
-            console.log(data);
+            //console.log(data);
             setLecturers(data);
         } catch (error) {
             setError('Błąd podczas ładowania danych: ' + error.message);

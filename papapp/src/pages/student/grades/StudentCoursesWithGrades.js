@@ -29,7 +29,7 @@ const StudentCoursesWithGrades = () => {
         getCoursesInSemester();
     }, []);
 
-    console.log(courseInSemester);
+    //console.log(courseInSemester);
 
     return (
         <List listName={`Przedmioty w semestrze ${semesterId}`} columnNames={['Kod przedmotu']} data={courseInSemester} error={error} userButtons={true} handleView={handleView} id="course_code" />

@@ -16,14 +16,14 @@ const UsersInGroupPage = ({ type }) => {
             const data = await client.getUsersInGroup(semesterId, courseId, groupId, type);
             const result = data.map(({ user_id, name, surname }) => ({ user_id, name, surname }))
             setUsers(result);
-            console.log(result)
+            //console.log(result)
         } catch (error) {
             setError(error.message || 'Błąd połączenia');
         }
     }
 
     const handleDeleteUser = async (e) => {
-        console.log(e.target.value)
+        //console.log(e.target.value)
         try {
             await client.deleteUserInGroup(semesterId, courseId, groupId, e.target.value);
             getUsersInGroup();

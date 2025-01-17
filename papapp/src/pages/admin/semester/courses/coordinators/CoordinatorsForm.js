@@ -14,7 +14,7 @@ const CoordinatorsForm = () => {
     const getAvCoordinators = async (e) => {
         const data = await client.getAvailableCourseCoordinators(semesterId, courseId);
         setCoordinators(data);
-        console.log(data)
+        //console.log(data)
     }
 
     const handleChange = (e) => {

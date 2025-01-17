@@ -32,10 +32,10 @@ const ClassesInGroupForm = () => {
     const handleClassTypes = async () => {
         try {
             const data = await client.getClassTypes();
-            console.log(data);
+            //console.log(data);
             setClassTypes(data);
         } catch (error) {
-            console.log(error.message);
+            //console.log(error.message);
         }
     };
 
@@ -67,9 +67,9 @@ const ClassesInGroupForm = () => {
     const getClass = async (classId) => {
         try {
             const data = await client.getClass(semesterId, courseId, groupId, classId);
-            console.log(data);
+            //console.log(data);
             setFormData(data)
-            console.log(formData)
+            //console.log(formData)
         } catch (error) {
             navigate('..');
             // setMessage('Błąd podczas pobierania danych');

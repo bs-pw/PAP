@@ -14,7 +14,7 @@ const LecturerGradeMenuPage = () => {
             const data = await client.checkIfIsCoordinatorOfCourse(semesterId, courseId, client.userId);
             setAmICoo(data);
         } catch (error) {
-            console.log('Error');
+            //console.log('Error');
         }
     }
 

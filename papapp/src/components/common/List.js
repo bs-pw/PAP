@@ -2,7 +2,7 @@ import React from 'react'
 
 const List = ({ listName, adminButtons = null, userButtons = false, columnNames, data, error, handleDelete, handleEdit, handleView, id }) => {
     if (adminButtons === true) adminButtons = [true, true]
-    console.log(adminButtons)
+    //console.log(adminButtons)
     return (
         <div>
             <h1>{listName}</h1>

@@ -27,7 +27,7 @@ const StudentSemesterPage = () => {
         getSemesters();
     }, []);
 
-    console.log(semesters);
+    //console.log(semesters);
 
     return (
         <List listName='Lista semestrów' columnNames={['Kod']} data={semesters} error={error} userButtons={true} handleView={handleView} id="semester" />

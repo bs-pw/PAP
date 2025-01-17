@@ -14,7 +14,7 @@ const CourseInSemesterForm = () => {
     const getCourses = async (e) => {
         const data = await client.getCourses();
         setCourses(data);
-        console.log(data)
+        //console.log(data)
     }
 
     const handleChange = (e) => {

@@ -1,7 +1,7 @@
 import React from 'react'
 
 const FormSelect = ({ name, label, defaultValue, options, onChange }) => {
-    console.log(options)
+    //console.log(options)
     return (
         <div className="mb-3">
             <label htmlFor="text" className="form-label">{label}</label>

@@ -46,7 +46,7 @@ class Client {
             body: JSON.stringify({ mail, password }),
         }).then(async response => {
             let data = await response.json()
-            console.log(data);
+            //console.log(data);
             if (response.ok) {
                 this.loggedIn = data.loggedIn;
                 this.userId = data.user_id;
@@ -54,7 +54,7 @@ class Client {
                 this.surname = data.surname;
                 this.mail = data.mail;
                 this.userTypeId = data.userTypeId;
-                console.log("client logged in: " + data.loggedIn);
+                //console.log("client logged in: " + data.loggedIn);
             }
             return data;
         }).catch(error => {

@@ -1,7 +1,7 @@
 import React from 'react';
 
 const convertMinutesToTime = (minutes) => {
-    console.log(minutes)
+    //console.log(minutes)
     minutes = Number(minutes)
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
@@ -16,13 +16,13 @@ function TimeConverter({ minutes }) {
         </>
     );
 }
+const days = ["Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela"];
+const repetitionLabels = ["Co tydzień", "Co 2 tygodnie(nieparzyste)", "Co 2 tygodnie(parzyste)"]
 
 const convertDayCodeToDay = (dayCode) => {
     dayCode = Number(dayCode)
-    const days = ["Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela"];
-    const repetitionLabels = ["Co tydzień", "Co 2 tygodnie(nieparzyste)", "Co 2 tygodnie(parzyste)"]
     const repetition = repetitionLabels[Math.floor(dayCode / 7)];
-    // console.log(Math.floor(dayCode / 7))
+    // //console.log(Math.floor(dayCode / 7))
     const day = days[dayCode % 7];
     return `${day} [${repetition}]`
 }
@@ -35,4 +35,4 @@ function DayConverter({ dayCode }) {
         </>
     )
 }
-export { TimeConverter, DayConverter, convertMinutesToTime, convertDayCodeToDay };
+export { TimeConverter, DayConverter, convertMinutesToTime, convertDayCodeToDay, days, repetitionLabels };

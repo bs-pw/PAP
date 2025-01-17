@@ -44,7 +44,7 @@ const CourseInSemesterPage = () => {
         getCoursesInSemester();
     }, []);
 
-    console.log(courseInSemester);
+    //console.log(courseInSemester);
 
     return (
         <>

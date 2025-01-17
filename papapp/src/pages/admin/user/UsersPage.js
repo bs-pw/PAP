@@ -13,7 +13,7 @@ const UsersPage = () => {
     const getUsers = async () => {
         try {
             const data = await client.getUsers();
-            console.log(data);
+            //console.log(data);
             setUsers(data);
         } catch (error) {
             setError('Błąd podczas ładowania danych: ' + error.message);
@@ -46,7 +46,7 @@ const UsersPage = () => {
     }, []);
 
     const columnNames = ['ID', 'Imię', 'Nazwisko', 'Typ użytkownika', 'Email'];
-    console.log(users)
+    //console.log(users)
 
     return (
         <>

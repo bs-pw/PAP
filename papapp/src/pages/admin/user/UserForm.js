@@ -30,19 +30,19 @@ const UserForm = () => {
     const handleUserTypes = async () => {
         try {
             const data = await client.getUserTypes();
-            console.log(data);
+            //console.log(data);
             setUserTypes(data);
         } catch (error) {
-            console.log(error.message);
+            //console.log(error.message);
         }
     };
 
     const handleGetUser = async (userId) => {
         try {
             const data = await client.getUser(userId);
-            console.log(data);
+            //console.log(data);
             setFormData(data)
-            console.log(formData)
+            //console.log(formData)
         } catch (error) {
             navigate('/admin/users');
         }
@@ -79,7 +79,7 @@ const UserForm = () => {
         }
     }, []);
 
-    console.log(id);
+    //console.log(id);
 
     const inputData = [
         { name: "name", type: "text", label: "Imię", value: formData.name, onChange: handleChange, required: true },

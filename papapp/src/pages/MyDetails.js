@@ -19,7 +19,7 @@ const MyDetails = () => {
 
     const changeMail = async (e) => {
         e.preventDefault()
-        // console.log(e)
+        // //console.log(e)
         try {
             await client.updateUser(client.userId, { mail: mail })
             setMessage("Zmieniono mail!")

@@ -16,9 +16,9 @@ const UsersInGroupForm = ({ type }) => {
         try {
             const data = await client.getAvailableUsersToAddToGroup(semesterId, courseId, groupId, type);
             setUsers(data);
-            console.log(users)
+            //console.log(users)
         } catch (error) {
-            console.log(error);
+            //console.log(error);
             setMessage(error.message);
         }
     }

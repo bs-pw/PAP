@@ -47,9 +47,9 @@ const GradeCategoriesForm = () => {
     const getGradeCategory = async (gradeCategoryId) => {
         try {
             const data = await client.getGradeCategory(semesterId, courseId, gradeCategoryId);
-            console.log(data);
+            //console.log(data);
             setFormData(data)
-            console.log(formData)
+            //console.log(formData)
         } catch (error) {
             navigate('..');
         }

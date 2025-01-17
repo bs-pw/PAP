@@ -14,7 +14,7 @@ const CoordinatorsPage = () => {
         try {
             const result = await client.getCourseStudents(semesterId, courseId)
             const data = result.map(({ user_id, name, surname }) => ({ user_id, name, surname }))
-            console.log(result)
+            //console.log(result)
             setStudents(data);
         } catch (error) {
             setError(error.message);

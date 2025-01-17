@@ -14,11 +14,11 @@ const LoginPage = () => {
 
         try {
             const data = await client.login(mail, password);
-            console.log("logged in: " + data.loggedIn);
+            //console.log("logged in: " + data.loggedIn);
             if (data.loggedIn) navigate('/dashboard');
             else setMessage(data.message || 'Nieprawidłowe dane logowania!');
         } catch (error) {
-            console.log(error.message);
+            //console.log(error.message);
             setMessage(error.message || 'Wystąpił błąd! Spróbuj ponownie!');
         }
     };

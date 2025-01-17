@@ -21,7 +21,7 @@ const LecturerFinalGradesPage = () => {
     };
 
     const onChange = (e) => {
-        console.log(e);
+        //console.log(e);
         let keys = e.target.name;
         listData[keys].grade = e.target.value;
     }
