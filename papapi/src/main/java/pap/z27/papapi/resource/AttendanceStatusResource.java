@@ -3,6 +3,7 @@ package pap.z27.papapi.resource;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.AttendanceStatus;
@@ -31,7 +32,7 @@ public class AttendanceStatusResource {
             if (attendanceStatusRepo.insertAttendanceStatus(attendanceStatus) == 0)
                 return ResponseEntity.badRequest().body("{\"message\":\"couldn't insert attendance status\"}");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"couldn't insert attendance status\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"couldn't insert attendance status\"}");
         }
         return ResponseEntity.ok("{\"message\":\"inserted attendance status\"}");
     }
@@ -45,7 +46,7 @@ public class AttendanceStatusResource {
             if (attendanceStatusRepo.removeAttendanceStatus(statusId)==0)
                 return ResponseEntity.badRequest().body("{\"message\":\"couldn't delete attendance status\"}");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"couldn't delete attendance status\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"couldn't delete attendance status\"}");
         }
         return ResponseEntity.ok("{\"message\":\"deleted attendance status\"}");
     }
@@ -61,7 +62,7 @@ public class AttendanceStatusResource {
             if (attendanceStatusRepo.updateAttendanceStatus(attendanceStatus)==0)
                 return ResponseEntity.badRequest().body("{\"message\":\"couldn't update attendance status\"}");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"couldn't update attendance status\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"couldn't update attendance status\"}");
         }
         return ResponseEntity.ok("{\"message\":\"updated attendance status\"}");
     }

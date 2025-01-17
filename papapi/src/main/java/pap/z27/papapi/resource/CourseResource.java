@@ -55,7 +55,7 @@ public class CourseResource {
         try {
             if(courseRepo.insertCourse(course)==0) return ResponseEntity.badRequest().body("{\"message\":\"cannot insert course\"}");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"cannot insert course\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"cannot insert course\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
@@ -75,7 +75,7 @@ public class CourseResource {
             if(courseRepo.updateCourse(course)==0)
                 return ResponseEntity.badRequest().body("{\"message\":\"cannot update course\"}");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"cannot update course\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"cannot update course\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
@@ -93,7 +93,7 @@ public class CourseResource {
             if(courseRepo.removeCourse(courseCode)==0)
                 return ResponseEntity.badRequest().body("{\"message\":\"cannot remove course\"}");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"cannot remove course\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"cannot remove course\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

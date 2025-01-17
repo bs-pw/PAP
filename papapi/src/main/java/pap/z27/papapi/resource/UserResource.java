@@ -134,7 +134,7 @@ public class UserResource {
                 if(userRepo.updateUsersPasswordOrMail(userId, user)==0)
                     return ResponseEntity.badRequest().body("{\"message\":\"Incorrect data! \"}\"");
             } catch (DataAccessException e) {
-                return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't update user! \"}\"");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't update user! \"}\"");
             }
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
@@ -156,7 +156,7 @@ public class UserResource {
                 if(userRepo.updateUsersType(userId, user_type_id)==0)
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Bad type id!\"}");
             } catch (DataAccessException e) {
-                return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't update user type!\"}");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't update user type!\"}");
             }
             return ResponseEntity.ok("{\"message\":\"ok\"}");
         }
@@ -190,7 +190,7 @@ public class UserResource {
             if(userRepo.removeUser(userId)==0)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Couldn't remove user! \"}");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't remove user! \"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't remove user! \"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

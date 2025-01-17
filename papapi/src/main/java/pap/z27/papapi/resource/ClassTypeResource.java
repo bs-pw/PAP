@@ -42,7 +42,7 @@ public class ClassTypeResource {
             if(classTypeRepo.insertClassType(classType)==0)
                 return ResponseEntity.badRequest().body("{\"message\":\"Couldn't insert class type\"}\"");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't insert class type\"}\"");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't insert class type\"}\"");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
@@ -78,7 +78,7 @@ public class ClassTypeResource {
             if(classTypeRepo.removeClassType(classTypeId)==0)
                 return ResponseEntity.badRequest().body("{\"message\":\"Couldn't remove class type\"}\"");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't remove class type\"}\"");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't remove class type\"}\"");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

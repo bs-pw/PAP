@@ -121,7 +121,7 @@ public class FinalGradeResource {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("{\"message\":\"Cannot insert final grade\"}");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Cannot insert final grade\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Cannot insert final grade\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
@@ -196,7 +196,7 @@ public class FinalGradeResource {
                         .body("{\"message\":\"Couldn't update final grades\"}");
             }
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Couldn't update final grades\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't update final grades\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

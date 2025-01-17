@@ -242,7 +242,7 @@ public class GradeResource {
                 return ResponseEntity.badRequest().body("{\"message\":\"Grade could not be deleted\"}");
             }
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Grade could not be deleted\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Grade could not be deleted\"}");
         }
         return ResponseEntity.ok("{\"message\":\"Grade deleted\"}");
     }

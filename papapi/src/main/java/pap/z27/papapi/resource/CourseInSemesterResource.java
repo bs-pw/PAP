@@ -91,7 +91,7 @@ public class CourseInSemesterResource {
             if(courseRepo.insertCourseInSemester(course)==0) return ResponseEntity.badRequest().body("{\"message\":\"cannot insert course in the semester\"}");
         } catch (DataAccessException e) {
             log.error("e: ", e);
-            return ResponseEntity.internalServerError().body("{\"message\":\"cannot insert course in the semester\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"cannot insert course in the semester\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
@@ -112,7 +112,7 @@ public class CourseInSemesterResource {
                         .body("{\"message\":\"Course not found\"}");
             }
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Cannot remove course\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Cannot remove course\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }

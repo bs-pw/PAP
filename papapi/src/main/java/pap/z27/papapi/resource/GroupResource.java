@@ -51,7 +51,7 @@ public class GroupResource {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("{\"message\":\"Cannot insert group (group might already exist)\"}");
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Cannot insert group (group might already exist)\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Cannot insert group (group might already exist)\"}");
         }
 
         return ResponseEntity.ok("{\"message\":\"ok\"}");
@@ -75,7 +75,7 @@ public class GroupResource {
                         .body("{\"message\":\"Group not found\"}");
             }
         } catch (DataAccessException e) {
-            return ResponseEntity.internalServerError().body("{\"message\":\"Cannot remove group\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Cannot remove group\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
