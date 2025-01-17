@@ -18,26 +18,9 @@ const StudentSemesterPage = () => {
         }
     };
 
-    const handleDeleteSemester = async (e) => {
+    const handleView = (e) => {
         e.preventDefault();
-        // console.log("ti")
-        try {
-            if (await client.deleteSemester(e.target.value)) {
-                await getSemesters();
-            }
-        } catch (error) {
-            setError('Błąd podczas usuwania semestru!');
-        }
-    }
-
-    const handleEditSemester = (e) => {
-        e.preventDefault();
-        navigate(`/admin/semesters/edit/` + e.target.value);
-    }
-
-    const handleVievCoursesInSemester = (e) => {
-        e.preventDefault();
-        navigate(`/admin/semesters/${e.target.value}/courses`);
+        navigate(`${e.target.value}`);
     }
 
     useEffect(() => {
@@ -47,10 +30,7 @@ const StudentSemesterPage = () => {
     console.log(semesters);
 
     return (
-        <>
-            {client.userTypeId == 0 && <Link to="/admin/semesters/create" className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >}
-            <List listName='Lista semestrów' columnNames={['Kod', 'Data początku', 'Data końca']} data={semesters} error={error} adminButtons={client.userTypeId == 0 && true} userButtons={true} handleDelete={handleDeleteSemester} handleEdit={handleEditSemester} handleViev={handleVievCoursesInSemester} id="semester_code" />
-        </>
+        <List listName='Lista semestrów' columnNames={['Kod']} data={semesters} error={error} userButtons={true} handleView={handleView} id="semester" />
     )
 }
 

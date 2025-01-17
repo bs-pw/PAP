@@ -49,7 +49,7 @@ const CourseInSemesterPage = () => {
     return (
         <>
             {client.userTypeId == 0 && <Link to={`/admin/semesters/${semesterId}/courses/add`} className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >}
-            <List listName={`Przedmioty w semestrze ${semesterId}`} columnNames={['Kod przedmotu']} data={courseInSemester} error={error} adminButtons={client.userTypeId == 0 && [true, false]} userButtons={true} handleViev={handleVievGroups} handleDelete={handleDeleteSemester} id="course_code" />
+            <List listName={`Przedmioty w semestrze ${semesterId}`} columnNames={['Kod przedmotu']} data={courseInSemester} error={error} adminButtons={client.userTypeId == 0 && [true, false]} userButtons={true} handleView={handleVievGroups} handleDelete={handleDeleteSemester} id="course_code" />
         </>
     )
 }

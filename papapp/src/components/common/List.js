@@ -1,6 +1,6 @@
 import React from 'react'
 
-const List = ({ listName, adminButtons = null, userButtons = false, columnNames, data, error, handleDelete, handleEdit, handleViev, id }) => {
+const List = ({ listName, adminButtons = null, userButtons = false, columnNames, data, error, handleDelete, handleEdit, handleView, id }) => {
     if (adminButtons === true) adminButtons = [true, true]
     console.log(adminButtons)
     return (
@@ -32,7 +32,7 @@ const List = ({ listName, adminButtons = null, userButtons = false, columnNames,
                                 {adminButtons[1] && <button className='btn btn-sm btn-warning' value={item[id]} onClick={handleEdit}>Edytuj</button>}
                             </td>}
                             {userButtons && <td>
-                                <button className='btn btn-sm btn-primary' value={item[id]} onClick={handleViev}>Podgląd</button>
+                                <button className='btn btn-sm btn-primary' value={item[id]} onClick={handleView}>Podgląd</button>
                             </td>}
                         </tr>
                     ))}
