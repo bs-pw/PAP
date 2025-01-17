@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useClient } from '../../../components/ClientContext';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import List from '../../../components/common/List';
+import { useParams } from 'react-router-dom';
 import FormInput from '../../../components/common/FormInput';
 
 const LecturerGradesListPage = ({ type = "student" }) => {
     const [listData, setListData] = useState([]);
     const [error, setError] = useState('');
     const client = useClient();
-    const navigate = useNavigate();
     const { semesterId, courseId, searchId } = useParams('');
-    const [listName, setListName] = useState(`Lista studentów ${courseId} ${semesterId}`);
-    const [columnNames, setColumnNames] = useState(["ID", "Imię", "Nazwisko"]);
-    const [idList, setIdList] = useState("user_id");
+    const [colName, setColName] = useState('Student');
 
     const getDataToList = async () => {
         try {
@@ -42,8 +38,6 @@ const LecturerGradesListPage = ({ type = "student" }) => {
         console.log(e);
         let keys = e.target.name.split(',');
         listData[keys[0]][keys[1]] = e.target.value;
-        console.log(listData)
-
     }
 
     const onSubmit = async (e) => {
@@ -51,6 +45,7 @@ const LecturerGradesListPage = ({ type = "student" }) => {
 
         try {
             await client.insertGrade(semesterId, courseId, listData)
+            setError("Zaktualizowano!")
         }
         catch (error) {
             await setError(error.message);
@@ -60,14 +55,11 @@ const LecturerGradesListPage = ({ type = "student" }) => {
     }
 
     useEffect(() => {
-        if (type !== "student") {
-            setListName(`Kategorie ocen ${courseId} ${semesterId}`);
-            setColumnNames(["ID", "Nazwa", "Maks punktów"]);
-            setIdList("category_id")
+        if (type === "student") {
+            setColName('Kategoria')
         }
         getDataToList();
         // setListData({ 1: { name: "Kolokwium", grade: 5, description: "test" } })
-        console.log(listData)
     }, [])
 
     return (
@@ -79,7 +71,7 @@ const LecturerGradesListPage = ({ type = "student" }) => {
                 <table className='table'>
                     <thead>
                         <tr>
-                            <th>Kategoria</th>
+                            <th>{colName}</th>
                             <th>Ocena</th>
                             <th>Opis</th>
                         </tr>

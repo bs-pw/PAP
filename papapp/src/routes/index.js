@@ -34,6 +34,7 @@ import LecturerCoursePage from "../pages/lecturer/LecturerCoursePage";
 import LecturerGradeMenuPage from "../pages/lecturer/LecturerGradeMenuPage";
 import LecturerGradePage from "../pages/lecturer/grades/LecturerGradePage";
 import LecturerGradesListPage from "../pages/lecturer/grades/LecturerGradesListPage";
+import LecturerFinalGradesPage from "../pages/lecturer/grades/LecturerFinalGradesPage";
 
 //import useAuthStatus from './useAuthStatus';
 
@@ -147,6 +148,10 @@ export const router = createBrowserRouter([
                                                         element: <LecturerGradesListPage type="category" />
                                                     }
                                                 ]
+                                            },
+                                            {
+                                                path: "final-grade",
+                                                element: <LecturerFinalGradesPage />
                                             }
                                         ]
                                     },
