@@ -46,7 +46,7 @@ const LecturerGradePage = ({ type = "student" }) => {
     }, [])
 
     return (
-        <List listName={listName} columnNames={columnNames} data={listData} error={error} userButtons={true} handleViev={handleView} id={idList} />
+        <List listName={listName} columnNames={columnNames} data={listData} error={error} userButtons={true} handleView={handleView} id={idList} />
     )
 }
 

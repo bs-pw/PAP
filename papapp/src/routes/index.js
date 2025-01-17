@@ -36,6 +36,8 @@ import LecturerGradePage from "../pages/lecturer/grades/LecturerGradePage";
 import LecturerGradesListPage from "../pages/lecturer/grades/LecturerGradesListPage";
 import LecturerFinalGradesPage from "../pages/lecturer/grades/LecturerFinalGradesPage";
 import StudentSemesterPage from "../pages/student/StudentSemesterPage";
+import StudentMenuPage from "../pages/student/StudentMenuPage";
+import StudentFinalGradesInSem from "../pages/student/StudentFinalGradesInSem";
 
 //import useAuthStatus from './useAuthStatus';
 
@@ -405,7 +407,11 @@ export const router = createBrowserRouter([
                                         children: [
                                             {
                                                 index: true,
-                                                element: <SemesterPage />,
+                                                element: <StudentMenuPage />,
+                                            },
+                                            {
+                                                path: "final-grades",
+                                                element: <StudentFinalGradesInSem />
                                             },
                                         ],
                                     },

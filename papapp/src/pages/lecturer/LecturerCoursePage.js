@@ -32,7 +32,7 @@ const LecturerCoursePage = () => {
     console.log(courseInSemester);
 
     return (
-        <List listName={`Przedmioty w semestrze ${semesterId}`} columnNames={['Kod przedmotu']} data={courseInSemester} error={error} userButtons={true} handleViev={handleViewGroups} id="course_code" />
+        <List listName={`Przedmioty w semestrze ${semesterId}`} columnNames={['Kod przedmotu']} data={courseInSemester} error={error} userButtons={true} handleView={handleViewGroups} id="course_code" />
     )
 }
 

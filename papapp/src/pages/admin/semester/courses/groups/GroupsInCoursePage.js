@@ -43,7 +43,7 @@ const GroupsInCoursePage = () => {
     return (
         <>
             <Link to={`add`} className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >
-            <List listName={`Grupy przedmiotu ${courseId} w semestrze ${semesterId}`} data={groups} columnNames={[`Kurs`]} adminButtons={[true, false]} userButtons={true} handleDelete={handleDeleteGroup} handleViev={handleViewStudents} id="group_number" />
+            <List listName={`Grupy przedmiotu ${courseId} w semestrze ${semesterId}`} data={groups} columnNames={[`Kurs`]} adminButtons={[true, false]} userButtons={true} handleDelete={handleDeleteGroup} handleView={handleViewStudents} id="group_number" />
         </>
     )
 }
