@@ -1,7 +1,6 @@
 package pap.z27.papapi.resource;
 
 import jakarta.servlet.http.HttpSession;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -9,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.Course;
-import pap.z27.papapi.domain.MyClass;
 import pap.z27.papapi.repo.CourseRepo;
 
 import java.util.List;
