@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 import pap.z27.papapi.repo.CourseInSemesterRepo;
+import pap.z27.papapi.repo.FinalGradeRepo;
 import pap.z27.papapi.repo.UserRepo;
 
 import java.util.List;
@@ -22,12 +23,14 @@ public class CourseInSemesterResource {
     private final CourseInSemesterRepo courseRepo;
     private final UserRepo userRepo;
     private final CourseInSemesterRepo courseInSemesterRepo;
+    private final FinalGradeRepo finalGradeRepo;
 
     @Autowired
-    public CourseInSemesterResource(CourseInSemesterRepo courseRepo, UserRepo userRepo, CourseInSemesterRepo courseInSemesterRepo) {
+    public CourseInSemesterResource(CourseInSemesterRepo courseRepo, UserRepo userRepo, CourseInSemesterRepo courseInSemesterRepo, FinalGradeRepo finalGradeRepo) {
         this.courseRepo = courseRepo;
         this.userRepo = userRepo;
         this.courseInSemesterRepo = courseInSemesterRepo;
+        this.finalGradeRepo = finalGradeRepo;
     }
     @GetMapping
     public List<CourseInSemester> getCoursesInSemester() {
@@ -70,6 +73,43 @@ public class CourseInSemesterResource {
         }
         return ResponseEntity.ok(courseInSemesterRepo.findAllUsersInCourse(courseCode, semester));
     }
+    @GetMapping("{semester}/{courseCode}/protocol")
+    public ResponseEntity<String> getProtocol(@PathVariable("courseCode") String courseCode,
+                                              @PathVariable("semester") String semester,
+                                              HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userTypeId != 0 && !userRepo.checkIfIsCoordinator(userId,courseCode,semester)) {
+            return ResponseEntity.badRequest().body("{\"message\":\"only coordinator can see protocols\"}\"");
+        }
+        try {
+            if (!courseRepo.checkIfIsClosed(semester, courseCode))
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Not closed yet!\"}\"");
+        }
+        catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Cannot get protocol \"}\"");
+        }
+//        TODO: generate protocol.pdf in repo
+        return ResponseEntity.ok("{\"message\":\"ok\"}");
+    }
+    @GetMapping("{semester}/{courseCode}/is-closed")
+    public ResponseEntity<Boolean> checkIsClosed(@PathVariable("courseCode") String courseCode,
+                                                                 @PathVariable("semester") String semester,
+                                                                 HttpSession session) {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        try{
+            return ResponseEntity.ok(courseInSemesterRepo.checkIfIsClosed(semester, courseCode));
+        }
+        catch (DataAccessException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
     @PostMapping
     public ResponseEntity<String> insertCourseInSemester(@RequestBody CourseInSemester course, HttpSession session)
     {
@@ -90,7 +130,34 @@ public class CourseInSemesterResource {
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
-
+    @PutMapping("{semester}/{courseCode}")
+    public ResponseEntity<String> closeCourseInSemester(@PathVariable("semester")String semester,
+                                                        @PathVariable("courseCode") String courseCode,
+                                                        HttpSession session)
+    {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userTypeId != 0 && !userRepo.checkIfIsCoordinator(userId,courseCode,semester)) {
+            return ResponseEntity.badRequest().body("{\"message\":\"only coordinator can update courses\"}\"");
+        }
+        int closedNumber=0;
+        try {
+            closedNumber=courseRepo.closeCourseInSemester(semester,courseCode);
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"cannot update course in the semester\"}");
+        }
+        if(closedNumber>0) {
+            try {
+                finalGradeRepo.updateFinalGradeNullsToTwosInCourse(semester, courseCode);
+            } catch (DataAccessException e) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"cannot update final grades \"}");
+            }
+        }
+        return ResponseEntity.ok("{\"message\":\"ok. "+closedNumber+ " course/s closed\"}");
+    }
     @DeleteMapping
     public ResponseEntity<String> deleteCourseInSemester(@RequestBody CourseInSemester course, HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");

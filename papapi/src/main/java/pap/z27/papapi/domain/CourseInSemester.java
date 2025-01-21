@@ -16,4 +16,10 @@ import java.io.Serializable;
 public class CourseInSemester implements Serializable {
     private String course_code;
     private String semester;
+    private Boolean is_closed;
+    public CourseInSemester(String course_code, String semester) {
+        this.course_code = course_code;
+        this.semester = semester;
+        this.is_closed = false;
+    }
 }

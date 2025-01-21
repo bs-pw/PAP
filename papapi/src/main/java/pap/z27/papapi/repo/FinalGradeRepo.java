@@ -56,9 +56,10 @@ public class FinalGradeRepo {
                 .param(semester)
                 .update();
     }
-    public Integer updateFinalGradeNullsToTwosInSemester(String semester){
-        return jdbcClient.sql("UPDATE FINAL_GRADES SET GRADE=2.0 WHERE SEMESTER=? and GRADE IS NULL")
+    public Integer updateFinalGradeNullsToTwosInCourse(String semester, String courseCode){
+        return jdbcClient.sql("UPDATE FINAL_GRADES SET GRADE=2.0 WHERE SEMESTER=? and COURSE_CODE=? and GRADE IS NULL")
                 .param(semester)
+                .param(courseCode)
                 .update();
     }
 

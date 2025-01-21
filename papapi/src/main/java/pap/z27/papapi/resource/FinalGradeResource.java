@@ -173,25 +173,4 @@ public class FinalGradeResource {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\" Problem with: "+exceptionsCounter+ " final grades.\"}");
         return ResponseEntity.ok().build();
     }
-
-    @PutMapping("/yourelate/{semester}")
-    public ResponseEntity<String> updateFinalGradeNullsToTwosInSemester(@PathVariable String semester,
-                                                               HttpSession session) {
-        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
-        if (userTypeId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        if (userTypeId != 0) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admins/coordinators can change final grades \"}");
-        }
-        try {
-            if (finalGradeRepo.updateFinalGradeNullsToTwosInSemester(semester) == 0) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("{\"message\":\"Couldn't update final grades\"}");
-            }
-        } catch (DataAccessException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't update final grades\"}");
-        }
-        return ResponseEntity.ok("{\"message\":\"ok\"}");
-    }
 }

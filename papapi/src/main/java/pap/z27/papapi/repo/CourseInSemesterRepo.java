@@ -64,10 +64,23 @@ public class CourseInSemesterRepo {
                 .query(UserPublicInfo.class)
                 .list();
     }
+    public Boolean checkIfIsClosed(String semester, String courseCode) {
+        return jdbcClient.sql("SELECT IS_CLOSED from COURSES_IN_SEMESTER where semester = ? and course_code = ?")
+                .param(semester)
+                .param(courseCode)
+                .query(Boolean.class)
+                .single();
+    }
     public Integer insertCourseInSemester(CourseInSemester courseInSemester) {
-        return jdbcClient.sql("INSERT INTO COURSES_IN_SEMESTER (course_code, semester) VALUES (?,?)")
+        return jdbcClient.sql("INSERT INTO COURSES_IN_SEMESTER (course_code, semester, is_closed VALUES (?,?,DEFAULT)")
                 .param(courseInSemester.getCourse_code())
                 .param(courseInSemester.getSemester())
+                .update();
+    }
+    public Integer closeCourseInSemester(String semester, String courseCode) {
+        return jdbcClient.sql("UPDATE COURSES_IN_SEMESTER SET is_closed=1 where course_code=? and semester=?")
+                .param(courseCode)
+                .param(semester)
                 .update();
     }
     public Integer insertCoordinator(Integer userID, CourseInSemester courseInSemester) {

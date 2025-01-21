@@ -105,7 +105,9 @@ alter table courses add constraint courses_pk primary key ( course_code );
 
 create table courses_in_semester (
    course_code varchar2(5 char) not null,
-   semester    varchar2(4 char) not null
+   semester    varchar2(4 char) not null,
+   is_closed   number(1) not null
+      check ( is_closed in (0, 1))
 );
 
 alter table courses_in_semester add constraint courses_in_semester_pk primary key ( course_code,
