@@ -8,9 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.Attendance;
 import pap.z27.papapi.domain.subclasses.AttendanceDTO;
-import pap.z27.papapi.repo.AttendanceRepo;
-import pap.z27.papapi.repo.GroupRepo;
-import pap.z27.papapi.repo.UserRepo;
+import pap.z27.papapi.repo.*;
 
 import javax.xml.crypto.Data;
 import java.util.List;
@@ -22,12 +20,13 @@ public class AttendanceResource {
     public final AttendanceRepo attendanceRepo;
     public final UserRepo userRepo;
     public final GroupRepo groupRepo;
-
+    public final CourseInSemesterRepo courseRepo;
     @Autowired
-    public AttendanceResource(AttendanceRepo attendanceRepo, UserRepo userRepo, GroupRepo groupRepo) {
+    public AttendanceResource(AttendanceRepo attendanceRepo, UserRepo userRepo, GroupRepo groupRepo,CourseInSemesterRepo courseRepo) {
         this.attendanceRepo = attendanceRepo;
         this.userRepo = userRepo;
         this.groupRepo = groupRepo;
+        this.courseRepo = courseRepo;
     }
 
     @GetMapping("{userId}")
@@ -115,7 +114,11 @@ public class AttendanceResource {
                     attendance.getGroup_number()) == null)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"No such student in the group\"}");
             attendance.setWho_inserted_id(userId);
+
             try {
+                if(courseRepo.checkIfIsClosed(attendance.getSemester(), attendance.getCourse_code()))
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
                 if(attendanceRepo.insertAttendance(attendance)==0)
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\" Cannot insert attendances\"}");
             } catch (DataAccessException e) {
@@ -144,7 +147,10 @@ public class AttendanceResource {
                     attendance.getGroup_number()) == null)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"No such student in the group\"}");
             attendance.setWho_inserted_id(userId);
+
             try {
+                if(courseRepo.checkIfIsClosed(attendance.getSemester(), attendance.getCourse_code()))
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
                 if(attendanceRepo.updateAttendance(attendance)==0)
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\" Cannot update attendances\"}");
             } catch (DataAccessException e) {

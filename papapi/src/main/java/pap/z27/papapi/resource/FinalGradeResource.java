@@ -10,6 +10,8 @@ import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.FinalGrade;
 import pap.z27.papapi.domain.subclasses.UserAndFinalGrade;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
+import pap.z27.papapi.repo.CourseInSemesterRepo;
+import pap.z27.papapi.repo.CourseRepo;
 import pap.z27.papapi.repo.FinalGradeRepo;
 import pap.z27.papapi.repo.UserRepo;
 
@@ -22,11 +24,13 @@ import java.util.Map;
 public class FinalGradeResource {
     private final FinalGradeRepo finalGradeRepo;
     private final UserRepo userRepo;
+    private final CourseInSemesterRepo courseRepo;
 
     @Autowired
-    public FinalGradeResource(FinalGradeRepo finalGradeRepo, UserRepo userRepo) {
+    public FinalGradeResource(FinalGradeRepo finalGradeRepo, UserRepo userRepo, CourseInSemesterRepo courseRepo) {
         this.finalGradeRepo = finalGradeRepo;
         this.userRepo = userRepo;
+        this.courseRepo = courseRepo;
     }
 
     @GetMapping("{userId}")
@@ -111,6 +115,8 @@ public class FinalGradeResource {
         if(userRepo.checkIfIsLecturerOfCourse(finalGrade.getUser_id(),finalGrade.getCourse_code(),finalGrade.getSemester()))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"User is already lecturer of this course!\"}");
         try {
+            if(courseRepo.checkIfIsClosed(finalGrade.getSemester(), finalGrade.getCourse_code()))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             if(finalGradeRepo.insertFinalGrade(finalGrade)==0)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("{\"message\":\"Cannot insert final grade\"}");
@@ -137,6 +143,8 @@ public class FinalGradeResource {
         }
 
         try {
+            if(courseRepo.checkIfIsClosed(finalGrade.getSemester(), finalGrade.getCourse_code()))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             if (finalGradeRepo.removeFinalGrade(finalGrade) == 0) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("{\"message\":\"Final grade not found\"}");
@@ -161,6 +169,13 @@ public class FinalGradeResource {
         }
         if (userTypeId != 0 && !userRepo.checkIfIsCoordinator(userId, courseCode, semester)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admins/coordinators can change final grades \"}");
+        }
+        try {
+            if (courseRepo.checkIfIsClosed(semester, courseCode))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         int exceptionsCounter=0;
         for(var finalGrade : finalGrades.values()) {

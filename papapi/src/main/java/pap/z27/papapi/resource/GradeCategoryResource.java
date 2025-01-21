@@ -7,9 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.GradeCategory;
-import pap.z27.papapi.repo.GradeCategoryRepo;
-import pap.z27.papapi.repo.GroupRepo;
-import pap.z27.papapi.repo.UserRepo;
+import pap.z27.papapi.repo.*;
 
 import java.util.List;
 
@@ -20,12 +18,14 @@ public class GradeCategoryResource {
     public final GradeCategoryRepo gradeCategoryRepo;
     public final UserRepo userRepo;
     public final GroupRepo groupRepo;
+    public final CourseInSemesterRepo courseRepo;
 
     @Autowired
-    public GradeCategoryResource(GradeCategoryRepo gradeCategoryRepo, UserRepo userRepo, GroupRepo groupRepo) {
+    public GradeCategoryResource(GradeCategoryRepo gradeCategoryRepo, UserRepo userRepo, GroupRepo groupRepo, CourseInSemesterRepo courseRepo) {
         this.gradeCategoryRepo = gradeCategoryRepo;
         this.userRepo = userRepo;
         this.groupRepo = groupRepo;
+        this.courseRepo = courseRepo;
     }
 
     @PostMapping
@@ -43,6 +43,8 @@ public class GradeCategoryResource {
                 return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can insert grade category \"}");
         }
         try {
+            if(courseRepo.checkIfIsClosed(gradeCategory.getSemester(), gradeCategory.getCourse_code()))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             if (gradeCategoryRepo.insertGradeCategory(gradeCategory) == 0)
             {
                 return ResponseEntity.badRequest().body("{\"message\":\"Could not insert grade category\"}");
@@ -118,6 +120,8 @@ public class GradeCategoryResource {
         }
 
         try {
+            if(courseRepo.checkIfIsClosed(semester, course_code))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             if (gradeCategoryRepo.updateGradeCategory(categoryId, course_code, semester, gradeCategory) != 0) {
                 return ResponseEntity.ok("{\"message\":\"grade category updated\"}");
             }
@@ -146,6 +150,8 @@ public class GradeCategoryResource {
         }
 
         try {
+            if(courseRepo.checkIfIsClosed(semester, course_code))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             if (gradeCategoryRepo.removeGradeCategory(course_code, semester, categoryId) != 0) {
                 return ResponseEntity.ok("{\"message\":\"grade category deleted\"}");
             }

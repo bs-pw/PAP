@@ -169,6 +169,9 @@ public class CourseInSemesterResource {
         }
 
         try {
+            if(courseRepo.checkIfIsClosed(course.getSemester(), course.getCourse_code()))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
             if (courseRepo.removeCourseInSemester(course) == 0) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("{\"message\":\"Course not found\"}");
