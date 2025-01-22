@@ -65,13 +65,13 @@ public class SemesterResource {
         }
 
         if (userTypeId != 0) {
-            return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert semesters\"}\"");
+            return ResponseEntity.badRequest().body("{\"message\":\"only admin can insert semesters\"}");
         }
         try {
             if(semesterRepo.insertSemester(semester)==0)
-                return ResponseEntity.badRequest().body("{\"message\":\"Couldn't insert semester\"}\"");
+                return ResponseEntity.badRequest().body("{\"message\":\"Couldn't insert semester\"}");
         } catch (DataAccessException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't insert semester\"}\"");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't insert semester\"}");
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
@@ -80,13 +80,13 @@ public class SemesterResource {
     public ResponseEntity<String> removeSemester (@RequestParam String semesterCode, HttpSession session) {
        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
        if (userTypeId != 0) {
-           return ResponseEntity.badRequest().body("{\"message\":\"only admin can delete semesters\"}\"");
+           return ResponseEntity.badRequest().body("{\"message\":\"only admin can delete semesters\"}");
        }
         try {
             if (semesterRepo.removeSemester(semesterCode) == 0)
-                return ResponseEntity.badRequest().body("{\"message\":\"semester couldn't be removed\"}\"");
+                return ResponseEntity.badRequest().body("{\"message\":\"semester couldn't be removed\"}");
         } catch (DataAccessException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"semester couldn't be removed\"}\"");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"semester couldn't be removed\"}");
         }
         return ResponseEntity.ok("{\"message\":\"semester removed\"}");
     }
@@ -95,13 +95,13 @@ public class SemesterResource {
     public ResponseEntity<String> updateSemester (@RequestBody Semester semester, HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
         if (userTypeId != 0) {
-            return ResponseEntity.badRequest().body("{\"message\":\"only admin can update semesters\"}\"");
+            return ResponseEntity.badRequest().body("{\"message\":\"only admin can update semesters\"}");
         }
         try {
             if (semesterRepo.updateSemester(semester) == 0)
-                return ResponseEntity.badRequest().body("{\"message\":\"semester couldn't be updated\"}\"");
+                return ResponseEntity.badRequest().body("{\"message\":\"semester couldn't be updated\"}");
         } catch (DataAccessException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"semester couldn't be updated\"}\"");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"semester couldn't be updated\"}");
         }
         return ResponseEntity.ok("{\"message\":\"semester updated\"}");
     }
