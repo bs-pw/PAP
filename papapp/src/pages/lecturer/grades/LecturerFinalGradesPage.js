@@ -43,10 +43,10 @@ const LecturerFinalGradesPage = () => {
     const generateProtocol = async (e) => {
         e.preventDefault();
         try {
-            await client.closeSemesterAndGetRaport(semesterId, courseId).then(res => res.blob())
+            await client.closeSemesterAndGetProtocol(semesterId, courseId).then(res => res.blob())
                 .then(blob => {
                     var file = window.URL.createObjectURL(blob);
-                    window.location.assign(file);
+                    window.open(file, '_blank');
                 });
         } catch (error) {
             await setError(error.message);
@@ -55,7 +55,6 @@ const LecturerFinalGradesPage = () => {
 
     useEffect(() => {
         getDataToList();
-        // setListData({ 1: { name: "Kolokwium", grade: 5, description: "test" } })
     }, [])
 
     return (
