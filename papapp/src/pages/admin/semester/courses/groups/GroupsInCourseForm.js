@@ -28,6 +28,7 @@ const GroupsInCourseForm = () => {
         label: "Numer grupy", type: "number", name: "group_number", value: formGroup, onChange: handleChange, required: true
     }]
 
+
     return (
         <Form inputData={inputData} buttonName="Dodaj" formName={`Dodaj grupę do przemiotu ${courseId} w semestrze ${semesterId}`} onSubmit={handleSubmit} message={message} />
     )

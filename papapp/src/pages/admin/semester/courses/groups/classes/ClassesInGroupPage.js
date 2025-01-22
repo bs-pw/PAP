@@ -43,8 +43,8 @@ const ClassesInGroupPage = () => {
 
     return (
         <>
-            <Link to={`add`} className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >
-            <List listName={`Zajęcia dla grupy ${groupId} z ${courseId} w semestrze ${semesterId}`} columnNames={['Id', 'Typ', 'Dzień tygodnia', 'Godzina', 'Długość', 'Sala']} data={classes} error={error} adminButtons={true} handleDelete={handleDelete} handleEdit={handleEdit} id="class_id_for_group" />
+            {!client.isLocked && <Link to={`add`} className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >}
+            <List listName={`Zajęcia dla grupy ${groupId} z ${courseId} w semestrze ${semesterId}`} columnNames={['Id', 'Typ', 'Dzień tygodnia', 'Godzina', 'Długość', 'Sala']} data={classes} error={error} adminButtons={!client.isLocked} handleDelete={handleDelete} handleEdit={handleEdit} id="class_id_for_group" />
         </>
     )
 }

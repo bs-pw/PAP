@@ -42,8 +42,8 @@ const GradeCategoriesPage = () => {
 
     return (
         <>
-            <Link to={`add`} className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >
-            <List listName={`Punktacja przedmiotu ${courseId} w semestrze ${semesterId}`} columnNames={['Id', 'Opis', 'Max punktów']} data={gradeCategories} error={error} adminButtons={true} handleDelete={handleDelete} handleEdit={handleEdit} id="category_id" />
+            {!client.isLocked && <Link to={`add`} className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >}
+            <List listName={`Punktacja przedmiotu ${courseId} w semestrze ${semesterId}`} columnNames={['Id', 'Opis', 'Max punktów']} data={gradeCategories} error={error} adminButtons={!client.isLocked} handleDelete={handleDelete} handleEdit={handleEdit} id="category_id" />
         </>
     )
 }

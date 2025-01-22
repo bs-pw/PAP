@@ -43,8 +43,8 @@ const UsersInGroupPage = ({ type }) => {
 
     return (
         <>
-            <Link to={`add`} className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >
-            <List listName={`${title} w grupie ${groupId}, przedmiot ${courseId} w semestrze ${semesterId}`} data={users} columnNames={[`Id`, `Imię`, `Nazwisko`]} adminButtons={[true, false]} handleDelete={handleDeleteUser} id="user_id" error={error} />
+            {!client.isLocked && <Link to={`add`} className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >}
+            <List listName={`${title} w grupie ${groupId}, przedmiot ${courseId} w semestrze ${semesterId}`} data={users} columnNames={[`Id`, `Imię`, `Nazwisko`]} adminButtons={!client.isLocked && [true, false]} handleDelete={handleDeleteUser} id="user_id" error={error} />
         </>
     )
 }

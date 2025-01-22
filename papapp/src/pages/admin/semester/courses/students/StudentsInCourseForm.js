@@ -15,6 +15,7 @@ const CoordinatorsForm = () => {
         const data = await client.getAvailableCourseStudents(semesterId, courseId);
         setStudents(data);
         //console.log(data)
+        if (client.isLocked) navigate('..')
     }
 
     const handleChange = (e) => {
@@ -33,6 +34,7 @@ const CoordinatorsForm = () => {
 
     useEffect(() => {
         getAvStudents();
+        // console.log(client.isLocked)
     }, [])
 
     const selectData = [{

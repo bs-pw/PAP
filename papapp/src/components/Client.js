@@ -5,6 +5,7 @@ class Client {
     surname = null;
     mail = null;
     userTypeId = null;
+    isLocked = false;
 
     constructor(baseUrl) {
         this.baseUrl = baseUrl;
@@ -30,6 +31,20 @@ class Client {
             this.surname = data.surname;
             this.mail = data.mail;
             this.userTypeId = data.userTypeId;
+            return true;
+        }).catch(error => {
+            throw new Error(error.message);
+        });
+    }
+
+    async isClosed(semesterId, courseId) {
+        return fetch(`${this.baseUrl}/courseinsemester/${semesterId}/${courseId}/is-closed`, {
+            method: 'GET',
+            credentials: this.credentials,
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            this.isLocked = data.isLocked;
             return true;
         }).catch(error => {
             throw new Error(error.message);
