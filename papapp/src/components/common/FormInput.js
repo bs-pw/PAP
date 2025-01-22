@@ -1,6 +1,6 @@
 import React from 'react'
 
-const FormInput = ({ name, type, label = false, value, onChange, step, required, defaultValue, min, max }) => {
+const FormInput = ({ name, type, label = false, value, onChange, step, required, defaultValue, min, max, disabled = false }) => {
     return (
         <div className="mb-3">
             {label && <label htmlFor={name} className="form-label">{label}</label>}
@@ -16,6 +16,7 @@ const FormInput = ({ name, type, label = false, value, onChange, step, required,
                 defaultValue={defaultValue}
                 min={min}
                 max={max}
+                disabled={disabled}
             />
         </div>
     )

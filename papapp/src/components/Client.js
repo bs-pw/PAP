@@ -1239,6 +1239,25 @@ class Client {
                 throw new Error(error.message);
             });
     }
+    async closeSemesterAndGetProtocol(semester, courseCode) {
+        return fetch(`${this.baseUrl}/finalgrades/${semester}/${courseCode}/protocol`,
+            {
+                method: 'PUT',
+                headers: this.headers,
+                credentials: this.credentials
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    return response;
+                } else {
+                    throw new Error(`Error when generating protocol!`);
+                }
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+    }
 
 }
 
