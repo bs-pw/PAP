@@ -8,10 +8,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import pap.z27.papapi.domain.subclasses.NameGrade;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
 import java.io.IOException;
+import java.util.Locale;
 
 
 @Service
@@ -85,7 +88,7 @@ public class ReportService {
         document.add(new Paragraph(new Chunk("III: Podsumowanie\n", headerFont)));
         Paragraph podsumowanie = new Paragraph(new Chunk("Liczba studentów zapisanych: ", textFont));
         podsumowanie.add(nameGrades.size() + "\n");
-        podsumowanie.add("Liczba stuentów, którzy ukończyli przedmiot: ");
+        podsumowanie.add("Liczba studentów, którzy ukończyli przedmiot: ");
         podsumowanie.add(nameGrades.stream()
                 .filter(item -> item.getGrade() > 2)
                 .count() + "\n");
@@ -109,11 +112,15 @@ public class ReportService {
         gradeList.add(4.5F);
         gradeList.add(5F);
 
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+        symbols.setDecimalSeparator(',');
+        DecimalFormat decimalFormat = new DecimalFormat("#.#", symbols);
+
         for (float grade : gradeList) {
             Integer count = (int)nameGrades.stream()
                     .filter(item -> Math.abs(item.getGrade() - grade) < epsilon)
                     .count();
-            gradeTable.addCell(new Phrase(String.valueOf(grade), textFont));
+            gradeTable.addCell(new Phrase(decimalFormat.format(grade), textFont));
             gradeTable.addCell(new Phrase(String.valueOf(count), textFont));
         }
 

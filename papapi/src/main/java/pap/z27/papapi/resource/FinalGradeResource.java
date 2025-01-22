@@ -57,8 +57,8 @@ public class FinalGradeResource {
         return ResponseEntity.ok(finalGradeRepo.findAllUsersFinalGrades(userId));
     }
 
-    @GetMapping("{semester}/{courseCode}/report")
-    public ResponseEntity<String> getFinalGradesReport(@PathVariable("courseCode") String courseCode,
+    @PutMapping("{semester}/{courseCode}/protocol")
+    public ResponseEntity<String> getFinalGradesProtocol(@PathVariable("courseCode") String courseCode,
                                                        @PathVariable("semester") String semester,
                                                        HttpSession session,
                                                        HttpServletResponse response) throws IOException, DataAccessException
@@ -70,13 +70,6 @@ public class FinalGradeResource {
         Integer userId = (Integer) session.getAttribute("user_id");
         if (userTypeId != 0 && !userRepo.checkIfIsCoordinator(userId,courseCode,semester)) {
             return ResponseEntity.badRequest().body("{\"message\":\"only coordinator can see protocols\"}\"");
-        }
-        try {
-            if (!courseRepo.checkIfIsClosed(semester, courseCode))
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Not closed yet!\"}\"");
-        }
-        catch (DataAccessException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Cannot get protocol \"}\"");
         }
 
         response.setContentType("application/pdf");
@@ -104,12 +97,12 @@ public class FinalGradeResource {
             return ResponseEntity.badRequest().body("{\"message\":\"Couldn't generate report\"}");
         }
 
-//        try {
-//            if (courseRepo.closeCourse(semester, courseCode)==0)
-//                return ResponseEntity.badRequest().body("{\"message\":\"Cannot close course\"}");
-//        } catch (DataAccessException e) {
-//            return ResponseEntity.badRequest().body("{\"message\":\"Cannot close course\"}");
-//        }
+        try {
+            if (courseRepo.closeCourse(semester, courseCode)==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Cannot close course\"}");
+        } catch (DataAccessException e) {
+            return ResponseEntity.badRequest().body("{\"message\":\"Cannot close course\"}");
+        }
 
         return ResponseEntity.ok("{\"message\":\"Report generated.\"}");
     }

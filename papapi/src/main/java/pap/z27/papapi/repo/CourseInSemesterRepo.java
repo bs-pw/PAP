@@ -66,7 +66,8 @@ public class CourseInSemesterRepo {
                 .list();
     }
     public List<NameGrade> findStudentsNamesGradesInCourse(String courseCode, String semester) {
-        return jdbcClient.sql("SELECT concat(concat(u.name, ' '), u.surname) as name, fg.GRADE FROM USERS u join FINAL_GRADES fg on u.user_id=fg.user_id where fg.course_code=? and fg.semester=?")
+        return jdbcClient.sql("SELECT concat(concat(u.name, ' '), u.surname) as name, fg.GRADE FROM USERS u join FINAL_GRADES fg on u.user_id=fg.user_id where fg.course_code=? and fg.semester=?" +
+                        "ORDER BY u.surname, u.name")
                 .param(courseCode)
                 .params(semester)
                 .query(NameGrade.class)
