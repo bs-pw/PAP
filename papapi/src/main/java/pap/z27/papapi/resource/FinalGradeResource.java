@@ -57,8 +57,8 @@ public class FinalGradeResource {
         return ResponseEntity.ok(finalGradeRepo.findAllUsersFinalGrades(userId));
     }
 
-    @GetMapping("{semester}/{courseCode}/report")
-    public ResponseEntity<String> getFinalGradesReport(@PathVariable("courseCode") String courseCode,
+    @PutMapping("{semester}/{courseCode}/protocol")
+    public ResponseEntity<String> getFinalGradesProtocol(@PathVariable("courseCode") String courseCode,
                                                        @PathVariable("semester") String semester,
                                                        HttpSession session,
                                                        HttpServletResponse response) throws IOException, DataAccessException
