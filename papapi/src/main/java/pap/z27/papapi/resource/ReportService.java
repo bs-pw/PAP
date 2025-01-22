@@ -28,7 +28,6 @@ public class ReportService {
                        String courseTitle) throws IOException {
         Document document = new Document(PageSize.A4);
 
-        LayoutProcessor.enableKernLiga();
         String fontDir = "src/main/java/pap/z27/papapi/Noto_Sans/static/";
         FontFactory.register(fontDir + "NotoSans-Regular.ttf", "notoSans");
         FontFactory.register(fontDir + "NotoSans-Bold.ttf", "notoSansBold");

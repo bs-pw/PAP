@@ -1,5 +1,6 @@
 package pap.z27.papapi.resource;
 
+import com.lowagie.text.pdf.LayoutProcessor;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class FinalGradeResource {
         this.reportService = reportService;
         this.courseRepo = courseRepo;
         this.realCourseRepo = realCourseRepo;
+        LayoutProcessor.enableKernLiga();
     }
 
     @GetMapping("{userId}")
