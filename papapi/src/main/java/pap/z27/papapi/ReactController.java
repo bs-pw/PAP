@@ -5,9 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ReactController {
 
-    @GetMapping(value = {"/**", "!/api/**"})
+    @GetMapping(value = "/**/{path:^(?!\\/api\\/).*$}")
     public String redirect() {
         return "forward:/index.html";
     }
 }
+
 
