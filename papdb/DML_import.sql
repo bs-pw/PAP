@@ -3,6 +3,7 @@ insert into attendance_statuses (
    status
 ) values ( 1,
            'Present' );
+commit;
 
 insert into class_types (
    class_type_id,
@@ -24,6 +25,7 @@ insert into class_types (
    type
 ) values ( 4,
            'Project' );
+commit;
 
 insert into semesters (
    semester_code,
@@ -46,6 +48,7 @@ insert into semesters (
 ) values ( '25L',
            date '2025-01-01',
            date '2025-12-31' );
+commit;
 
 insert into courses (
    course_code,
@@ -77,6 +80,7 @@ insert into courses (
    title
 ) values ( 'MAKO1',
            'Matematyka konkretna 1' );
+commit;
 
 insert into courses_in_semester (
    course_code,
@@ -127,6 +131,7 @@ insert into courses_in_semester (
 ) values ( 'MAKO1',
            '24Z',
            0 );
+commit;
 
 insert into user_types (
    user_type_id,
@@ -153,6 +158,7 @@ insert into user_types (
    type
 ) values ( 4,
            'inactive' );
+commit;
 
 insert into users (
    user_id,
@@ -1064,6 +1070,7 @@ insert into users (
            'BHHOMT1V',
            'student_60@pw.edu.pl',
            3 );
+commit;
 
 insert into coordinators (
    user_id,
@@ -1107,6 +1114,7 @@ insert into coordinators (
 ) values ( 101,
            'SOI',
            '24Z' );
+commit;
 
 insert into final_grades (
    user_id,
@@ -1738,6 +1746,7 @@ insert into final_grades (
            'BD1',
            '24Z',
            2.0 );
+commit;
 
 insert into grade_categories (
    category_id,
@@ -1882,6 +1891,7 @@ insert into grade_categories (
            '24Z',
            'Egzamin',
            15.00 );
+commit;
 
 insert into grades (
    category_id,
@@ -2155,6 +2165,7 @@ insert into grades (
            8.00,
            timestamp '2025-01-22 23:10:38.000000',
            null );
+commit;
 
 insert into groups (
    course_code,
@@ -2205,6 +2216,7 @@ insert into groups (
 ) values ( 'SOI',
            201,
            '24Z' );
+commit;
 
 insert into students_in_groups (
    user_id,
@@ -2260,6 +2272,7 @@ insert into students_in_groups (
            'BD1',
            '24Z',
            104 );
+commit;
 
 insert into lecturers (
    user_id,
@@ -2288,6 +2301,7 @@ insert into lecturers (
            'PROB',
            '24Z',
            101 );
+commit;
 
 insert into classes (
    course_code,
@@ -2422,3 +2436,4 @@ insert into classes (
            60,
            '107',
            2 );
+commit;
