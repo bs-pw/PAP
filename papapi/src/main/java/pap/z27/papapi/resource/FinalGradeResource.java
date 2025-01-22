@@ -63,6 +63,22 @@ public class FinalGradeResource {
                                                        HttpSession session,
                                                        HttpServletResponse response) throws IOException, DataAccessException
     {
+        Integer userTypeId = (Integer) session.getAttribute("user_type_id");
+        if (userTypeId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userTypeId != 0 && !userRepo.checkIfIsCoordinator(userId,courseCode,semester)) {
+            return ResponseEntity.badRequest().body("{\"message\":\"only coordinator can see protocols\"}\"");
+        }
+        try {
+            if (!courseRepo.checkIfIsClosed(semester, courseCode))
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Not closed yet!\"}\"");
+        }
+        catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Cannot get protocol \"}\"");
+        }
+
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm");
         String currentDateTime = dateFormatter.format(new Date());
@@ -76,9 +92,6 @@ public class FinalGradeResource {
         List<NameGrade> studentNameGrades = courseRepo.findStudentsNamesGradesInCourse(courseCode, semester);
         String courseTitle = realCourseRepo.findCourseName(courseCode);
 
-//        String currentWorkingDir = System.getProperty("user.dir");
-//        System.out.println("Current working directory: " + currentWorkingDir);
-
         try {
             reportService.export(response,
                     semester,
@@ -90,6 +103,13 @@ public class FinalGradeResource {
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("{\"message\":\"Couldn't generate report\"}");
         }
+
+//        try {
+//            if (courseRepo.closeCourse(semester, courseCode)==0)
+//                return ResponseEntity.badRequest().body("{\"message\":\"Cannot close course\"}");
+//        } catch (DataAccessException e) {
+//            return ResponseEntity.badRequest().body("{\"message\":\"Cannot close course\"}");
+//        }
 
         return ResponseEntity.ok("{\"message\":\"Report generated.\"}");
     }
