@@ -80,8 +80,14 @@ public class CourseInSemesterRepo {
                 .query(Boolean.class)
                 .single();
     }
+    public Integer closeCourse(String semester, String courseCode) {
+        return jdbcClient.sql("UPDATE COURSES_IN_SEMESTER SET IS_CLOSED=1 where course_code=? and semester=?")
+                .param(courseCode)
+                .param(semester)
+                .update();
+    }
     public Integer insertCourseInSemester(CourseInSemester courseInSemester) {
-        return jdbcClient.sql("INSERT INTO COURSES_IN_SEMESTER (course_code, semester, is_closed VALUES (?,?,DEFAULT)")
+        return jdbcClient.sql("INSERT INTO COURSES_IN_SEMESTER (course_code, semester, is_closed) VALUES (?,?,DEFAULT)")
                 .param(courseInSemester.getCourse_code())
                 .param(courseInSemester.getSemester())
                 .update();

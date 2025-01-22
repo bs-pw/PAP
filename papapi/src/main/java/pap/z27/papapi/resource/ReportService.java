@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import pap.z27.papapi.domain.subclasses.NameGrade;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import java.io.IOException;
@@ -38,6 +39,9 @@ public class ReportService {
         Font titleFont = FontFactory.getFont("notoSansBold", BaseFont.IDENTITY_H, true, 20);
         Font headerFont = FontFactory.getFont("notoSansBold", BaseFont.IDENTITY_H, true, 16);
         Font textFont = FontFactory.getFont("notoSans", BaseFont.IDENTITY_H, true, 12);
+        Font textBold = FontFactory.getFont("notoSansBold", BaseFont.IDENTITY_H, true, 12);
+
+        Paragraph newline = new Paragraph(new Chunk("\n", textFont));
 
         Paragraph title = new Paragraph("PROTOKÓŁ KOŃCOWY", titleFont);
         title.setAlignment(Element.ALIGN_CENTER);
@@ -53,43 +57,82 @@ public class ReportService {
         daneText.add("Koordynator(rzy): " + String.join(", ", coordinators) + "\n");
         daneText.add("Prowadzący: " + String.join(", ", lecturers) + "\n");
         document.add(daneText);
-        document.add(new Paragraph(Chunk.NEWLINE));
+        document.add(newline);
 
         Paragraph uczestnicyHeader = new Paragraph(new Chunk("II: Uczestnicy\n", headerFont));
         document.add(uczestnicyHeader);
 
-        float[] columnDefinitionSize = {33.33F, 33.33F, 33.33F};
+        float[] columnDefinitionSize = {5F, 15F, 5F};
         PdfPTable table = new PdfPTable(columnDefinitionSize);
-        table.getDefaultCell().setBorder(0);
+        table.setSpacingBefore(10F);
         table.setHorizontalAlignment(Element.ALIGN_LEFT);
-        table.setTotalWidth(width - 20);
+        table.setTotalWidth(width - 70);
         table.setLockedWidth(true);
 
-        PdfPCell cell = new PdfPCell();
-        cell.setColspan(columnDefinitionSize.length);
-        table.addCell(cell);
-        table.addCell(new Phrase("Louis Pasteur", textFont));
-        table.addCell(new Phrase("Albert Einstein", textFont));
-        table.addCell(new Phrase("Isaac Newton", textFont));
-        table.addCell(new Phrase("8, Rabic street", textFont));
-        table.addCell(new Phrase("2 Photons Avenue", textFont));
-        table.addCell(new Phrase("32 Gravitation Court", textFont));
-        table.addCell(new Phrase("39100 Dole France", textFont));
-        table.addCell(new Phrase("12345 Ulm Germany", textFont));
-        table.addCell(new Phrase("45789 Cambridge  England", textFont));
+        table.addCell(new Phrase("Lp.", textBold));
+        table.addCell(new Phrase("Imię i Nazwisko", textBold));
+        table.addCell(new Phrase("Ocena", textBold));
+
+        for (int i = 0; i < nameGrades.size(); i++) {
+            table.addCell(new Phrase((i + 1) + ".", textFont));
+            table.addCell(new Phrase(nameGrades.get(i).getName(), textFont));
+            table.addCell(new Phrase(String.valueOf(nameGrades.get(i).getGrade()), textFont));
+        }
 
         document.add(table);
+        document.add(newline);
 
+        document.add(new Paragraph(new Chunk("III: Podsumowanie\n", headerFont)));
+        Paragraph podsumowanie = new Paragraph(new Chunk("Liczba studentów zapisanych: ", textFont));
+        podsumowanie.add(nameGrades.size() + "\n");
+        podsumowanie.add("Liczba stuentów, którzy ukończyli przedmiot: ");
+        podsumowanie.add(nameGrades.stream()
+                .filter(item -> item.getGrade() > 2)
+                .count() + "\n");
+        podsumowanie.add("\nRozkład ocen:\n");
 
-//        Paragraph signature = new Paragraph("........", textFont);
-//        signature.setAlignment(Element.ALIGN_RIGHT);
+        document.add(podsumowanie);
 
-//        document.add(title);
-//        document.add(Chunk.NEWLINE);
-//        document.add(text);
-//        document.add(Chunk.NEWLINE);
-//        document.add(signature);
+        PdfPTable gradeTable = new PdfPTable(2);
+        gradeTable.setSpacingBefore(10F);
+        gradeTable.setHorizontalAlignment(Element.ALIGN_LEFT);
 
+        gradeTable.addCell(new Phrase("Ocena", textBold));
+        gradeTable.addCell(new Phrase("Liczba ocen", textBold));
+
+        float epsilon = 0.0000001F;
+        List<Float> gradeList = new ArrayList<Float>();
+        gradeList.add(2F);
+        gradeList.add(3F);
+        gradeList.add(3.5F);
+        gradeList.add(4F);
+        gradeList.add(4.5F);
+        gradeList.add(5F);
+
+        for (float grade : gradeList) {
+            Integer count = (int)nameGrades.stream()
+                    .filter(item -> Math.abs(item.getGrade() - grade) < epsilon)
+                    .count();
+            gradeTable.addCell(new Phrase(String.valueOf(grade), textFont));
+            gradeTable.addCell(new Phrase(String.valueOf(count), textFont));
+        }
+
+        document.add(gradeTable);
+        document.add(newline);
+        document.add(newline);
+
+        Paragraph signaturePlaceholder = new Paragraph(new Chunk(".....................................", textFont));
+        signaturePlaceholder.setAlignment(Element.ALIGN_RIGHT);
+
+        Paragraph coordinatorName;
+
+        for (String coordinator : coordinators) {
+            coordinatorName = new Paragraph(new Chunk(coordinator, textFont));
+            coordinatorName.setAlignment(Element.ALIGN_RIGHT);
+            document.add(signaturePlaceholder);
+            document.add(coordinatorName);
+            document.add(newline);
+        }
         document.close();
     }
 }
