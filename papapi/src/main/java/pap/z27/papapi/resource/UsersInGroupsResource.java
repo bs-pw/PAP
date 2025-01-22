@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.subclasses.UserInGroup;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
+import pap.z27.papapi.repo.CourseInSemesterRepo;
 import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 
@@ -19,11 +20,13 @@ import java.util.List;
 public class UsersInGroupsResource {
     private final GroupRepo groupRepo;
     private final UserRepo userRepo;
+    private final CourseInSemesterRepo courseRepo;
 
     @Autowired
-    public UsersInGroupsResource(GroupRepo groupRepo, UserRepo userRepo) {
+    public UsersInGroupsResource(GroupRepo groupRepo, UserRepo userRepo, CourseInSemesterRepo courseRepo) {
         this.groupRepo = groupRepo;
         this.userRepo = userRepo;
+        this.courseRepo = courseRepo;
     }
     @GetMapping("/{semester}/{courseCode}/{groupNr}/students")
     public ResponseEntity<List<UserPublicInfo>> getAllStudentsInGroup(
@@ -97,7 +100,14 @@ public class UsersInGroupsResource {
                 userInGroup.getSemester())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Only admins/coordinators can add students to groups\"}");
         }
-
+        try {
+            if (courseRepo.checkIfIsClosed(userInGroup.getSemester(), userInGroup.getCourse_code()))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        catch (DataAccessException e)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         Integer userId = userInGroup.getUser_id();
         Integer userTypeId = userRepo.findUsersTypeId(userId);
         if (userTypeId == null) {
@@ -168,6 +178,8 @@ public class UsersInGroupsResource {
         if (userTypeId == 0) {
            if (affectedUsersTypeId == 3) {
                try {
+                   if(courseRepo.checkIfIsClosed(userInGroup.getSemester(), userInGroup.getCourse_code()))
+                       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
                    if(groupRepo.updateStudentsGroup(userInGroup, newGroupNr)==0)
                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                            .body("{\"message\":\"Couldn't change student's group.\"}");
@@ -213,6 +225,8 @@ public class UsersInGroupsResource {
         uig.setUser_id(userId);
         int result = 0;
         try {
+            if(courseRepo.checkIfIsClosed(semester, courseCode))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             result = groupRepo.removeStudentFromGroup(uig)+groupRepo.removeLecturerFromGroup(uig);
         } catch (DataAccessException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't update user's group.\"}");

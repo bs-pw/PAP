@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.MyClass;
 import pap.z27.papapi.domain.subclasses.ClassDTO;
 import pap.z27.papapi.domain.subclasses.ClassInfo;
+import pap.z27.papapi.repo.CourseInSemesterRepo;
 import pap.z27.papapi.repo.MyClassRepo;
 import pap.z27.papapi.repo.UserRepo;
 
@@ -21,11 +22,13 @@ import java.util.Objects;
 public class ClassResource {
     private final MyClassRepo classRepo;
     private final UserRepo userRepo;
+    private final CourseInSemesterRepo courseRepo;
 
     @Autowired
-    public ClassResource(MyClassRepo classRepo, UserRepo userRepo) {
+    public ClassResource(MyClassRepo classRepo, UserRepo userRepo, CourseInSemesterRepo courseRepo) {
         this.classRepo = classRepo;
         this.userRepo = userRepo;
+        this.courseRepo = courseRepo;
     }
 
 
@@ -107,8 +110,10 @@ public class ClassResource {
         {
             ResponseEntity.badRequest().body("{\"message\":\"only admins, lecturers or coordinators of courses can create classes\"}");
         }
-
         try {
+            if(courseRepo.checkIfIsClosed(myClass.getSemester(), myClass.getCourse_code()))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
             if(classRepo.insertClass(myClass)==0)
             {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot insert class\"}");
@@ -145,6 +150,9 @@ public class ClassResource {
         myClass.setGroup_number(groupNr);
         myClass.setClass_id_for_group(classIdForGroup);
         try {
+            if(courseRepo.checkIfIsClosed(myClass.getSemester(), myClass.getCourse_code()))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
             if(classRepo.updateClass(myClass)==0)
             {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot update class\"}");
@@ -180,6 +188,9 @@ public class ClassResource {
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"only admins, lecturers or coordinators of courses can remove classes\"}");
         }
         try {
+            if(courseRepo.checkIfIsClosed(semester, courseCode))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
             if(classRepo.removeClass(courseCode,semester,groupNr,classIdForGroup)==0)
             {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"cannot remove class\"}");

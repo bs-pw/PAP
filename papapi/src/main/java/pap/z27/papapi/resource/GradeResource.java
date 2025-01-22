@@ -8,10 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.Grade;
 import pap.z27.papapi.domain.subclasses.GradeDTO;
-import pap.z27.papapi.repo.GradeCategoryRepo;
-import pap.z27.papapi.repo.GradeRepo;
-import pap.z27.papapi.repo.GroupRepo;
-import pap.z27.papapi.repo.UserRepo;
+import pap.z27.papapi.repo.*;
+
 import java.util.List;
 import java.util.Map;
 
@@ -22,14 +20,14 @@ public class GradeResource {
     public final GradeRepo gradeRepo;
     public final UserRepo userRepo;
     public final GroupRepo groupRepo;
-    private final GradeCategoryRepo gradeCategoryRepo;
+    private final CourseInSemesterRepo courseRepo;
 
     @Autowired
-    public GradeResource(GradeRepo gradeRepo, UserRepo userRepo, GroupRepo groupRepo, GradeCategoryRepo gradeCategoryRepo) {
+    public GradeResource(GradeRepo gradeRepo, UserRepo userRepo, GroupRepo groupRepo, CourseInSemesterRepo courseRepo) {
         this.gradeRepo = gradeRepo;
         this.userRepo = userRepo;
         this.groupRepo = groupRepo;
-        this.gradeCategoryRepo = gradeCategoryRepo;
+        this.courseRepo = courseRepo;
     }
     @GetMapping("{semester}/{courseCode}/{categoryId}/category")
     public ResponseEntity<List<GradeDTO>> getGradesByCategory(@PathVariable String semester,
@@ -81,9 +79,9 @@ public class GradeResource {
         if (!userRepo.checkIfStudentIsInCourse(userId, courseCode, semester))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-            if (!userTypeId.equals(0) && !thisUserId.equals(userId) && !userRepo.checkIfIsCoordinator(thisUserId, courseCode, semester) && !userRepo.checkIfIsLecturerOfCourse(thisUserId, courseCode, semester)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
+        if (!userTypeId.equals(0) && !thisUserId.equals(userId) && !userRepo.checkIfIsCoordinator(thisUserId, courseCode, semester) && !userRepo.checkIfIsLecturerOfCourse(thisUserId, courseCode, semester)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
             return ResponseEntity.ok(gradeRepo.findGradesOfCourseForUser(semester, courseCode, userId));
         }
@@ -102,6 +100,13 @@ public class GradeResource {
         if (!userTypeId.equals(0) && !userRepo.checkIfIsCoordinator(thisUserId,courseCode,semester) && !userRepo.checkIfIsLecturerOfCourse(thisUserId,courseCode,semester)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+        try {
+            if (courseRepo.checkIfIsClosed(semester, courseCode))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        catch (DataAccessException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         int exceptionsCounter=0;
         for(var grade:grades.values()) {
             if(grade.getGrade()==null) {
@@ -113,7 +118,6 @@ public class GradeResource {
                 continue;
             }
             grade.setWho_inserted_id(thisUserId);
-
             try {
                 if (gradeRepo.updateGrade(semester, courseCode, grade) == 0)
                 {
@@ -144,6 +148,8 @@ public class GradeResource {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         try {
+            if(courseRepo.checkIfIsClosed(semester, courseCode))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             if(gradeRepo.removeGrade(semester,courseCode,categoryId,userId)==0) {
                 return ResponseEntity.badRequest().body("{\"message\":\"Grade could not be deleted\"}");
             }

@@ -73,6 +73,9 @@ public class CoordinatorResource {
 
         CourseInSemester courseInSemester = new CourseInSemester(coordinator.getCourse_code(),coordinator.getSemester());
         try {
+            if(courseInSemesterRepo.checkIfIsClosed(courseInSemester.getSemester(), courseInSemester.getCourse_code()))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
             if (courseInSemesterRepo.insertCoordinator(coordinator.getUser_id(), courseInSemester) == 0) {
                 return ResponseEntity.badRequest().body("{\"message\":\"Couldn't add coordinator\"}");
             }
@@ -93,6 +96,9 @@ public class CoordinatorResource {
             return ResponseEntity.badRequest().body("{\"message\":\"Only admins can delete coordinators\"}");
         }
         try {
+            if(courseInSemesterRepo.checkIfIsClosed(semester, courseCode))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
             if (courseInSemesterRepo.removeCoordinator(coordinatorId, new CourseInSemester(courseCode,semester)) == 0) {
                 return ResponseEntity.badRequest().body("{\"message\":\"Couldn't delete coordinator\"}");
             }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.Group;
 import pap.z27.papapi.domain.subclasses.UserInGroup;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
+import pap.z27.papapi.repo.CourseInSemesterRepo;
 import pap.z27.papapi.repo.GroupRepo;
 import pap.z27.papapi.repo.UserRepo;
 
@@ -20,11 +21,13 @@ import java.util.List;
 public class LecturerResource {
     public final GroupRepo groupRepo;
     public final UserRepo userRepo;
+    public final CourseInSemesterRepo courseRepo;
 
     @Autowired
-    public LecturerResource(GroupRepo groupRepo, UserRepo userRepo) {
+    public LecturerResource(GroupRepo groupRepo, UserRepo userRepo, CourseInSemesterRepo courseRepo) {
         this.groupRepo = groupRepo;
         this.userRepo = userRepo;
+        this.courseRepo = courseRepo;
     }
 
     @PostMapping(path = "{lecturerId}")
@@ -51,6 +54,8 @@ public class LecturerResource {
             return ResponseEntity.badRequest().body("{\"message\":\"inactive users cannot be lecturers\"}");
         }
         try {
+            if(courseRepo.checkIfIsClosed(group.getSemester(), group.getCourse_code()))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             if (groupRepo.addLecturerToGroup(lecturerId, group)==0)
                 return ResponseEntity.badRequest().body("{\"message\":\"Couldn't add lecturer to group\"}");
         } catch (DataAccessException e) {
@@ -92,6 +97,8 @@ public class LecturerResource {
                 return ResponseEntity.badRequest().body("{\"message\":\"Only course coordinator can remove lecturers \"}");
         }
         try {
+            if(courseRepo.checkIfIsClosed(lecturer.getSemester(), lecturer.getCourse_code()))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             if (groupRepo.removeLecturer(lecturer) == 0) {
                 return ResponseEntity.badRequest().body("{\"message\":\"Couldn't delete lecturer (lecturer might not exist).\"}");
             }
