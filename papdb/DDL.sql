@@ -420,3 +420,51 @@ BEGIN
 END;
 /
 ALTER TRIGGER check_grade_category_trigger ENABLE;
+
+
+
+CREATE OR REPLACE TRIGGER check_semester_trigger
+BEFORE INSERT OR UPDATE ON semesters
+FOR EACH ROW
+DECLARE
+BEGIN
+   FOR r_sem IN (SELECT * FROM SEMESTERS where :old.semester_code != semester_code) LOOP
+      IF :new.start_date BETWEEN r_sem.start_date AND r_sem.end_date OR :new.end_date BETWEEN r_sem.start_date AND r_sem.end_date THEN
+         RAISE_APPLICATION_ERROR(-20001, 'Semester cannot interfere other semesters!');
+      END IF;
+   END LOOP;
+END;
+/
+ALTER TRIGGER check_semester_trigger ENABLE;
+
+-- FUNCTIONS
+
+CREATE OR REPLACE FUNCTION days_untill_end_of_semester (p_semester_code semesters.semester_code%TYPE)
+RETURN NUMBER
+AS
+    v_end_date semesters.end_date%TYPE;
+BEGIN
+    SELECT end_date
+    INTO v_end_date
+    FROM semesters
+    WHERE semester_code = p_semester_code;
+    
+    RETURN floor(v_end_date - SYSDATE);
+END;
+/
+CREATE OR REPLACE FUNCTION get_current_semester
+RETURN semesters.semester_code%TYPE
+AS
+    v_current_semester semesters.semester_code%TYPE;
+BEGIN
+    SELECT semester_code
+    INTO v_current_semester
+    FROM semesters
+    WHERE start_date <= SYSDATE
+    AND end_date >= SYSDATE;
+    
+    RETURN v_current_semester;
+END;
+/
+
+SELECT days_untill_end_of_semester('24Z') FROM DUAL;
