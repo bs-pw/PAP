@@ -1,34 +1,34 @@
-drop table attendance_statuses cascade constraints;
+-- drop table attendance_statuses cascade constraints;
 
-drop table attendances cascade constraints;
+-- drop table attendances cascade constraints;
 
-drop table class_types cascade constraints;
+-- drop table class_types cascade constraints;
 
-drop table classes cascade constraints;
+-- drop table classes cascade constraints;
 
-drop table coordinators cascade constraints;
+-- drop table coordinators cascade constraints;
 
-drop table courses cascade constraints;
+-- drop table courses cascade constraints;
 
-drop table courses_in_semester cascade constraints;
+-- drop table courses_in_semester cascade constraints;
 
-drop table final_grades cascade constraints;
+-- drop table final_grades cascade constraints;
 
-drop table grade_categories cascade constraints;
+-- drop table grade_categories cascade constraints;
 
-drop table grades cascade constraints;
+-- drop table grades cascade constraints;
 
-drop table groups cascade constraints;
+-- drop table groups cascade constraints;
 
-drop table lecturers cascade constraints;
+-- drop table lecturers cascade constraints;
 
-drop table semesters cascade constraints;
+-- drop table semesters cascade constraints;
 
-drop table students_in_groups cascade constraints;
+-- drop table students_in_groups cascade constraints;
 
-drop table user_types cascade constraints;
+-- drop table user_types cascade constraints;
 
-drop table users cascade constraints;
+-- drop table users cascade constraints;
 
 
 create table attendance_statuses (
