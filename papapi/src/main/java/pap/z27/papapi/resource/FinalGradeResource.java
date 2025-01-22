@@ -1,5 +1,6 @@
 package pap.z27.papapi.resource;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.FinalGrade;
+import pap.z27.papapi.domain.subclasses.NameGrade;
 import pap.z27.papapi.domain.subclasses.UserAndFinalGrade;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 import pap.z27.papapi.repo.CourseInSemesterRepo;
@@ -15,6 +17,10 @@ import pap.z27.papapi.repo.CourseRepo;
 import pap.z27.papapi.repo.FinalGradeRepo;
 import pap.z27.papapi.repo.UserRepo;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -24,13 +30,17 @@ import java.util.Map;
 public class FinalGradeResource {
     private final FinalGradeRepo finalGradeRepo;
     private final UserRepo userRepo;
+    private final ReportService reportService;
     private final CourseInSemesterRepo courseRepo;
+    private final CourseRepo realCourseRepo;
 
     @Autowired
-    public FinalGradeResource(FinalGradeRepo finalGradeRepo, UserRepo userRepo, CourseInSemesterRepo courseRepo) {
+    public FinalGradeResource(FinalGradeRepo finalGradeRepo, UserRepo userRepo, ReportService reportService, CourseInSemesterRepo courseRepo, CourseRepo realCourseRepo) {
         this.finalGradeRepo = finalGradeRepo;
         this.userRepo = userRepo;
+        this.reportService = reportService;
         this.courseRepo = courseRepo;
+        this.realCourseRepo = realCourseRepo;
     }
 
     @GetMapping("{userId}")
@@ -46,6 +56,44 @@ public class FinalGradeResource {
         }
         return ResponseEntity.ok(finalGradeRepo.findAllUsersFinalGrades(userId));
     }
+
+    @GetMapping("{semester}/{courseCode}/report")
+    public ResponseEntity<String> getFinalGradesReport(@PathVariable("courseCode") String courseCode,
+                                                       @PathVariable("semester") String semester,
+                                                       HttpSession session,
+                                                       HttpServletResponse response) throws IOException, DataAccessException
+    {
+        response.setContentType("application/pdf");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=" + semester + "_" + courseCode + "_" + currentDateTime + "_report.pdf";
+        response.setHeader(headerKey, headerValue);
+
+        List<String> coordinators = userRepo.findAllCourseCoordinatorNames(semester, courseCode);
+        List<String> lecturers = userRepo.findAllCourseLecturerNames(semester, courseCode);
+        List<NameGrade> studentNameGrades = courseRepo.findStudentsNamesGradesInCourse(courseCode, semester);
+        String courseTitle = realCourseRepo.findCourseName(courseCode);
+
+//        String currentWorkingDir = System.getProperty("user.dir");
+//        System.out.println("Current working directory: " + currentWorkingDir);
+
+        try {
+            reportService.export(response,
+                    semester,
+                    courseCode,
+                    coordinators,
+                    lecturers,
+                    studentNameGrades,
+                    courseTitle);
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().body("{\"message\":\"Couldn't generate report\"}");
+        }
+
+        return ResponseEntity.ok("{\"message\":\"Report generated.\"}");
+    }
+
 
     @GetMapping("{semester}/{courseCode}/available")
     public ResponseEntity<List<UserPublicInfo>> getEligibleCourseStudents(@PathVariable("courseCode") String courseCode, @PathVariable("semester") String semester, HttpSession session) {

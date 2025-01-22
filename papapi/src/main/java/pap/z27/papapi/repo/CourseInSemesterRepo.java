@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.CourseInSemester;
+import pap.z27.papapi.domain.subclasses.NameGrade;
 import pap.z27.papapi.domain.subclasses.UserAndFinalGrade;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 
@@ -63,6 +64,14 @@ public class CourseInSemesterRepo {
                 .params(semester)
                 .query(UserPublicInfo.class)
                 .list();
+    }
+    public List<NameGrade> findStudentsNamesGradesInCourse(String courseCode, String semester) {
+        return jdbcClient.sql("SELECT concat(concat(u.name, ' '), u.surname) as name, fg.GRADE FROM USERS u join FINAL_GRADES fg on u.user_id=fg.user_id where fg.course_code=? and fg.semester=?")
+                .param(courseCode)
+                .params(semester)
+                .query(NameGrade.class)
+                .list();
+
     }
     public Boolean checkIfIsClosed(String semester, String courseCode) {
         return jdbcClient.sql("SELECT IS_CLOSED from COURSES_IN_SEMESTER where semester = ? and course_code = ?")
