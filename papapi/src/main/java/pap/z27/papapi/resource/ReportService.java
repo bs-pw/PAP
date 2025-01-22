@@ -114,7 +114,7 @@ public class ReportService {
 
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
         symbols.setDecimalSeparator(',');
-        DecimalFormat decimalFormat = new DecimalFormat("#.#", symbols);
+        DecimalFormat decimalFormat = new DecimalFormat("0.0", symbols);
 
         for (float grade : gradeList) {
             Integer count = (int)nameGrades.stream()
