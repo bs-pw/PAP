@@ -86,11 +86,9 @@ public class ReportService {
         Paragraph podsumowanie = new Paragraph(new Chunk("Liczba studentów zapisanych: ", textFont));
         podsumowanie.add(nameGrades.size() + "\n");
         podsumowanie.add("Liczba stuentów, którzy ukończyli przedmiot: ");
-        podsumowanie.add(String.valueOf(
-                nameGrades.stream()
-                    .filter(item -> item.getGrade() > 2)
-                    .count()
-        ) + "\n");
+        podsumowanie.add(nameGrades.stream()
+                .filter(item -> item.getGrade() > 2)
+                .count() + "\n");
         podsumowanie.add("\nRozkład ocen:\n");
 
         document.add(podsumowanie);
