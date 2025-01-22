@@ -40,6 +40,19 @@ const LecturerFinalGradesPage = () => {
         getDataToList();
     }
 
+    const generateProtocol = async (e) => {
+        e.preventDefault();
+        try {
+            await client.closeSemesterAndGetRaport(semesterId, courseId).then(res => res.blob())
+                .then(blob => {
+                    var file = window.URL.createObjectURL(blob);
+                    window.location.assign(file);
+                });
+        } catch (error) {
+            await setError(error.message);
+        }
+    }
+
     useEffect(() => {
         getDataToList();
         // setListData({ 1: { name: "Kolokwium", grade: 5, description: "test" } })
@@ -63,12 +76,15 @@ const LecturerFinalGradesPage = () => {
                             <tr>
                                 <td>{item.name} {item.max && `[max: ${item.max} pkt.]`}</td>
 
-                                <td><FormInput key={item.user_id} name={item.user_id} type="number" defaultValue={item.grade} onChange={onChange} step="0.5" min={2} max={5} /></td>
+                                <td><FormInput key={item.user_id} name={item.user_id} type="number" defaultValue={item.grade} onChange={onChange} step="0.5" min={2} max={5} disabled={client.isLocked} /></td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-                <button type="submit" className="btn btn-primary" /*dangerouslySetInnerHTML={{ __html: buttonName }}*/>Zapisz</button>
+                <div className='d-flex justify-content-between'>
+                    {!client.isLocked && <button type="submit" className="btn btn-primary">Zapisz</button>}
+                    <button type="submit" className="btn btn-danger" onClick={generateProtocol}>{client.isLocked ? 'W' : 'Zamknij semestr i w'}ygeneruj raport</button>
+                </div>
             </form>
         </div >
     )

@@ -81,15 +81,15 @@ const LecturerGradesListPage = ({ type = "student" }) => {
                             <tr>
                                 <td>{item.name} {item.max && `[max: ${item.max} pkt.]`}</td>
 
-                                <td><FormInput key={key} name={[key, "grade"]} type="number" defaultValue={item.grade} onChange={onChange} step="0.01" min={0} max={item.max} /></td>
+                                <td><FormInput key={key} name={[key, "grade"]} type="number" defaultValue={item.grade} onChange={onChange} step="0.01" min={0} max={item.max} disabled={client.isLocked} /></td>
 
-                                <td><FormInput key={key} objectData={key} name={[key, "description"]} type="text" defaultValue={item.description} onChange={onChange} /></td>
+                                <td><FormInput key={key} objectData={key} name={[key, "description"]} type="text" defaultValue={item.description} onChange={onChange} disabled={client.isLocked} /></td>
 
                             </tr>
                         ))}
                     </tbody>
                 </table>
-                <button type="submit" className="btn btn-primary" /*dangerouslySetInnerHTML={{ __html: buttonName }}*/>Zapisz</button>
+                {!client.isLocked && <button type="submit" className="btn btn-primary" /*dangerouslySetInnerHTML={{ __html: buttonName }}*/>Zapisz</button>}
             </form>
         </div >
     )

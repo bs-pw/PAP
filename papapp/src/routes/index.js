@@ -124,7 +124,7 @@ export const router = createBrowserRouter([
                                     },
                                     {
                                         path: ":courseId",
-                                        element: <Outlet />,
+                                        element: <CheckIsLocked />,
                                         children: [
                                             {
                                                 index: true,
