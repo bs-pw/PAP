@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.FinalGrade;
+import pap.z27.papapi.domain.subclasses.GradeCount;
 import pap.z27.papapi.domain.subclasses.UserAndFinalGrade;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
 
@@ -32,6 +33,15 @@ public class FinalGradeRepo {
                 .param(courseCode)
                 .params(semester)
                 .query(UserAndFinalGrade.class)
+                .list();
+    }
+
+    public List<GradeCount> getCourseGradeCount(String courseCode, String semester) {
+        return jdbcClient.sql("SELECT grade, count(*) as count from FINAL_GRADES WHERE COURSE_CODE=? AND SEMESTER=?" +
+                " GROUP BY grade ORDER BY grade DESC ")
+                .param(courseCode)
+                .param(semester)
+                .query(GradeCount.class)
                 .list();
     }
     public Integer insertFinalGrade(FinalGrade finalGrade) {

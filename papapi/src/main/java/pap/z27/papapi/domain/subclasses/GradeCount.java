@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @AllArgsConstructor
-public class NameGrade implements Serializable {
-    private String name;
+public class GradeCount implements Serializable {
     private Float grade;
+    private Integer count;
 }

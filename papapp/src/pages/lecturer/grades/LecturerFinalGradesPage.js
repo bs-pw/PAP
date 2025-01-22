@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useClient } from '../../../components/ClientContext';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import FormInput from '../../../components/common/FormInput';
 
 const LecturerFinalGradesPage = () => {
@@ -8,6 +8,8 @@ const LecturerFinalGradesPage = () => {
     const [error, setError] = useState('');
     const client = useClient();
     const { semesterId, courseId } = useParams('');
+    const navigate = useNavigate();
+    const [refreshKey, setRefreshKey] = useState(0);
 
     const getDataToList = async () => {
         try {
@@ -43,10 +45,12 @@ const LecturerFinalGradesPage = () => {
     const generateProtocol = async (e) => {
         e.preventDefault();
         try {
-            await client.closeSemesterAndGetRaport(semesterId, courseId).then(res => res.blob())
-                .then(blob => {
+            await client.closeSemesterAndGetProtocol(semesterId, courseId).then(res => res.blob())
+                .then(async (blob) => {
                     var file = window.URL.createObjectURL(blob);
-                    window.location.assign(file);
+                    window.open(file, '_blank');
+                    await client.isClosed(semesterId, courseId);
+                    setRefreshKey(prevKey => prevKey + 1);
                 });
         } catch (error) {
             await setError(error.message);
@@ -55,8 +59,7 @@ const LecturerFinalGradesPage = () => {
 
     useEffect(() => {
         getDataToList();
-        // setListData({ 1: { name: "Kolokwium", grade: 5, description: "test" } })
-    }, [])
+    }, [refreshKey])
 
     return (
         <div>

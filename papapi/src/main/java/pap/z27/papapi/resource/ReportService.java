@@ -6,6 +6,7 @@ import com.lowagie.text.pdf.PdfTable;
 import com.lowagie.text.Chunk;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
+import pap.z27.papapi.domain.subclasses.GradeCount;
 import pap.z27.papapi.domain.subclasses.NameGrade;
 
 import java.text.DecimalFormat;
@@ -25,10 +26,10 @@ public class ReportService {
                        List<String> coordinators,
                        List<String> lecturers,
                        List<NameGrade> nameGrades,
-                       String courseTitle) throws IOException {
+                       String courseTitle,
+                       List<GradeCount> gradeCounts) throws IOException {
         Document document = new Document(PageSize.A4);
 
-        LayoutProcessor.enableKernLiga();
         String fontDir = "src/main/java/pap/z27/papapi/Noto_Sans/static/";
         FontFactory.register(fontDir + "NotoSans-Regular.ttf", "notoSans");
         FontFactory.register(fontDir + "NotoSans-Bold.ttf", "notoSansBold");
@@ -72,6 +73,10 @@ public class ReportService {
         table.setTotalWidth(width - 70);
         table.setLockedWidth(true);
 
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+        symbols.setDecimalSeparator(',');
+        DecimalFormat decimalFormat = new DecimalFormat("0.0", symbols);
+
         table.addCell(new Phrase("Lp.", textBold));
         table.addCell(new Phrase("Imię i Nazwisko", textBold));
         table.addCell(new Phrase("Ocena", textBold));
@@ -79,7 +84,7 @@ public class ReportService {
         for (int i = 0; i < nameGrades.size(); i++) {
             table.addCell(new Phrase((i + 1) + ".", textFont));
             table.addCell(new Phrase(nameGrades.get(i).getName(), textFont));
-            table.addCell(new Phrase(String.valueOf(nameGrades.get(i).getGrade()), textFont));
+            table.addCell(new Phrase(decimalFormat.format(nameGrades.get(i).getGrade()), textFont));
         }
 
         document.add(table);
@@ -105,24 +110,26 @@ public class ReportService {
 
         float epsilon = 0.0000001F;
         List<Float> gradeList = new ArrayList<Float>();
-        gradeList.add(2F);
-        gradeList.add(3F);
-        gradeList.add(3.5F);
-        gradeList.add(4F);
-        gradeList.add(4.5F);
         gradeList.add(5F);
-
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
-        symbols.setDecimalSeparator(',');
-        DecimalFormat decimalFormat = new DecimalFormat("#.#", symbols);
+        gradeList.add(4.5F);
+        gradeList.add(4F);
+        gradeList.add(3.5F);
+        gradeList.add(3F);
+        gradeList.add(2F);
 
         for (float grade : gradeList) {
-            Integer count = (int)nameGrades.stream()
+            Integer count = gradeCounts.stream()
                     .filter(item -> Math.abs(item.getGrade() - grade) < epsilon)
-                    .count();
+                    .mapToInt(GradeCount::getCount)
+                    .sum();
             gradeTable.addCell(new Phrase(decimalFormat.format(grade), textFont));
             gradeTable.addCell(new Phrase(String.valueOf(count), textFont));
         }
+
+//        for (GradeCount gradeCount : gradeCounts) {
+//            gradeTable.addCell(new Phrase(decimalFormat.format(gradeCount.getGrade()), textFont));
+//            gradeTable.addCell(new Phrase(String.valueOf(gradeCount.getCount()), textFont));
+//        }
 
         document.add(gradeTable);
         document.add(newline);

@@ -1,5 +1,6 @@
 package pap.z27.papapi.resource;
 
+import com.lowagie.text.pdf.LayoutProcessor;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pap.z27.papapi.domain.CourseInSemester;
 import pap.z27.papapi.domain.FinalGrade;
+import pap.z27.papapi.domain.subclasses.GradeCount;
 import pap.z27.papapi.domain.subclasses.NameGrade;
 import pap.z27.papapi.domain.subclasses.UserAndFinalGrade;
 import pap.z27.papapi.domain.subclasses.UserPublicInfo;
@@ -41,6 +43,7 @@ public class FinalGradeResource {
         this.reportService = reportService;
         this.courseRepo = courseRepo;
         this.realCourseRepo = realCourseRepo;
+        LayoutProcessor.enableKernLiga();
     }
 
     @GetMapping("{userId}")
@@ -84,6 +87,7 @@ public class FinalGradeResource {
         List<String> lecturers = userRepo.findAllCourseLecturerNames(semester, courseCode);
         List<NameGrade> studentNameGrades = courseRepo.findStudentsNamesGradesInCourse(courseCode, semester);
         String courseTitle = realCourseRepo.findCourseName(courseCode);
+        List<GradeCount> gradeCounts = finalGradeRepo.getCourseGradeCount(courseCode, semester);
 
         try {
             reportService.export(response,
@@ -92,7 +96,8 @@ public class FinalGradeResource {
                     coordinators,
                     lecturers,
                     studentNameGrades,
-                    courseTitle);
+                    courseTitle,
+                    gradeCounts);
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("{\"message\":\"Couldn't generate report\"}");
         }
