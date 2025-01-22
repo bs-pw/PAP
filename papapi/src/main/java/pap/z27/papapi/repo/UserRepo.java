@@ -61,6 +61,25 @@ public class UserRepo {
                 .query(UserPublicInfo.class)
                 .list();
     }
+
+    public List<String> findAllCourseCoordinatorNames(String semester, String courseCode) {
+        return jdbcClient.sql("SELECT concat(concat(u.name, ' '), u.surname) as name FROM USERS u JOIN COORDINATORS c ON u.USER_ID=c.USER_ID" +
+                " WHERE c.COURSE_CODE=? AND c.SEMESTER=?")
+                .param(courseCode)
+                .param(semester)
+                .query(String.class)
+                .list();
+    }
+
+    public List<String> findAllCourseLecturerNames(String semester, String courseCode) {
+        return jdbcClient.sql("SELECT concat(concat(u.name, ' '), u.surname) as name FROM USERS u JOIN LECTURERS l ON u.USER_ID=l.USER_ID" +
+                " WHERE l.COURSE_CODE=? AND l.SEMESTER=?")
+                .param(courseCode)
+                .param(semester)
+                .query(String.class)
+                .list();
+    }
+
     public List<UserPublicInfo> findAllEligibleCourseCoordinators(CourseInSemester courseInSemester) {
         return jdbcClient.sql("Select users.user_id, users.name, users.surname, user_types.type, users.mail " +
                         "from users " +
