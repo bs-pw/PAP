@@ -1,4 +1,4 @@
-package pap.z27.papapi.Services;
+package pap.z27.papapi.services;
 
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
