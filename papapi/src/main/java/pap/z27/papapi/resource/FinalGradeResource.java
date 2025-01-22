@@ -71,13 +71,6 @@ public class FinalGradeResource {
         if (userTypeId != 0 && !userRepo.checkIfIsCoordinator(userId,courseCode,semester)) {
             return ResponseEntity.badRequest().body("{\"message\":\"only coordinator can see protocols\"}\"");
         }
-        try {
-            if (!courseRepo.checkIfIsClosed(semester, courseCode))
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Not closed yet!\"}\"");
-        }
-        catch (DataAccessException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Cannot get protocol \"}\"");
-        }
 
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm");
@@ -104,12 +97,12 @@ public class FinalGradeResource {
             return ResponseEntity.badRequest().body("{\"message\":\"Couldn't generate report\"}");
         }
 
-//        try {
-//            if (courseRepo.closeCourse(semester, courseCode)==0)
-//                return ResponseEntity.badRequest().body("{\"message\":\"Cannot close course\"}");
-//        } catch (DataAccessException e) {
-//            return ResponseEntity.badRequest().body("{\"message\":\"Cannot close course\"}");
-//        }
+        try {
+            if (courseRepo.closeCourse(semester, courseCode)==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Cannot close course\"}");
+        } catch (DataAccessException e) {
+            return ResponseEntity.badRequest().body("{\"message\":\"Cannot close course\"}");
+        }
 
         return ResponseEntity.ok("{\"message\":\"Report generated.\"}");
     }
