@@ -120,7 +120,7 @@ public class UsersInGroupsResource {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                             .body("{\"message\":\"User is not a student.\"}");
                 }
-                if (groupRepo.isLecturerOfGroup(userId,userInGroup.getSemester(),userInGroup.getCourse_code(),userInGroup.getGroup_number())!=null)
+                if (groupRepo.isLecturerOfGroup(userId,userInGroup.getSemester(),userInGroup.getCourse_code(),userInGroup.getGroup_number())==0)
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .body("{\"message\":\"User is already a lecturer of this group.\"}");
 

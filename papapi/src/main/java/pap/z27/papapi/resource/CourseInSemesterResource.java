@@ -96,7 +96,7 @@ public class CourseInSemesterResource {
         return ResponseEntity.ok("{\"message\":\"ok\"}");
     }
     @GetMapping("{semester}/{courseCode}/is-closed")
-    public ResponseEntity<Boolean> checkIsClosed(@PathVariable("courseCode") String courseCode,
+    public ResponseEntity<String> checkIsClosed(@PathVariable("courseCode") String courseCode,
                                                                  @PathVariable("semester") String semester,
                                                                  HttpSession session) {
         Integer userTypeId = (Integer) session.getAttribute("user_type_id");
@@ -104,7 +104,9 @@ public class CourseInSemesterResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         try{
-            return ResponseEntity.ok(courseInSemesterRepo.checkIfIsClosed(semester, courseCode));
+//            return ResponseEntity.ok(courseInSemesterRepo.checkIfIsClosed(semester, courseCode));
+            return ResponseEntity.status(HttpStatus.OK).body("{\"isLocked\":"+courseInSemesterRepo.checkIfIsClosed(semester, courseCode)+"}");
+
         }
         catch (DataAccessException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

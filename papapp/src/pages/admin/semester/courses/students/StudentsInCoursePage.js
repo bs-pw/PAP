@@ -37,8 +37,8 @@ const CoordinatorsPage = () => {
 
     return (
         <>
-            <Link to={`add`} className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >
-            <List listName={`Studenci przedmiotu ${courseId} w semestrze ${semesterId}`} columnNames={['Id', 'Imię', 'Nazwisko']} data={students} error={error} adminButtons={[true, false]} handleDelete={handleDelete} id="user_id" />
+            {!client.isLocked && <Link to={`add`} className='nav-link text-primary' style={{ fontSize: "1.2em" }}><i className="bi bi-plus-lg"></i> Nowy</Link >}
+            <List listName={`Studenci przedmiotu ${courseId} w semestrze ${semesterId}`} columnNames={['Id', 'Imię', 'Nazwisko']} data={students} error={error} adminButtons={!client.isLocked && [true, false]} handleDelete={handleDelete} id="user_id" />
         </>
     )
 }

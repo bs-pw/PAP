@@ -39,6 +39,8 @@ import StudentMenuPage from "../pages/student/StudentMenuPage";
 import StudentFinalGradesInSem from "../pages/student/StudentFinalGradesInSem";
 import StudentCoursesWithGrades from "../pages/student/grades/StudentCoursesWithGrades";
 import StudentGrades from "../pages/student/grades/StudentGrades";
+import AdminSelectedCourse from "../pages/admin/semester/courses/AdminSelectedCourse";
+import CheckIsLocked from "../pages/admin/semester/courses/CheckIsLocked";
 
 //import useAuthStatus from './useAuthStatus';
 
@@ -122,6 +124,7 @@ export const router = createBrowserRouter([
                                     },
                                     {
                                         path: ":courseId",
+                                        element: <Outlet />,
                                         children: [
                                             {
                                                 index: true,
@@ -251,10 +254,11 @@ export const router = createBrowserRouter([
                                                     },
                                                     {
                                                         path: ":courseId",
+                                                        element: <CheckIsLocked />,
                                                         children: [
                                                             {
                                                                 index: true,
-                                                                element: <><Link to={`coordinators`} className="nav-link">Koordynatorzy</Link><Link to={`groups`} className="nav-link">Grupy</Link><Link to={`students`} className="nav-link">Studenci</Link><Link to={`grade-categories`} className="nav-link">Punktacja przedmiotu</Link></>
+                                                                element: <AdminSelectedCourse />
                                                             },
                                                             {
                                                                 path: "coordinators",
