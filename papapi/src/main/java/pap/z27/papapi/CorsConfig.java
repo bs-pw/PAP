@@ -15,6 +15,8 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOriginPattern("https://*.usos.pro");
+        config.addAllowedOriginPattern("http://localhost:*");
+        config.addAllowedOriginPattern("https://localhost:*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
