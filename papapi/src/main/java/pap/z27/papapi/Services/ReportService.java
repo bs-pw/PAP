@@ -1,8 +1,7 @@
-package pap.z27.papapi.resource;
+package pap.z27.papapi.Services;
 
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
-import com.lowagie.text.pdf.PdfTable;
 import com.lowagie.text.Chunk;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
