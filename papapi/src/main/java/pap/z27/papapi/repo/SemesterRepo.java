@@ -17,7 +17,7 @@ public class SemesterRepo {
         this.jdbcClient = jdbcClient;
     }
     public List<Semester> findAllSemesters() {
-        return jdbcClient.sql("SELECT * from SEMESTERS")
+        return jdbcClient.sql("SELECT * from SEMESTERS ORDER BY SEMESTER_CODE")
                 .query(Semester.class)
                 .list();
     }

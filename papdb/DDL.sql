@@ -452,6 +452,7 @@ BEGIN
     RETURN floor(v_end_date - SYSDATE);
 END;
 /
+
 CREATE OR REPLACE FUNCTION get_current_semester
 RETURN semesters.semester_code%TYPE
 AS
@@ -467,4 +468,17 @@ BEGIN
 END;
 /
 
-SELECT days_untill_end_of_semester('24Z') FROM DUAL;
+-- PROCEDURES
+
+CREATE OR REPLACE PROCEDURE inactivate_users(p_semester_code semesters.semester_code%TYPE)
+AS
+BEGIN
+UPDATE users
+   SET user_type_id = 4
+   WHERE user_type_id != 0
+     AND user_id NOT IN (SELECT user_id FROM FINAL_GRADES WHERE semester = p_semester_code)
+     AND user_id NOT IN (SELECT user_id FROM COORDINATORS WHERE semester = p_semester_code)
+     AND user_id NOT IN (SELECT user_id FROM LECTURERS WHERE semester = p_semester_code);
+END;
+/
+
