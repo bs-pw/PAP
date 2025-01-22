@@ -10,9 +10,10 @@ const UserForm = () => {
         surname: "",
         mail: "",
         password: "",
+        password2: "",
         user_type_id: "0",
     });
-
+    const [password2, setPassword2] = useState('');
     const [message, setMessage] = useState('');
     const [userTypes, setUserTypes] = useState([]);
     const [formName, setFormName] = useState('Rejestracja');
@@ -26,6 +27,16 @@ const UserForm = () => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
+
+    const handleChangePassword2 = (e) => {
+        setPassword2(e.target.value);
+        if (formData.password != password2) {
+            setMessage('Hasła nie są identyczne');
+        } else {
+            setMessage(' ');
+        }
+    }
+
 
     const handleUserTypes = async () => {
         try {
@@ -42,7 +53,8 @@ const UserForm = () => {
             const data = await client.getUser(userId);
             //console.log(data);
             setFormData(data)
-            //console.log(formData)
+            // formData.password2 = '';
+            // console.log(formData)
         } catch (error) {
             navigate('/admin/users');
         }
@@ -50,9 +62,15 @@ const UserForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        // console.log(formData)
+        // console.log(formData.password)
+        // console.log(password2);
+        if (formData.password != password2) return;
         if (id) {
             try {
+                if (formData.password == '') {
+                    formData.password = null;
+                }
                 await client.updateUser(id, formData);
                 setMessage('Użytkownik został zaktualizowany!');
                 navigate("..")
@@ -86,9 +104,10 @@ const UserForm = () => {
         { name: "surname", type: "text", label: "Nazwisko", value: formData.surname, onChange: handleChange, required: true },
         { name: "mail", type: "email", label: "Email", value: formData.mail, onChange: handleChange, required: true },
         { name: "password", type: "password", label: "Hasło", value: formData.password, onChange: handleChange, required: true },
+        { name: "password2", type: "password", label: "Powtórz hasło", value: password2, onChange: handleChangePassword2, required: true },
     ];
 
-    if (id) { inputData[3].label += "(zostaw puste, jeśli nie zmieniasz hasła)"; inputData[3].required = false }
+    if (id) { inputData[3].label += "(zostaw puste, jeśli nie zmieniasz hasła)"; inputData[3].required = false; inputData[4].required = false }
 
     const selectData = [
         { name: "user_type_id", label: "Typ użytkownika", options: userTypes.map(userType => ({ value: userType.user_type_id, label: userType.type })), defaultValue: formData.user_type_id, onChange: handleChange },
