@@ -1,34 +1,34 @@
-drop table attendance_statuses cascade constraints;
+-- drop table attendance_statuses cascade constraints;
 
-drop table attendances cascade constraints;
+-- drop table attendances cascade constraints;
 
-drop table class_types cascade constraints;
+-- drop table class_types cascade constraints;
 
-drop table classes cascade constraints;
+-- drop table classes cascade constraints;
 
-drop table coordinators cascade constraints;
+-- drop table coordinators cascade constraints;
 
-drop table courses cascade constraints;
+-- drop table courses cascade constraints;
 
-drop table courses_in_semester cascade constraints;
+-- drop table courses_in_semester cascade constraints;
 
-drop table final_grades cascade constraints;
+-- drop table final_grades cascade constraints;
 
-drop table grade_categories cascade constraints;
+-- drop table grade_categories cascade constraints;
 
-drop table grades cascade constraints;
+-- drop table grades cascade constraints;
 
-drop table groups cascade constraints;
+-- drop table groups cascade constraints;
 
-drop table lecturers cascade constraints;
+-- drop table lecturers cascade constraints;
 
-drop table semesters cascade constraints;
+-- drop table semesters cascade constraints;
 
-drop table students_in_groups cascade constraints;
+-- drop table students_in_groups cascade constraints;
 
-drop table user_types cascade constraints;
+-- drop table user_types cascade constraints;
 
-drop table users cascade constraints;
+-- drop table users cascade constraints;
 
 
 create table attendance_statuses (
@@ -479,6 +479,47 @@ END;
 /
 
 -- PROCEDURES
+CREATE OR REPLACE PROCEDURE give_final_grades_from_points(p_semester semesters.semester_code%TYPE, p_course_code courses.course_code%TYPE)
+as
+   students_points number(6,2);
+   max_points number(6,2);
+BEGIN
+   FOR r_user IN (SELECT user_id FROM FINAL_GRADES where semester=p_semester and COURSE_CODE=p_course_code and grade is null) LOOP
+      SELECT sum(grade)
+      INTO students_points
+      FROM GRADES
+      WHERE user_id=r_user.user_id and semester=p_semester and course_code=p_course_code;
+
+      SELECT sum(max_grade)
+      INTO max_points
+      FROM GRADE_CATEGORIES
+      WHERE semester=p_semester and course_code=p_course_code;
+
+      IF students_points/max_points >= 0.5 THEN
+         IF students_points/max_points >= 0.6 THEN
+            IF students_points/max_points >= 0.7 THEN
+               IF students_points/max_points >= 0.8 THEN
+                  IF students_points/max_points >= 0.9 THEN
+                     UPDATE FINAL_GRADES set grade=5.0 where user_id=r_user.user_id and semester=p_semester and course_code=p_course_code;
+                  ELSE
+                     UPDATE FINAL_GRADES set grade=4.5 where user_id=r_user.user_id and semester=p_semester and course_code=p_course_code;
+                  END IF;
+               ELSE
+                  UPDATE FINAL_GRADES set grade=4.0 where user_id=r_user.user_id and semester=p_semester and course_code=p_course_code;
+               END IF;
+            ELSE
+               UPDATE FINAL_GRADES set grade=3.5 where user_id=r_user.user_id and semester=p_semester and course_code=p_course_code;
+            END IF;
+         ELSE
+            UPDATE FINAL_GRADES set grade=3.0 where user_id=r_user.user_id and semester=p_semester and course_code=p_course_code;
+         END IF;
+      ELSE
+         UPDATE FINAL_GRADES set grade=2.0 where user_id=r_user.user_id and semester=p_semester and course_code=p_course_code;
+      END IF;
+   END LOOP;
+END;
+/
+
 
 CREATE OR REPLACE PROCEDURE inactivate_users(p_semester_code semesters.semester_code%TYPE)
 AS
@@ -491,4 +532,5 @@ UPDATE users
      AND user_id NOT IN (SELECT user_id FROM LECTURERS WHERE semester = p_semester_code);
 END;
 /
+
 
