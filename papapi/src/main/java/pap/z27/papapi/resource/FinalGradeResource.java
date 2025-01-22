@@ -75,7 +75,12 @@ public class FinalGradeResource {
         if (userTypeId != 0 && !userRepo.checkIfIsCoordinator(userId,courseCode,semester)) {
             return ResponseEntity.badRequest().body("{\"message\":\"only coordinator can see protocols\"}\"");
         }
-
+        try {
+            if (courseRepo.closeCourse(semester, courseCode)==0)
+                return ResponseEntity.badRequest().body("{\"message\":\"Cannot close course\"}");
+        } catch (DataAccessException e) {
+            return ResponseEntity.badRequest().body("{\"message\":\"Cannot close course\"}");
+        }
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm");
         String currentDateTime = dateFormatter.format(new Date());
@@ -101,13 +106,6 @@ public class FinalGradeResource {
                     gradeCounts);
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("{\"message\":\"Couldn't generate report\"}");
-        }
-
-        try {
-            if (courseRepo.closeCourse(semester, courseCode)==0)
-                return ResponseEntity.badRequest().body("{\"message\":\"Cannot close course\"}");
-        } catch (DataAccessException e) {
-            return ResponseEntity.badRequest().body("{\"message\":\"Cannot close course\"}");
         }
 
         return ResponseEntity.ok("{\"message\":\"Report generated.\"}");

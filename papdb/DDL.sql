@@ -437,6 +437,16 @@ END;
 /
 ALTER TRIGGER check_semester_trigger ENABLE;
 
+CREATE OR REPLACE TRIGGER close_semester_trigger
+BEFORE UPDATE OF is_closed ON courses_in_semester
+FOR EACH ROW
+DECLARE
+BEGIN
+   UPDATE FINAL_GRADES set grade = 2.0 where semester = :old.semester and course_code = :old.course_code and grade is null;
+END;
+/
+ALTER TRIGGER close_semester_trigger ENABLE;
+
 -- FUNCTIONS
 
 CREATE OR REPLACE FUNCTION days_untill_end_of_semester (p_semester_code semesters.semester_code%TYPE)
