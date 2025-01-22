@@ -80,7 +80,7 @@ public class FinalGradeResource {
         }
 
         response.setContentType("application/pdf");
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm");
         String currentDateTime = dateFormatter.format(new Date());
 
         String headerKey = "Content-Disposition";
