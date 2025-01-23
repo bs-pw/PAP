@@ -81,19 +81,6 @@
 <logicalDatatype>LOGDT007</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="user_id1" id="32B42697-E609-96E6-7DE3-078D481B284B">
-<createdBy>Maci9</createdBy>
-<createdTime>2024-11-22 23:18:03 UTC</createdTime>
-<generatorID>055235BF-0CFA-2090-2B96-9F6FD204EEB8</generatorID>
-<ownerDesignName>logical</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>DCB6B607-7FED-66AC-C29D-F29A58E8089C</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT019</logicalDatatype>
-<dataTypePrecision>6</dataTypePrecision>
-<ownDataTypeParameters>,6,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="attendance_status_id" id="47EAB514-542C-3891-397C-C7BAE04C6026">
 <createdBy>Maci9</createdBy>
 <createdTime>2024-12-25 19:39:25 UTC</createdTime>
@@ -106,6 +93,42 @@
 <logicalDatatype>LOGDT019</logicalDatatype>
 <dataTypePrecision>6</dataTypePrecision>
 <ownDataTypeParameters>,6,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="user_id1" id="2DE91771-31BA-F276-DA41-17D024E1B458">
+<createdBy>stud</createdBy>
+<createdTime>2025-01-22 21:34:42 UTC</createdTime>
+<generatorID>9461F977-3EAF-A71E-7EF7-6337B772EE6B</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>BB467391-53EA-9825-F373-5E2B880665E5</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>6</dataTypePrecision>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="courses_code1" id="FE90B660-9DC0-E55E-A41B-44F5CC833075">
+<createdBy>stud</createdBy>
+<createdTime>2025-01-22 21:34:42 UTC</createdTime>
+<generatorID>9461F977-3EAF-A71E-7EF7-6337B772EE6B</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>539C617D-7B28-4200-B036-3D59A4AC25AD</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>5 CHAR</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="semester_code1" id="68C15989-6E1A-2A0F-A213-093F7AEF54ED">
+<createdBy>stud</createdBy>
+<createdTime>2025-01-22 21:34:42 UTC</createdTime>
+<generatorID>9461F977-3EAF-A71E-7EF7-6337B772EE6B</generatorID>
+<ownerDesignName>logical</ownerDesignName>
+<referedAttribute>87030509-9C3E-CDDD-5365-35AA59FEEF5F</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>4 CHAR</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
