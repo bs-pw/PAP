@@ -10,7 +10,6 @@ import pap.z27.papapi.domain.Attendance;
 import pap.z27.papapi.domain.subclasses.AttendanceDTO;
 import pap.z27.papapi.repo.*;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 
 
@@ -72,7 +71,7 @@ public class AttendanceResource {
         if (userTypeId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if (userTypeId != 0 && groupRepo.isLecturerOfGroup(thisUserId,semester,courseCode,groupNr)==null) {
+        if (userTypeId != 0 && !userRepo.checkIfIsLecturerOfGroup(thisUserId,semester,courseCode,groupNr)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(attendanceRepo.findAllAttendancesInGroup(courseCode,semester,groupNr));
@@ -98,20 +97,20 @@ public class AttendanceResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         if (userTypeId==1) {
-            if(groupRepo.isLecturerOfGroup(userId,
+            if(!userRepo.checkIfIsLecturerOfGroup(userId,
                     attendance.getSemester(),
                     attendance.getCourse_code(),
-                    attendance.getGroup_number()) == null)
+                    attendance.getGroup_number()))
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Lecturer does not lead the group\"}");
 
             if (attendance.getDate() == null) {
                 return ResponseEntity.badRequest().body("{\"message\":\"Date cannot be null\"}");
             }
 
-            if(groupRepo.isStudentInGroup(attendance.getUser_id(),
+            if(!userRepo.checkIfIsStudentInGroup(attendance.getUser_id(),
                     attendance.getSemester(),
                     attendance.getCourse_code(),
-                    attendance.getGroup_number()) == null)
+                    attendance.getGroup_number()))
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"No such student in the group\"}");
             attendance.setWho_inserted_id(userId);
 
@@ -139,12 +138,12 @@ public class AttendanceResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         if(userTypeId.equals(1)) {
-            if(groupRepo.isLecturerOfGroup(userId,attendance.getSemester(),attendance.getCourse_code(),attendance.getGroup_number()) == null)
+            if(!userRepo.checkIfIsLecturerOfGroup(userId,attendance.getSemester(),attendance.getCourse_code(),attendance.getGroup_number()))
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Lecturer does not lead the group\"}");
-            if(groupRepo.isStudentInGroup(attendance.getUser_id(),
+            if(!userRepo.checkIfIsStudentInGroup(attendance.getUser_id(),
                     attendance.getSemester(),
                     attendance.getCourse_code(),
-                    attendance.getGroup_number()) == null)
+                    attendance.getGroup_number()))
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"No such student in the group\"}");
             attendance.setWho_inserted_id(userId);
 

@@ -135,6 +135,7 @@ public class UserResource {
             } catch (DataAccessException e) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Couldn't update user! \"}\"");
             }
+            if(user.getMail()!=null)session.setAttribute("mail",user.getMail());
         }
         return ResponseEntity.ok("{\"message\":\"ok\"}");
 

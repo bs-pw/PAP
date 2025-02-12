@@ -192,17 +192,6 @@ public class GroupRepo {
                 .list();
     }
 
-    public Integer isStudentInLecturerGroup(Integer studentId, Integer lecturerId, String semester, String course_code)
-    {
-        return jdbcClient.sql("SELECT count(*) from STUDENTS_IN_GROUPS sig inner join LECTURERS l on (l.GROUP_NUMBER=sig.GROUP_NUMBER and l.SEMESTER=sig.SEMESTER and l.COURSE_CODE=sig.COURSE_CODE) where sig.USER_ID=? and l.USER_ID=? and l.SEMESTER=? and l.COURSE_CODE=?")
-                .param(studentId)
-                .param(lecturerId)
-                .param(semester)
-                .param(course_code)
-                .query(Integer.class)
-                .optional().orElse(null);
-    }
-
     public Integer removeLecturer(UserInGroup lecturer) {
         return jdbcClient.sql("DELETE FROM LECTURERS WHERE USER_ID=? AND COURSE_CODE=? AND SEMESTER=? AND GROUP_NUMBER=?")
                 .param(lecturer.getUser_id())
@@ -212,32 +201,6 @@ public class GroupRepo {
                 .update();
     }
 
-    public Integer isStudentInGroup(Integer userId, String semester, String course_code, Integer group_number) {
-        return jdbcClient.sql("SELECT count(*) from STUDENTS_IN_GROUPS where USER_ID=? and SEMESTER=? and COURSE_CODE=? and GROUP_NUMBER=?")
-                .param(userId)
-                .param(semester)
-                .param(course_code)
-                .param(group_number)
-                .query(Integer.class)
-                .optional().orElse(null);
-    }
-    public Integer isLecturerOfGroup(Integer userId, String semester, String course_code, Integer group_number) {
-        return jdbcClient.sql("SELECT count(*) from LECTURERS where USER_ID=? and SEMESTER=? and COURSE_CODE=? and GROUP_NUMBER=?")
-                .param(userId)
-                .param(semester)
-                .param(course_code)
-                .param(group_number)
-                .query(Integer.class)
-                .optional().orElse(null);
-    }
-    public Integer isLecturerOfCourse(Integer userId, String semester, String course_code) {
-        return jdbcClient.sql("SELECT count(*) from LECTURERS where USER_ID=? and SEMESTER=? and COURSE_CODE=?")
-                .param(userId)
-                .param(semester)
-                .param(course_code)
-                .query(Integer.class)
-                .optional().orElse(null);
-    }
     public List<UserPublicInfo> findLecturersOfGroup(String courseCode, String semester, Integer groupNr){
         return jdbcClient.sql("SELECT u.user_id,u.name,u.surname,ut.type,u.mail FROM USERS u join LECTURERS sig ON u.user_id=sig.user_id join " +
                         "USER_TYPES ut ON u.user_type_id=ut.user_type_id WHERE sig.course_code=? and sig.semester=? and sig.group_number=?")

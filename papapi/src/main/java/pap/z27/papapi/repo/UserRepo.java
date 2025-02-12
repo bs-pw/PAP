@@ -307,6 +307,24 @@ public class UserRepo {
                 .query(Integer.class)
                 .single()!=0;
     }
+    public Boolean checkIfIsStudentInGroup(Integer userId, String semester, String course_code, Integer group_number) {
+        return jdbcClient.sql("SELECT count(*) from STUDENTS_IN_GROUPS where USER_ID=? and SEMESTER=? and COURSE_CODE=? and GROUP_NUMBER=?")
+                .param(userId)
+                .param(semester)
+                .param(course_code)
+                .param(group_number)
+                .query(Integer.class)
+                .single()!=0;
+    }
+    public Boolean checkIfIsLecturerOfGroup(Integer userId, String semester, String course_code, Integer group_number) {
+        return jdbcClient.sql("SELECT count(*) from LECTURERS where USER_ID=? and SEMESTER=? and COURSE_CODE=? and GROUP_NUMBER=?")
+                .param(userId)
+                .param(semester)
+                .param(course_code)
+                .param(group_number)
+                .query(Integer.class)
+                .single()!=0;
+    }
     public Integer removeUser(Integer userId) {
         return jdbcClient.sql("DELETE FROM USERS where user_id=?")
                 .param(userId)

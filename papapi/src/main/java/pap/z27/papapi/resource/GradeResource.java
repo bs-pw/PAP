@@ -40,7 +40,7 @@ public class GradeResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        if (groupRepo.isLecturerOfCourse(userId, semester, courseCode) == null &&
+        if (!userRepo.checkIfIsLecturerOfCourse(userId, courseCode, semester) &&
                 !userTypeId.equals(0) &&
                 !userRepo.checkIfIsCoordinator(userId, courseCode, semester)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -172,7 +172,7 @@ public class GradeResource {
 
         if (!userTypeId.equals(0) &&
             !userRepo.checkIfIsCoordinator(userId, courseCode, semester) &&
-            groupRepo.isLecturerOfCourse(userId, semester, courseCode) == null) {
+            !userRepo.checkIfIsLecturerOfCourse(userId, courseCode, semester)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 

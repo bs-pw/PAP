@@ -39,7 +39,7 @@ public class UsersInGroupsResource {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Integer userId = (Integer) session.getAttribute("user_id");
-        if (userTypeId.equals(4) || (userTypeId.equals(3) && groupRepo.isStudentInGroup(userId,semester,courseCode,groupNr)==null)){
+        if (userTypeId.equals(4) || (userTypeId.equals(3) && !userRepo.checkIfIsStudentInGroup(userId,semester,courseCode,groupNr))){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(groupRepo.findStudentsInGroup(courseCode,semester,groupNr));
@@ -120,7 +120,7 @@ public class UsersInGroupsResource {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                             .body("{\"message\":\"User is not a student.\"}");
                 }
-                if (groupRepo.isLecturerOfGroup(userId,userInGroup.getSemester(),userInGroup.getCourse_code(),userInGroup.getGroup_number())==0)
+                if (userRepo.checkIfIsLecturerOfGroup(userId,userInGroup.getSemester(),userInGroup.getCourse_code(),userInGroup.getGroup_number()))
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .body("{\"message\":\"User is already a lecturer of this group.\"}");
 
